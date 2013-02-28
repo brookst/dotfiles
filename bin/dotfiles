@@ -1,0 +1,76 @@
+#!/bin/bash
+
+#echo 'dotfiles - Environment bootstrapper - Tim Brooks - http://skoorb.net'
+
+path=`pwd -L`
+
+# Set some default values
+action=""
+cmdl_opts=""
+
+# Loop over cmd line tokens
+a=$@
+while true; do
+  b=${a%% *}
+  a=${a#* }
+
+  if [ "$b" == "sync" -o "$b" == "pull" ];then
+    action=$b
+  elif [ "$b" == "-o" -o "$b" == "--overwrite" ];then
+    overwrite=true
+  elif [ "$b" == "-q" -o "$b" == "--quiet" ];then
+    quiet=true
+  elif [ "$b" == "-d" -o "$b" == "--dryrun" ];then
+    dryrun=true
+  elif [ "$b" == "-c" -o "$b" == "--compare" ];then
+    compare=true
+  else
+    cmdl_opts+=" "$b
+  fi
+
+  if [ "$a" == "$b" -o "$a" == "$c" ]; then
+    break
+  fi
+done
+
+function action () {
+    if [ $dryrun ]; then
+        log skipping action $@
+    else
+        log $@
+        eval $@
+    fi
+}
+
+function log () {
+    if [ ! $quiet ]; then
+        echo $@
+    fi
+}
+
+if [ "$action" == "pull" ]; then
+    cd ~/.dotfiles
+    git pull
+fi
+
+if [ "$action" == "sync" ]; then
+    for target in $(ls -A ~/.dotfiles/home/); do
+        target_path=${path}/home/${target}
+        link_path=~/${target}
+        if [ -L $link_path ]; then
+             log $link_path linked
+        elif [ -e $link_path ]; then
+            if [ $overwrite ]; then
+                log overwriting $link_path
+                action rm -rf $link_path
+                action ln -s $target_path $link_path
+            elif [ $compare ]; then
+                diff -s $target_path $link_path
+            else
+                log pre-existing $link_path
+            fi
+        else
+            action ln -s $target_path $link_path 
+        fi
+    done
+fi
