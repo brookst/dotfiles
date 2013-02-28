@@ -2,6 +2,7 @@
 
 #echo 'dotfiles - Environment bootstrapper - Tim Brooks - http://skoorb.net'
 
+remotes="github skoorb"
 path=`pwd -L`
 
 # Set some default values
@@ -15,7 +16,7 @@ while true; do
   b=${a%% *}
   a=${a#* }
 
-  if [ "$b" == "sync" -o "$b" == "pull" ]; then
+  if [ "$b" == "sync" -o "$b" == "pull" -o "$b" == "push" ]; then
     action=$b
   elif [ "$b" == "add" ]; then
     action=$b
@@ -54,9 +55,16 @@ function log () {
     fi
 }
 
+if [ "$action" == "push" ]; then
+    cd ~/.dotfiles
+    for remote in $remotes; do
+        action git push $remote
+    done
+fi
+
 if [ "$action" == "pull" ]; then
     cd ~/.dotfiles
-    git pull
+    action git pull
 fi
 
 if [ "$action" == "sync" ]; then
