@@ -6,7 +6,8 @@ path=`pwd -L`
 
 # Set some default values
 action=""
-cmdl_opts=""
+file="foo"
+extra_opts=""
 
 # Loop over cmd line tokens
 a=$@
@@ -14,18 +15,23 @@ while true; do
   b=${a%% *}
   a=${a#* }
 
-  if [ "$b" == "sync" -o "$b" == "pull" ];then
+  if [ "$b" == "sync" -o "$b" == "pull" ]; then
     action=$b
-  elif [ "$b" == "-o" -o "$b" == "--overwrite" ];then
+  elif [ "$b" == "add" ]; then
+    action=$b
+    c=${a%% *}
+    a=${a#* }
+    file=$c
+  elif [ "$b" == "-o" -o "$b" == "--overwrite" ]; then
     overwrite=true
-  elif [ "$b" == "-q" -o "$b" == "--quiet" ];then
+  elif [ "$b" == "-q" -o "$b" == "--quiet" ]; then
     quiet=true
-  elif [ "$b" == "-d" -o "$b" == "--dryrun" ];then
+  elif [ "$b" == "-d" -o "$b" == "--dryrun" ]; then
     dryrun=true
-  elif [ "$b" == "-c" -o "$b" == "--compare" ];then
+  elif [ "$b" == "-c" -o "$b" == "--compare" ]; then
     compare=true
   else
-    cmdl_opts+=" "$b
+    extra_opts+=" "$b
   fi
 
   if [ "$a" == "$b" -o "$a" == "$c" ]; then
@@ -73,4 +79,11 @@ if [ "$action" == "sync" ]; then
             action ln -s $target_path $link_path 
         fi
     done
+fi
+
+if [ "$action" == "add" ]; then
+    file_name=${file##*/}
+    action mv ${file} ~/.dotfiles/home/${file_name}
+    action git add ~/.dotfiles/home/${file_name}
+    action git commit -m "Added home/${file_name}"
 fi
