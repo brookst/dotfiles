@@ -68,8 +68,10 @@ if [ "$action" == "pull" ]; then
 fi
 
 if [ "$action" == "sync" ]; then
-    for target in $(ls -A ~/.dotfiles/home/); do
-        target_path=${path}/home/${target}
+    targets=$(cd ~/.dotfiles; ls -A home/)
+    targets+=" "$(cd ~/.dotfiles;ls bin/)
+    for target in ${targets}; do
+        target_path=${target}
         link_path=~/${target}
         if [ -L $link_path ]; then
              log $link_path linked
