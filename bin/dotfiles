@@ -108,6 +108,7 @@ fi
 
 if [ "$action" == "add" ]; then
     file_name=${file##*/}
+    cd ~/.dotfiles
     action mv ${file} ~/.dotfiles/home/${file_name}
     action git add ~/.dotfiles/home/${file_name}
     action git commit -m "Added home/${file_name}"
