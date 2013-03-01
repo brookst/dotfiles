@@ -2,7 +2,6 @@
 
 #echo 'dotfiles - Environment bootstrapper - Tim Brooks - http://skoorb.net'
 
-remotes="github skoorb"
 path=`pwd -L`
 
 # Set some default values
@@ -77,6 +76,7 @@ function link () {
 
 if [ "$action" == "push" ]; then
     cd ~/.dotfiles
+    remotes=$(git remote)
     for remote in $remotes; do
         action git push $remote
     done
