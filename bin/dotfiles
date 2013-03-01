@@ -69,7 +69,7 @@ fi
 
 if [ "$action" == "sync" ]; then
     targets=$(cd ~/.dotfiles; ls -A home/)
-    targets+=" "$(echo bin/*)
+    targets+=" "$(cd ~/.dotfiles; echo bin/*)
     if [ ! -d "`echo ~/bin`" ]; then
         action mkdir ~/bin
     fi
