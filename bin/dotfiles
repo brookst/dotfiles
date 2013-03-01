@@ -55,6 +55,26 @@ function log () {
     fi
 }
 
+function link () {
+    target_path=$1
+    link_path=$2
+    if [ -L $link_path ]; then
+         log $link_path linked
+    elif [ -e $link_path ]; then
+        if [ $overwrite ]; then
+            log overwriting $link_path
+            action rm -rf $link_path
+            action ln -s $target_path $link_path
+        elif [ $compare ]; then
+            diff -s $target_path $link_path
+        else
+            log pre-existing $link_path
+        fi
+    else
+        action ln -s $target_path $link_path
+    fi
+}
+
 if [ "$action" == "push" ]; then
     cd ~/.dotfiles
     for remote in $remotes; do
@@ -68,29 +88,21 @@ if [ "$action" == "pull" ]; then
 fi
 
 if [ "$action" == "sync" ]; then
-    targets=$(cd ~/.dotfiles; ls -A home/)
-    targets+=" "$(cd ~/.dotfiles; echo bin/*)
+    targets=$(cd ~/.dotfiles; ls -A home)
+    for target in ${targets}; do
+        target_path=~/.dotfiles/home/${target}
+        link_path=~/${target}
+        link $target_path $link_path
+    done
+
     if [ ! -d "`echo ~/bin`" ]; then
         action mkdir ~/bin
     fi
+    targets=$(cd ~/.dotfiles; ls bin)
     for target in ${targets}; do
-        target_path=${target}
-        link_path=~/${target}
-        if [ -L $link_path ]; then
-             log $link_path linked
-        elif [ -e $link_path ]; then
-            if [ $overwrite ]; then
-                log overwriting $link_path
-                action rm -rf $link_path
-                action ln -s $target_path $link_path
-            elif [ $compare ]; then
-                diff -s $target_path $link_path
-            else
-                log pre-existing $link_path
-            fi
-        else
-            action ln -s $target_path $link_path 
-        fi
+        target_path=~/.dotfiles/bin/${target}
+        link_path=~/bin/${target}
+        link $target_path $link_path
     done
 fi
 
