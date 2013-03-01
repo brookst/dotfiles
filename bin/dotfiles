@@ -70,6 +70,9 @@ fi
 if [ "$action" == "sync" ]; then
     targets=$(cd ~/.dotfiles; ls -A home/)
     targets+=" "$(echo bin/*)
+    if [ ! -d "`echo ~/bin`" ]; then
+        action mkdir ~/bin
+    fi
     for target in ${targets}; do
         target_path=${target}
         link_path=~/${target}
