@@ -28,6 +28,8 @@ while true; do
     quiet=true
   elif [ "$b" == "-d" -o "$b" == "--dryrun" ]; then
     dryrun=true
+  elif [ "$b" == "-e" -o "$b" == "--executable" ]; then
+    executable=true
   elif [ "$b" == "-c" -o "$b" == "--compare" ]; then
     compare=true
   else
@@ -109,8 +111,13 @@ fi
 
 if [ "$action" == "add" ]; then
     file_name=${file##*/}
+    if [ $executable ]; then
+        loc="bin"
+    else
+        loc="home"
+    fi
     cd ~/.dotfiles
-    action mv ${file} ~/.dotfiles/home/${file_name}
-    action git add ~/.dotfiles/home/${file_name}
-    action git commit -m "\"Added home/${file_name}\""
+    action mv ${file} ~/.dotfiles/${loc}/${file_name}
+    action git add ~/.dotfiles/${loc}/${file_name}
+    action git commit -m "\"Added ${loc}/${file_name}\""
 fi
