@@ -78,7 +78,7 @@ function link () {
 
 if [ "$action" == "push" ]; then
     cd ~/.dotfiles
-    action git commit -m "\"File update\""
+    action git commit -am "\"File update\""
     remotes=$(git remote)
     for remote in $remotes; do
         action git push $remote
