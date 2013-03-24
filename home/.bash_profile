@@ -143,7 +143,7 @@ export PYTHONSTARTUP=/home/$USER/.pythonrc
 
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$MINUIT2DIR/lib:$PYTHIA8/lib
 export PYTHONPATH=$ROOTSYS/lib:$PYTHONDIR/lib
-export PATH=~/bin:$PYTHONDIR/bin:$ROOTSYS/bin:$PATH
+export PATH=~/bin:$ROOTSYS/bin:$PATH
 alias root="root -l"
 
 # Set up ATLAS computing environment
