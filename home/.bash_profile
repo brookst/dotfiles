@@ -4,8 +4,10 @@ if [ -f ~/.bash_local ]; then
 fi
 # A few aliases to improve the console and save time
 SKOORB=skoorb.net
+SERVER=tims-server.skoorb.net
+DESKTOP=tims-desktop.skoorb.net
 PI=pi.skoorb.net
-PI2=tims-pi-v2.skoorb.net
+PI2=pi2.skoorb.net
 LAP=laptop.skoorb.net
 LXP=lxplus.cern.ch
 LA0=linappserv0.pp.rhul.ac.uk
@@ -21,6 +23,8 @@ alias dir="ls *.*[^~]"
 alias pdf="evince"
 alias ssh="ssh -X -Y"
 alias skoorb="ssh $SKOORB"
+alias server="ssh $SERVER"
+alias desktop="ssh $DESKTOP"
 alias pi="ssh $PI"
 alias pi2="ssh $PI2"
 alias lap="ssh $LAP"
@@ -149,6 +153,29 @@ alias root="root -l"
 # Set up ATLAS computing environment
 export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase
 alias atlsetup='source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh'
+
+SSH_ENV="$HOME/.ssh/environment"
+
+function start_agent {
+     echo "Initialising new SSH agent..."
+     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+     echo succeeded
+     chmod 600 "${SSH_ENV}"
+     . "${SSH_ENV}" > /dev/null
+     /usr/bin/ssh-add;
+}
+
+# Source SSH settings, if applicable
+
+if [ -f "${SSH_ENV}" ]; then
+     . "${SSH_ENV}" > /dev/null
+     #ps ${SSH_AGENT_PID} doesn't work under cywgin
+     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+         start_agent;
+     }
+else
+     start_agent;
+fi
 
 # End up in /home/$USER
 #cd ~
