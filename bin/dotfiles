@@ -5,7 +5,7 @@
 path=`pwd -L`
 
 # Set some default values
-action=""
+action="help"
 file="foo"
 extra_opts=""
 
@@ -75,6 +75,16 @@ function link () {
         action ln -s $target_path $link_path
     fi
 }
+
+if [ "$action" == "help" ]; then
+    echo "${0##*/} - Tim Brooks <brooks@skoorb.net>"
+    echo "Usage: dotfiles <action> -[cdeoq]"
+    echo "Actions: help - this help message"
+    echo "         pull - pull updates from attached repos"
+    echo "         push - push updates to attached repos"
+    echo "         sync - sync dotfiles to this repo"
+    echo "         add - add a dotfile to this repo"
+fi
 
 if [ "$action" == "push" ]; then
     cd ~/.dotfiles
