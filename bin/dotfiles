@@ -90,8 +90,9 @@ if [ "$action" == "push" ]; then
     cd ~/.dotfiles
     action git commit -am "\"File update\""
     remotes=$(git remote)
+    branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
-        action git push $remote
+        action git push $remote $branch
     done
 fi
 
