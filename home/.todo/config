@@ -1,0 +1,4 @@
+TODO_DIR=~/dev/todo.txt-cli
+TODO_FILE=~/dev/todo.txt-cli/todo.txt
+DONE_FILE=~/dev/todo.txt-cli/done.txt
+REPORT_FILE=~/dev/todo.txt-cli/report.txt
