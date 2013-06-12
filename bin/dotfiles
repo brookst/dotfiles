@@ -120,14 +120,21 @@ if [ "$action" == "sync" ]; then
 fi
 
 if [ "$action" == "add" ]; then
-    file_name=${file##*/}
     if [ $executable ]; then
         loc="bin"
+        file_name=${file##*/}
     else
         loc="home"
+        file_name=${file##$HOME/}
+        dirs=$(echo $file_name | tr '/' ' ')
     fi
-    cd ~/.dotfiles
+    path=~/.dotfiles/${loc}
+    for dir in $dirs; do
+        action mkdir -p $path
+        path=$path/$dir
+    done
     action mv ${file} ~/.dotfiles/${loc}/${file_name}
+    cd ~/.dotfiles
     action git add ~/.dotfiles/${loc}/${file_name}
     action git commit -m "\"Added ${loc}/${file_name}\""
 fi
