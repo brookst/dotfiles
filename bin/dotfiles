@@ -101,7 +101,7 @@ if [ "$action" == "pull" ]; then
 fi
 
 if [ "$action" == "sync" ]; then
-    targets=$(cd ~/.dotfiles; ls -A home)
+    targets=$(cd ~/.dotfiles; find home -type f -printf "%P\n")
     for target in ${targets}; do
         target_path=~/.dotfiles/home/${target}
         link_path=~/${target}
