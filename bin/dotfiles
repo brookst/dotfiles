@@ -90,8 +90,9 @@ if [ "$action" == "push" ]; then
     cd ~/.dotfiles
     action git commit -am "\"File update\""
     remotes=$(git remote)
+    branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
-        action git push $remote
+        action git push $remote $branch
     done
 fi
 
@@ -104,7 +105,11 @@ if [ "$action" == "sync" ]; then
     targets=$(cd ~/.dotfiles; find home -type f -printf "%P\n")
     for target in ${targets}; do
         target_path=~/.dotfiles/home/${target}
-        link_path=~/${target}
+        link_path=~
+        for dir in $(echo $target | tr '/' ' '); do
+            action mkdir -p $link_path
+            link_path=~/$dir
+        done
         link $target_path $link_path
     done
 
