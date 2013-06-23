@@ -53,6 +53,7 @@ nmap ; :CtrlPBuffer<CR>
 "map  :w!<CR>:!aspell check %<CR>:e! %<CR>
 
 runtime bundle/vim-pathogen/autoload/pathogen.vim
+set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 call pathogen#infect()
 
 "Versions prior to 701.040 don't have the method syntastic uses for

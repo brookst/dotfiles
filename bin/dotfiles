@@ -108,7 +108,7 @@ if [ "$action" == "sync" ]; then
         link_path=~
         for dir in $(echo $target | tr '/' ' '); do
             action mkdir -p $link_path
-            link_path=~/$dir
+            link_path+=/$dir
         done
         link $target_path $link_path
     done
