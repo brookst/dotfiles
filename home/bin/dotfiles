@@ -26,6 +26,8 @@ while true; do
     overwrite=true
   elif [ "$b" == "-q" -o "$b" == "--quiet" ]; then
     quiet=true
+  elif [ "$b" == "-v" -o "$b" == "--verbose" ]; then
+    verbose=true
   elif [ "$b" == "-d" -o "$b" == "--dryrun" ]; then
     dryrun=true
   elif [ "$b" == "-e" -o "$b" == "--executable" ]; then
@@ -45,14 +47,23 @@ function action () {
     if [ $dryrun ]; then
         log skipping action $@
     else
-        log $@
-        eval $@
+        if $@; then
+            log $@
+        else
+            warn failed command: $@
+        fi
     fi
 }
 
 function log () {
-    if [ ! $quiet ]; then
+    if [ $verbose ]; then
         echo $@
+    fi
+}
+
+function warn () {
+    if [ !$quiet ]; then
+        echo Warning $@
     fi
 }
 
@@ -70,7 +81,7 @@ function link () {
                 action rm -rf $link_path
                 action ln -s $target_path $link_path
             else
-                log pre-existing link $link_path
+                warn pre-existing link $link_path
             fi
         fi
     elif [ -e $link_path ]; then
@@ -81,7 +92,7 @@ function link () {
         elif [ $compare ]; then
             diff -s $target_path $link_path
         else
-            log pre-existing file $link_path
+            warn pre-existing file $link_path
         fi
     else
         action ln -s $target_path $link_path
