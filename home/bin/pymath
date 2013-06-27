@@ -1,0 +1,9 @@
+#!/bin/env python
+
+from math import *
+from sys import argv
+
+expression = " ".join(argv[1:])
+expression = expression.replace('{', '(')
+expression = expression.replace('}', ')')
+print(eval(expression)) 
