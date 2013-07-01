@@ -1,6 +1,11 @@
 [include]
         # For username / creds / etc
         path = ~/.gitconfig.local
+[user]
+        name = Tim Brooks
+        email = brooks@cern.ch
+[github]
+        user = brookst
 [core]
         editor = vim
         whitespace = trailing-space tab-in-indent tabwidth=4

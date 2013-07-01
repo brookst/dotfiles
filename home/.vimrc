@@ -1,3 +1,4 @@
+set lazyredraw
 set nocompatible
 set notitle
 set shiftwidth=4
