@@ -40,10 +40,20 @@ if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
-if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
+if $TERM ==? "linux"
+  set t_Co=8
+else
   set t_Co=256
 endif
 
+inoremap <Up>    <NOP>
+inoremap <Down>  <NOP>
+inoremap <Right> <NOP>
+inoremap <Left>  <NOP>
+noremap <Up>     <NOP>
+noremap <Down>   <NOP>
+noremap <Right>  <NOP>
+noremap <Left>   <NOP>
 nmap j gj
 nmap k gk
 nmap <C-e> :e#<CR>
@@ -55,6 +65,8 @@ nmap ; :CtrlPBuffer<CR>
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 call pathogen#infect()
+
+let g:airline_powerline_fonts=1
 
 "Versions prior to 701.040 don't have the method syntastic uses for
 "highlighting
