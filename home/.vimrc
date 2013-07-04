@@ -1,4 +1,3 @@
-set lazyredraw
 set nocompatible
 set notitle
 set shiftwidth=4
@@ -25,6 +24,7 @@ set background=dark
 set pastetoggle=<F2>
 
 "always show status line
+set lazyredraw
 set laststatus=2
 "set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
