@@ -23,6 +23,8 @@ set background=dark
 "toggle set paste option
 set pastetoggle=<F2>
 
+nnoremap <F5> :GundoToggle<CR>
+
 "always show status line
 set lazyredraw
 set laststatus=2
@@ -81,7 +83,6 @@ let g:syntastic_warning_symbol='⚠'
 let g:syntastic_style_error_symbol='✗'
 let g:syntastic_style_warning_symbol='⚠'
 
-let g:syntastic_python_checker = 'pylint'
 let g:syntastic_cpp_config_file='.syntastic.conf'
 
 " On by default, turn it off for html
