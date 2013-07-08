@@ -43,6 +43,9 @@ if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
+" Resize splits when the window is resized
+au VimResized * :wincmd =
+
 if $TERM ==? "linux"
   set t_Co=8
 else
@@ -62,7 +65,6 @@ nmap k gk
 nmap <C-e> :e#<CR>
 nmap <C-n> :bnext<CR>
 nmap <C-p> :bprev<CR>
-nmap ; :CtrlPBuffer<CR>
 "map  :w!<CR>:!aspell check %<CR>:e! %<CR>
 
 runtime bundle/vim-pathogen/autoload/pathogen.vim
@@ -70,7 +72,6 @@ set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 call pathogen#infect()
 
 let g:airline_powerline_fonts=1
-let g:airline_section_a = '%{g:airline_current_mode_text} %{&paste ? "PASTE" : ""}'
 
 "Versions prior to 701.040 don't have the method syntastic uses for
 "highlighting
