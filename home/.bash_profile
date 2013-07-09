@@ -83,18 +83,21 @@ START_TITLE=$"\033]2;"
 END_TITLE=$"\007"
 
 # Don't junk up simple linux terminals
-if [ "$TERM" == "linux" ];then #-o "$STY" == "" ]; then
+if [[ "$TERM" =~ "linux" ]];then #-o "$STY" == "" ]; then
   export TITLEBAR=""
 # List the screen id if this is a screen session
 elif [ -n "$STY" ]; then
   export TERM_TEXT="[${STY#*.}]"
   export TITLEBAR="$START_TITLE[${STY#*.}]$USER@${HOSTNAME%%.*}$END_TITLE"
+  export TERM=screen-256color
 # Just insert TITLEBAR in xterms etc.
 else
   export TITLEBAR="$START_TITLE$USER@${HOSTNAME%%.*}$END_TITLE"
+  export TERM=xterm-256color
 fi
 # Echo title command sequence to the terminal
 echo -ne $TITLEBAR
+
 
 # Set up the prompt to display user@first_part_of_server_name 
 # and the pwd relative to our home directory and Testarea
