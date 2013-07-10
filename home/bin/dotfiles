@@ -15,7 +15,7 @@ while true; do
   b=${a%% *}
   a=${a#* }
 
-  if [ "$b" == "sync" -o "$b" == "pull" -o "$b" == "push" ]; then
+  if [ "$b" == "sync" -o "$b" == "pull" -o "$b" == "push" -o "$b" == "diff" ]; then
     action=$b
   elif [ "$b" == "add" ]; then
     action=$b
@@ -117,6 +117,11 @@ if [ "$action" == "push" ]; then
     for remote in $remotes; do
         action git push $remote $branch
     done
+fi
+
+if [ "$action" == "diff" ]; then
+    cd ~/.dotfiles
+    action git diff
 fi
 
 if [ "$action" == "pull" ]; then
