@@ -23,8 +23,6 @@ set background=dark
 "toggle set paste option
 set pastetoggle=<F2>
 
-nnoremap <F5> :GundoToggle<CR>
-
 "always show status line
 set lazyredraw
 set laststatus=2
@@ -51,6 +49,22 @@ if $TERM ==? "linux"
 else
   set t_Co=256
 endif
+
+function! Make()
+  ccl
+  silent make
+  redraw!
+  for i in getqflist()
+    if i['valid']
+      cwin
+      winc p
+      return
+    endif
+  endfor
+endfunction
+
+nnoremap <F5> :call Make()<CR>
+nnoremap <F6> :GundoToggle<CR>
 
 inoremap <Up>    <NOP>
 inoremap <Down>  <NOP>
