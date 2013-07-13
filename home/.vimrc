@@ -44,6 +44,9 @@ endif
 " Resize splits when the window is resized
 au VimResized * :wincmd =
 
+" Reset wrap mode after diffing files
+au FilterWritePre * if &diff | set wrap | endif
+
 if $TERM ==? "linux"
   set t_Co=8
 else
