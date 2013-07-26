@@ -15,7 +15,7 @@ while true; do
   b=${a%% *}
   a=${a#* }
 
-  if [ "$b" == "sync" -o "$b" == "pull" -o "$b" == "push" -o "$b" == "diff" ]; then
+  if [ "$b" == "sync" -o "$b" == "pull" -o "$b" == "push" -o "$b" == "diff" -o "$b" == "status" ]; then
     action=$b
   elif [ "$b" == "add" ]; then
     action=$b
@@ -119,16 +119,6 @@ if [ "$action" == "push" ]; then
     done
 fi
 
-if [ "$action" == "diff" ]; then
-    cd ~/.dotfiles
-    action git diff
-fi
-
-if [ "$action" == "pull" ]; then
-    cd ~/.dotfiles
-    action git pull
-fi
-
 if [ "$action" == "sync" ]; then
     targets=$(cd ~/.dotfiles; find home -type f -printf "%P\n")
     for target in ${targets}; do
@@ -160,4 +150,9 @@ if [ "$action" == "add" ]; then
     cd ~/.dotfiles
     action git add ~/.dotfiles/${loc}/${file_name}
     action git commit -m "\"Added ${loc}/${file_name}\""
+fi
+
+if [ "$action" == "diff" -o "$action" == "pull" -o "$action" == "status" ]; then
+    cd ~/.dotfiles
+    action git $action
 fi
