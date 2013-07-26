@@ -9,6 +9,57 @@ action="help"
 file="foo"
 extra_opts=""
 
+# Execute getopt
+ARGS=$(getopt -o m:oqvdec -l "message:,overwrite,quiet,verbose,dryrun,executable,compare" -n "getopt.sh" -- "$@");
+
+# Bad arguments
+if [ $? -ne 0 ];
+then
+  exit 1
+fi
+
+eval set -- "$ARGS";
+
+while true; do
+  case "$1" in
+    -m|--message)
+      shift;
+      if [ -n "$1" ]; then
+        message=$1
+        shift;
+      fi
+      ;;
+    -o|--overwrite)
+      shift;
+      overwrite=true
+      ;;
+    -q|--quiet)
+      shift;
+      quiet=true
+      ;;
+    -v|--verbose)
+      shift;
+      verbose=true
+      ;;
+    -d|--dryrun)
+      shift;
+      dryrun=true
+      ;;
+    -e|--executable)
+      shift;
+      executable=true
+      ;;
+    -c|--compare)
+      shift;
+      compare=true
+      ;;
+    --)
+      shift;
+      break;
+      ;;
+  esac
+done
+
 # Loop over cmd line tokens
 a=$@
 while true; do
@@ -22,18 +73,6 @@ while true; do
     c=${a%% *}
     a=${a#* }
     file=$c
-  elif [ "$b" == "-o" -o "$b" == "--overwrite" ]; then
-    overwrite=true
-  elif [ "$b" == "-q" -o "$b" == "--quiet" ]; then
-    quiet=true
-  elif [ "$b" == "-v" -o "$b" == "--verbose" ]; then
-    verbose=true
-  elif [ "$b" == "-d" -o "$b" == "--dryrun" ]; then
-    dryrun=true
-  elif [ "$b" == "-e" -o "$b" == "--executable" ]; then
-    executable=true
-  elif [ "$b" == "-c" -o "$b" == "--compare" ]; then
-    compare=true
   else
     extra_opts+=" "$b
   fi
@@ -111,7 +150,7 @@ fi
 
 if [ "$action" == "push" ]; then
     cd ~/.dotfiles
-    action git commit -am "\"File update\""
+    action git commit -am "\"$message\""
     remotes=$(git remote)
     branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
