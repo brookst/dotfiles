@@ -14,6 +14,12 @@ set incsearch
 set smartcase
 set wrap
 
+" Use British English
+set spelllang=en_gb
+
+" Toggle spellchecking
+nmap <silent> <leader>s :set spell!<CR>
+
 "hi Comment ctermfg=lightblue
 "hi Constant ctermfg=lightred
 "hi Special ctermfg=lightred
@@ -65,6 +71,9 @@ function! Make()
     endif
   endfor
 endfunction
+
+" Call make silently
+nmap <silent> <leader>m :call Make()<CR>
 
 nnoremap <F5> :call Make()<CR>
 nnoremap <F6> :GundoToggle<CR>
