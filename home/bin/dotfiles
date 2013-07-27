@@ -167,6 +167,10 @@ for action in ${actions[@]}; do
   elif [ "$action" == "push" ]; then
     cd ~/.dotfiles
     if [ "$message" ]; then
+      if [ ${#message} -gt 50 ]; then
+        warn "specified message is too long"
+        exit 1
+      fi
       action git commit -am "\"$message\""
     else
       action git commit -am "\"File update\""
@@ -202,6 +206,10 @@ for action in ${actions[@]}; do
       action git add ~/.dotfiles/${loc}/${file_name}
     done
     if [ $message ]; then
+      if [ ${#@} -gt 50 ]; then
+        warn "specified message is too long"
+        exit 1
+      fi
       action git commit -m "\"$message\""
     elif [ ${#files[@]} == 1 ]; then
       action git commit -m "\"Added ${loc}/${file_name}\""
