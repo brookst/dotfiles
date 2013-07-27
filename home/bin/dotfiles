@@ -8,8 +8,7 @@ function usage () {
   echo "Usage: ${_name} [option]... [action]... [file]..."
   echo "Manage dotfiles repository"
   echo
-  echo "Actions: help - this help message"
-  echo "         pull - pull updates from attached repos"
+  echo "Actions: pull - pull updates from attached repos"
   echo "         push - push updates to attached repos"
   echo "         sync - sync dotfiles to this repo"
   echo "         add - add a dotfile to this repo"
@@ -44,7 +43,7 @@ while true; do
       ;;
     -h|--help)
       shift;
-      help=true
+      actions=help
       ;;
     -o|--overwrite)
       shift;
@@ -99,6 +98,11 @@ while true; do
     break
   fi
 done
+
+if [ ! $actions ]; then
+  usage
+  exit 1
+fi
 
 function action () {
     if [ $dryrun ]; then
@@ -155,11 +159,6 @@ function link () {
         action ln -s $target_path $link_path
     fi
 }
-
-if [ $help ]; then
-  usage
-  exit 0
-fi
 
 for action in ${actions[@]}; do
   if [ "$action" == "help" ]; then
