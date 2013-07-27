@@ -184,26 +184,18 @@ for action in ${actions[@]}; do
     targets=$(cd ~/.dotfiles; find home -type f -printf "%P\n")
     for target in ${targets}; do
       target_path=~/.dotfiles/home/${target}
-      link_path=~
-      for dir in $(echo ${target} | tr '/' ' '); do
-        action mkdir -p $link_path
-        link_path+=/$dir
-      done
+      link_path=~/${target}
+      action mkdir -p ${link_path%/*}
       link $target_path $link_path
     done
   elif [ "$action" == "add" ]; then
     for file in ${files[@]}; do
       loc="home"
-      file_name=${file##$HOME/}
-      dirs=$(echo $file_name | tr '/' ' ')
-      path=~/.dotfiles/${loc}
-      for dir in $dirs; do
-        action mkdir -p $path
-        path=$path/$dir
-      done
-      action mv ${file} ~/.dotfiles/${loc}/${file_name}
+      file_name=~/.dotfiles/${loc}/${file##$HOME/}
+      action mkdir -p ${file_name%/*}
+      action mv ${file} ${file_name}
       cd ~/.dotfiles
-      action git add ~/.dotfiles/${loc}/${file_name}
+      action git add ${file_name}
     done
     if [ $message ]; then
       if [ ${#@} -gt 50 ]; then
