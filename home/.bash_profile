@@ -126,6 +126,9 @@ PS1="\[$YELLOW\]$TERM_TEXT\[$GREEN\]\u@\h\[$NO_COLOUR\]\$(PWD)\[\$(prompt_exit)\
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace
 
+# Expand variables in paths
+shopt -s direxpand
+
 # append to the history file, don't overwrite it
 shopt -s histappend
 
