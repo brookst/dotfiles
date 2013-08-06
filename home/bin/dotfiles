@@ -185,14 +185,26 @@ for action in ${actions[@]}; do
     for target in ${targets}; do
       target_path=~/.dotfiles/home/${target}
       link_path=~/${target}
-      action mkdir -p ${link_path%/*}
+      if [ -d "${link_path%/*}" ]; then
+        log "${link_path%/*} exists"
+      elif [ -e "${link_path%/*}" ]; then
+        warn "${link_path%/*} is not a directory"
+      else
+        action mkdir -p ${link_path%/*}
+      fi
       link $target_path $link_path
     done
   elif [ "$action" == "add" ]; then
     for file in ${files[@]}; do
       loc="home"
       file_name=~/.dotfiles/${loc}/${file##$HOME/}
-      action mkdir -p ${file_name%/*}
+      if [ -d "${file_name%/*}" ]; then
+        log "${file_name%/*} exists"
+      elif [ -e "${file_name%/*}" ]; then
+        warn "${file_name%/*} is not a directory"
+      else
+        action mkdir -p ${file_name%/*}
+      fi
       action mv ${file} ${file_name}
       cd ~/.dotfiles
       action git add ${file_name}
