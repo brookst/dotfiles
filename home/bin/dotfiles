@@ -18,6 +18,7 @@ function usage () {
   echo "  -o, --overwrite         overwrite present dotfiles"
   echo "  -c, --compare           compare present dotfiles to their replacement"
   echo "  -v, --verbose           verbose information about actions performed"
+  echo "  -m,--message            commit message used when adding or syncing"
   echo "  -q, --quiet             suppress warnings"
 }
 
@@ -185,17 +186,38 @@ for action in ${actions[@]}; do
     for target in ${targets}; do
       target_path=~/.dotfiles/home/${target}
       link_path=~/${target}
-      action mkdir -p ${link_path%/*}
+      if [ -d "${link_path%/*}" ]; then
+        log "${link_path%/*} exists"
+      elif [ -e "${link_path%/*}" ]; then
+        warn "${link_path%/*} is not a directory"
+      else
+        action mkdir -p ${link_path%/*}
+      fi
       link $target_path $link_path
     done
   elif [ "$action" == "add" ]; then
     for file in ${files[@]}; do
       loc="home"
       file_name=~/.dotfiles/${loc}/${file##$HOME/}
-      action mkdir -p ${file_name%/*}
+      if [ -d "${file_name%/*}" ]; then
+        log "${file_name%/*} exists"
+      elif [ -e "${file_name%/*}" ]; then
+        warn "${file_name%/*} is not a directory"
+      else
+        action mkdir -p ${file_name%/*}
+      fi
       action mv ${file} ${file_name}
       cd ~/.dotfiles
       action git add ${file_name}
+      if [ "$message" ]; then
+        if [ ${#message} -gt 50 ]; then
+          warn "specified message is too long"
+          exit 1
+        fi
+        action git commit -am "\"$message\""
+      else
+        action git commit -am "\"Added ${file##$HOME/}\""
+      fi
     done
     if [ $message ]; then
       if [ ${#@} -gt 50 ]; then
