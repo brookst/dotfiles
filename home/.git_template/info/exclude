@@ -1,0 +1,6 @@
+# Build directory
+build
+*.d
+
+# Temp files/dirs
+*.swp
