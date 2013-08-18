@@ -29,6 +29,9 @@ set background=dark
 "toggle set paste option
 set pastetoggle=<F2>
 
+" Vim doesn't set this under Windows for some reason
+set backspace=indent,eol,start
+
 "always show status line
 set lazyredraw
 set laststatus=2
