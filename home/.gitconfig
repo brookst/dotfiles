@@ -18,4 +18,4 @@
 [branch]
         autosetuprebase = always
 [init]
-	templatedir = ~/.git_template
+        templatedir = ~/.git_template

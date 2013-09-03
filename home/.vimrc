@@ -101,6 +101,7 @@ set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 call pathogen#infect()
 
 let g:airline_powerline_fonts=1
+let g:airline#extensions#tabline#enabled = 1
 
 "Versions prior to 701.040 don't have the method syntastic uses for
 "highlighting
