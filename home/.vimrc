@@ -14,7 +14,7 @@ set incsearch
 set smartcase
 set wrap
 
-" Turn of terminal mouse support
+" Turn on terminal mouse support
 set mouse=a
 
 " Use British English
@@ -65,18 +65,19 @@ else
   set t_Co=256
 endif
 
-" function! Make()
-"   ccl
-"   silent make
-"   redraw!
-"   for i in getqflist()
-"     if i['valid']
-"       cwin
-"       winc p
-"       return
-"     endif
-"   endfor
-" endfunction
+" Don't display push enter to contiune, just popopen the quicklist
+function! Make()
+  ccl
+  silent make
+  redraw!
+  for i in getqflist()
+    if i['valid']
+      cwin
+      winc p
+      return
+    endif
+  endfor
+endfunction
 
 " " Call make silently
 " nmap <silent> <leader>m :call Make()<CR>
