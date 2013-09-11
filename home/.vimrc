@@ -14,6 +14,9 @@ set incsearch
 set smartcase
 set wrap
 
+" Turn of terminal mouse support
+set mouse=a
+
 " Use British English
 set spelllang=en_gb
 
@@ -62,21 +65,21 @@ else
   set t_Co=256
 endif
 
-function! Make()
-  ccl
-  silent make
-  redraw!
-  for i in getqflist()
-    if i['valid']
-      cwin
-      winc p
-      return
-    endif
-  endfor
-endfunction
+" function! Make()
+"   ccl
+"   silent make
+"   redraw!
+"   for i in getqflist()
+"     if i['valid']
+"       cwin
+"       winc p
+"       return
+"     endif
+"   endfor
+" endfunction
 
-" Call make silently
-nmap <silent> <leader>m :call Make()<CR>
+" " Call make silently
+" nmap <silent> <leader>m :call Make()<CR>
 
 nnoremap <F5> :call Make()<CR>
 nnoremap <F6> :GundoToggle<CR>
@@ -102,6 +105,8 @@ call pathogen#infect()
 
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
+" let g:airline_left_sep = '▙'
+" let g:airline_right_sep = '▟'
 
 "Versions prior to 701.040 don't have the method syntastic uses for
 "highlighting
