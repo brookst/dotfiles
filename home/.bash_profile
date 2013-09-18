@@ -21,7 +21,7 @@ alias ls="ls --color=auto"
 alias sl="ls -r"
 alias dir="ls *.*[^~]"
 alias pdf="evince"
-alias ssh="ssh -X -Y"
+alias ssh="ssh-add -l || ssh-add && ssh -X -Y"
 alias skoorb="ssh $SKOORB"
 alias server="ssh $SERVER"
 alias desktop="ssh $DESKTOP"
@@ -99,7 +99,7 @@ fi
 echo -ne $TITLEBAR
 
 
-# Set up the prompt to display user@first_part_of_server_name 
+# Set up the prompt to display user@first_part_of_server_name
 # and the pwd relative to our home directory and Testarea
 function PWD {
   es=$?
