@@ -2,6 +2,10 @@
 if [ -f ~/.bash_local ]; then
   source ~/.bash_local
 fi
+#Start ssh in a screen session
+sssh () {
+    screen -S $1 ssh $1
+}
 # A few aliases to improve the console and save time
 SKOORB=skoorb.net
 SERVER=tims-server.skoorb.net
@@ -28,8 +32,8 @@ alias desktop="ssh $DESKTOP"
 alias pi="ssh $PI"
 alias pi2="ssh $PI2"
 alias lap="ssh $LAP"
-alias lxp="ssh $LXP"
-alias la0="ssh $LA0"
+alias lxp=sssh lxp
+alias la0=sssh la0
 alias la1="ssh $LA1"
 alias la5="ssh $LA5"
 alias grep='grep --color=auto'
@@ -126,6 +130,9 @@ PS1="\[$YELLOW\]$TERM_TEXT\[$GREEN\]\u@\h\[$NO_COLOUR\]\$(PWD)\[\$(prompt_exit)\
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace
 
+# save lots of history
+HISTSIZE=5000
+
 # Expand variables in paths
 shopt -s direxpand
 
@@ -142,6 +149,8 @@ shopt -s checkwinsize
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
+
+export GOROOT=$(go env GOROOT)
 
 # Set up virtualenv
 export WORKON_HOME=$HOME/.virtualenvs

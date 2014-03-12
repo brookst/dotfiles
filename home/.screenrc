@@ -5,21 +5,21 @@ vbell off
 msgwait 1
 defutf8 on
 compacthist on
- 
+
 # Monitor windows
 defmonitor on
 activity ""
- 
+
 # Turns off alternate screen switching in xterms,
 # so that text in screen will go into the xterm's scrollback buffer:
 termcapinfo xterm* ti@:te@
 altscreen on
- 
+
 # Enable 256 color terminal
 # attrcolor b ".I"
 # termcapinfo xterm 'Co#256:AB=E[48;5;%dm:AF=E[38;5;%dm'
 # termcapinfo xterm|xterms|xs|rxvt ti@:te@
 # defbce "on"
- 
+
 # Log 10000 lines
 defscrollback 50000

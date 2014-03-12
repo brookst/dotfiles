@@ -106,6 +106,9 @@ call pathogen#infect()
 
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#example#enabled = 0
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#redgreen#enabled = 1
 " let g:airline_left_sep = '▙'
 " let g:airline_right_sep = '▟'
 
@@ -127,3 +130,10 @@ let g:syntastic_cpp_config_file='.syntastic.conf'
 let g:syntastic_mode_map = { 'mode': 'active',
         \ 'active_filetypes': [],
         \ 'passive_filetypes': ['html'] }
+
+let wiki_user = {}
+let wiki_user.path = '~/vimwiki/'
+" let wiki_user.html_template = '~/public_html/template.tpl'
+let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp'}
+
+let g:vimwiki_list = [wiki_user]

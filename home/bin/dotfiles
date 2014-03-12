@@ -18,16 +18,12 @@ function usage () {
   echo "  -o, --overwrite         overwrite present dotfiles"
   echo "  -c, --compare           compare present dotfiles to their replacement"
   echo "  -v, --verbose           verbose information about actions performed"
-  echo "  -m,--message            commit message used when adding or syncing"
+  echo "  -m, --message           commit message used when adding or syncing"
   echo "  -q, --quiet             suppress warnings"
 }
 
 # Execute getopt
-ARGS=$(getopt -o m:hoqvdc -l "message:,help,overwrite,quiet,verbose,dryrun,compare" -n "getopt.sh" -- "$@");
-
-# Bad arguments
-if [ $? -ne 0 ];
-then
+if ! ARGS=$(getopt -o m:hoqvdc -l "message:,help,overwrite,quiet,verbose,dryrun,compare" -n "getopt.sh" -- "$@"); then
   exit 1
 fi
 
