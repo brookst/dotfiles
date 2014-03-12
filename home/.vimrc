@@ -104,6 +104,19 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 call pathogen#infect()
 
+"Scratchpad from
+"http://dhruvasagar.com/2014/03/11/creating-custom-scratch-buffers-in-vim
+function! ScratchEdit(cmd, options)
+    exe a:cmd tempname()
+    setl buftype=nofile bufhidden=wipe nobuflisted
+    if !empty(a:options) | exe 'setl' a:options | endif
+endfunction
+
+command! -bar -nargs=* Sedit call ScratchEdit('edit', <q-args>)
+command! -bar -nargs=* Ssplit call ScratchEdit('split', <q-args>)
+command! -bar -nargs=* Svsplit call ScratchEdit('vsplit', <q-args>)
+command! -bar -nargs=* Stabedit call ScratchEdit('tabe', <q-args>)
+
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#example#enabled = 0
