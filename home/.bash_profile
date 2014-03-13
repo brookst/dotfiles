@@ -4,7 +4,7 @@ if [ -f ~/.bash_local ]; then
 fi
 #Start ssh in a screen session
 sssh () {
-    screen -S $1 ssh $1
+    screen -r skoorb || screen -S $1 ssh $1
 }
 # A few aliases to improve the console and save time
 SKOORB=skoorb.net
