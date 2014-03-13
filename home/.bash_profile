@@ -32,8 +32,8 @@ alias desktop="ssh $DESKTOP"
 alias pi="ssh $PI"
 alias pi2="ssh $PI2"
 alias lap="ssh $LAP"
-alias lxp=sssh lxp
-alias la0=sssh la0
+alias lxp="sssh lxp"
+alias la0="sssh la0"
 alias la1="ssh $LA1"
 alias la5="ssh $LA5"
 alias grep='grep --color=auto'

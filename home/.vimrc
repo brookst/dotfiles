@@ -146,6 +146,7 @@ let g:syntastic_mode_map = { 'mode': 'active',
 
 let wiki_user = {}
 let wiki_user.path = '~/vimwiki/'
+let wiki_user.diary_rel_path = ''
 " let wiki_user.html_template = '~/public_html/template.tpl'
 let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp'}
 
