@@ -150,7 +150,9 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-export GOROOT=$(go env GOROOT)
+if go version &> /dev/null; then
+    export GOROOT=$(go env GOROOT)
+fi
 
 # Set up virtualenv
 export WORKON_HOME=$HOME/.virtualenvs
