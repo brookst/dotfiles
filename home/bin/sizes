@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # sizes - sorts files sizes in human readable form
-# Tim Brooks - <brooks@skoorb.net>
+# Tim Brooks 2013 - <brooks@skoorb.net>
 #
 
 OUT=$(mktemp) || { echo "Failed to create temp file"; exit 1; }

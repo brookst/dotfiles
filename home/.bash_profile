@@ -43,6 +43,7 @@ alias screen='env screen' # Forward through env vars to get X11 DISPLAY working
 alias tbrowse='python -i ~/bin/browser.py '
 tmplog=/tmp/$USER/tmp.log
 alias mailme='tee '$tmplog';cat '$tmplog' | mail -s "Job done" "brooks@cern.ch";rm '$tmplog
+alias Date='date --rfc-3339=date' # YYYY-mm-dd format date
 
 scp () {
     # wrapper function to prevent scp of local-only files

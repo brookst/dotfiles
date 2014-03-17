@@ -20,13 +20,15 @@ set mouse=a
 " Use British English
 set spelllang=en_gb
 
-" Toggle spellchecking
+" Toggle spell checking
 nmap <silent> <leader>s :set spell!<CR>
 
-"hi Comment ctermfg=lightblue
-"hi Constant ctermfg=lightred
-"hi Special ctermfg=lightred
-"hi Type ctermfg=darkgreen
+hi clear SpellBad
+hi clear SpellLocal
+hi clear SpellRare
+hi SpellBad cterm=underline,bold ctermbg=darkgrey
+hi SpellLocal cterm=underline ctermbg=darkgray
+hi SpellRare cterm=underline ctermbg=darkgrey
 set background=dark
 
 "toggle set paste option
@@ -45,8 +47,8 @@ set statusline=%t[%{strlen(&fenc)?&fenc:'none'},
 set statusline+=%{&ff}]%h%m%r%y(%b)%=%c,%l/%L\ %P\ %#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}%*
 
-filetype on            " enables filetype detection
-filetype plugin on     " enables filetype specific plugins
+filetype on            " enables file type detection
+filetype plugin on     " enables file type specific plugins
 syntax on
 
 if has("autocmd")
@@ -65,19 +67,19 @@ else
   set t_Co=256
 endif
 
-" Don't display push enter to contiune, just popopen the quicklist
-function! Make()
-  ccl
-  silent make
-  redraw!
-  for i in getqflist()
-    if i['valid']
-      cwin
-      winc p
-      return
-    endif
-  endfor
-endfunction
+" Don't display push enter to continue, just pop open the quicklist
+" function! Make()
+"   ccl
+"   silent make
+"   redraw!
+"   for i in getqflist()
+"     if i['valid']
+"       cwin
+"       winc p
+"       return
+"     endif
+"   endfor
+" endfunction
 
 " " Call make silently
 " nmap <silent> <leader>m :call Make()<CR>

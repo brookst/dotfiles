@@ -4,7 +4,7 @@
 _name=${0##*/}
 
 function usage () {
-  echo "${_name} - Tim Brooks <brooks@skoorb.net>"
+  echo "${_name} - Tim Brooks 2013 <brooks@skoorb.net>"
   echo "Usage: ${_name} [option]... [action]... [file]..."
   echo "Manage dotfiles repository"
   echo

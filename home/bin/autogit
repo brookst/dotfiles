@@ -1,0 +1,113 @@
+#!/bin/bash
+
+_name=${0##*/}
+function usage () {
+    if [ $1 == 0 ]; then
+    echo "${_name} - Tim Brooks 2014 <brooks@skoorb.net>"
+    fi
+    echo "Usage: ${_name} [option]... [repo_path]"
+    echo "Auto update git repo"
+    echo
+    echo "Options:"
+    echo "  -h, --help              this help message"
+    echo "  -v, --verbose           echo messages to terminal"
+    echo "  -r, --remote=origin     name of git remote repo"
+    echo "  -b, --branch=master     branch to push"
+    exit $1
+}
+
+repo_path=${PWD}
+repo_remote="origin"
+repo_branch="master"
+verbose=false
+
+if ! ARGS=$(getopt -o hvr:b: -l help,verbose,remote:,branch: -- "$@"); then
+    exit 1
+fi
+set -- $ARGS
+
+while [ $# -gt 0 ]
+do
+    case $1 in
+    -h|--help) usage 0 ;;
+    -v|--verbose) verbose=true ;;
+    # for options with required arguments, an additional shift is required
+    -r|--remote) eval repo_remote="$2" ; shift;;
+    -b|--branch) eval repo_branch="$2" ; shift;;
+    (--) if [ -n "$2" ]; then
+        repo_path=${2} ; shift
+        fi; break;;
+    (-*) echo "${_name}: error - unrecognized option $1" 1>&2; usage 1;;
+    (*) break;;
+    esac
+    shift
+done
+
+function log () {
+    read msg
+    if [ "$verbose" == true ] && [ -n "${msg}" ]; then
+        echo ${msg}
+    fi
+}
+
+function stat () {
+    files=$(git status -s)
+    if [ "${#files}" == "0" ]; then
+        echo "No files to commit" | log
+        return 1
+    else
+        return 0
+    fi
+}
+
+function pull () {
+    git pull --quiet ${repo_remote} ${repo_branch} | log
+    code=$?
+    if [[ "${code}" != "0" ]]; then
+        echo "Error ${code} occured while pulling"
+        exit $code
+    fi
+}
+
+function add () {
+    git add --all | log
+    code=$?
+    if [[ "${code}" != "0" ]]; then
+        echo "Error ${code} occured while adding"
+        exit $code
+    fi
+}
+
+function commit () {
+    git commit -m "Auto update @${HOSTNAME}" | log
+    code=$?
+    if [[ "${code}" != "0" ]]; then
+        echo "Error ${code} occured while commiting"
+        exit $code
+    fi
+}
+
+function push () {
+    git push -q ${repo_remote} ${repo_branch} | log
+    code=$?
+    if [[ "${code}" != "0" ]]; then
+        echo "Error ${code} occured while pushing"
+        exit $code
+    fi
+}
+
+function main () {
+    if ! eval cd ${repo_path} #eval strips single quotes
+        then
+        echo "${_name}: Path ${repo_path} not found"
+        exit 1
+    fi
+    if stat; then
+        add
+        commit
+        pull
+        push
+    fi
+}
+
+main
