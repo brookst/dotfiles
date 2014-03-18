@@ -43,9 +43,9 @@ set laststatus=2
 "set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 "set statusline+=%*
-set statusline=%t[%{strlen(&fenc)?&fenc:'none'},
-set statusline+=%{&ff}]%h%m%r%y(%b)%=%c,%l/%L\ %P\ %#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}%*
+" set statusline=%t[%{strlen(&fenc)?&fenc:'none'},
+" set statusline+=%{&ff}]%h%m%r%y(%b)%=%c,%l/%L\ %P\ %#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}%*
 
 filetype on            " enables file type detection
 filetype plugin on     " enables file type specific plugins
@@ -87,6 +87,10 @@ endif
 nnoremap <F5> :call Make()<CR>
 nnoremap <F6> :GundoToggle<CR>
 
+"Insert date in insert mode
+inoremap <C-D>   <C-R>=strftime('%F')." "<CR>
+
+"Unmap arrow keys
 inoremap <Up>    <NOP>
 inoremap <Down>  <NOP>
 inoremap <Right> <NOP>
@@ -95,8 +99,11 @@ noremap <Up>     <NOP>
 noremap <Down>   <NOP>
 noremap <Right>  <NOP>
 noremap <Left>   <NOP>
+
+"Remap line movements to traverse wrapped segments
 nmap j gj
 nmap k gk
+
 nmap <C-e> :e#<CR>
 nmap <C-n> :bnext<CR>
 nmap <C-p> :bprev<CR>

@@ -13,6 +13,10 @@ function usage () {
     echo "  -v, --verbose           echo messages to terminal"
     echo "  -r, --remote=origin     name of git remote repo"
     echo "  -b, --branch=master     branch to push"
+    echo
+    echo "  -c, --commit            only perform commit"
+    echo "  -p, --push              only perform push"
+    echo "  -g, --pull              only perform pull"
     exit $1
 }
 
@@ -20,8 +24,11 @@ repo_path=${PWD}
 repo_remote="origin"
 repo_branch="master"
 verbose=false
+only_commit=false
+only_push=false
+only_pull=false
 
-if ! ARGS=$(getopt -o hvr:b: -l help,verbose,remote:,branch: -- "$@"); then
+if ! ARGS=$(getopt -o hvcpgr:b: -l help,verbose,commit,push,pull,remote:,branch: -- "$@"); then
     exit 1
 fi
 set -- $ARGS
@@ -31,6 +38,9 @@ do
     case $1 in
     -h|--help) usage 0 ;;
     -v|--verbose) verbose=true ;;
+    -c|--commit) only_commit=true ;;
+    -p|--push) only_push=true ;;
+    -g|--pull) only_pull=true ;;
     # for options with required arguments, an additional shift is required
     -r|--remote) eval repo_remote="$2" ; shift;;
     -b|--branch) eval repo_branch="$2" ; shift;;
@@ -102,10 +112,27 @@ function main () {
         echo "${_name}: Path ${repo_path} not found"
         exit 1
     fi
+    if [ "$only_commit" == true ] || [ "$only_push" == true ] || [ "$only_pull" == true ]; then
+        if [ "$only_pull" == true ]; then
+            pull
+        fi
+        if [ "$only_commit" == true ]; then
+            if stat; then
+                add
+                commit
+            else
+                exit 1
+            fi
+        fi
+        if [ "$only_push" == true ]; then
+            push
+        fi
+        exit 0
+    fi
     if stat; then
+        pull
         add
         commit
-        pull
         push
     fi
 }
