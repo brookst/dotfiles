@@ -57,10 +57,11 @@ do
 done
 
 function log () {
-    read msg
-    if [ "$verbose" == true ] && [ -n "${msg}" ]; then
-        echo ${msg}
-    fi
+    while read msg; do
+        if [ "$verbose" == true ] && [ -n "${msg}" ]; then
+            echo ${msg}
+        fi
+    done
 }
 
 function stat () {
@@ -75,9 +76,9 @@ function stat () {
 
 function pull () {
     if [ "$verbose" == true ]; then
-        git pull --quiet ${repo_remote} ${repo_branch} | log
-    else
         git pull ${repo_remote} ${repo_branch} | log
+    else
+        git pull --quiet ${repo_remote} ${repo_branch} | log
     fi
     code=$?
     if [[ "${code}" != "0" ]]; then
