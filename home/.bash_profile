@@ -4,7 +4,10 @@ if [ -f ~/.bash_local ]; then
 fi
 #Start ssh in a screen session
 sssh () {
-    ssh-add -l || ssh-add && screen -r $1 || screen -S $1 ssh $1
+    if ! ssh-add -l; then
+        ssh-add
+    fi
+    screen -rd $1 || screen -S $1 ssh $1
 }
 # A few aliases to improve the console and save time
 SKOORB=skoorb.net
