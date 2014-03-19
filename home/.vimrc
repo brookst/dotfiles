@@ -21,14 +21,23 @@ set mouse=a
 set spelllang=en_gb
 
 " Toggle spell checking
-nmap <silent> <leader>s :set spell!<CR>
+nnoremap <silent> <leader>s :set spell!<CR>
 
 hi clear SpellBad
+hi clear SpellCap
 hi clear SpellLocal
 hi clear SpellRare
-hi SpellBad cterm=underline,bold ctermbg=darkgrey
-hi SpellLocal cterm=underline ctermbg=darkgray
-hi SpellRare cterm=underline ctermbg=darkgrey
+hi SpellBad cterm=standout,undercurl ctermbg=red
+hi SpellCap cterm=standout,undercurl ctermbg=darkred
+hi SpellLocal cterm=standout,undercurl ctermbg=darkblue
+hi SpellRare cterm=undercurl ctermbg=darkblue
+" this is an uncapitalized sentance.
+
+" Use repeat.vim to map cp to a repeatable xp
+nnoremap <silent> <Plug>TransposeCharacters xp
+\:call repeat#set("\<Plug>TransposeCharacters")<CR>
+nmap cp <Plug>TransposeCharacters
+
 set background=dark
 
 "toggle set paste option

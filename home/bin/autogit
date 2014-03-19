@@ -25,12 +25,13 @@ repo_path=${PWD}
 repo_remote="origin"
 repo_branch="master"
 verbose=false
+debug=false
 always_pull=false
 only_commit=false
 only_push=false
 only_pull=false
 
-if ! ARGS=$(getopt -o hvfcpgr:b: -l help,verbose,fetch,commit,push,pull,remote:,branch: -- "$@"); then
+if ! ARGS=$(getopt -o hvdfcpgr:b: -l help,verbose,debug,fetch,commit,push,pull,remote:,branch: -- "$@"); then
     exit 1
 fi
 set -- $ARGS
@@ -40,6 +41,7 @@ do
     case $1 in
     -h|--help) usage 0 ;;
     -v|--verbose) verbose=true ;;
+    -d|--debug) debug=true ;;
     -f|--fetch) always_pull=true ;;
     -c|--commit) only_commit=true ;;
     -p|--push) only_push=true ;;
@@ -50,13 +52,14 @@ do
     (--) if [ -n "$2" ]; then
         repo_path=${2} ; shift
         fi; break;;
-    (-*) echo "${_name}: error - unrecognized option $1" 1>&2; usage 1;;
+    (-*) echo "${_name}: error - unrecognised option $1" 2>&1; usage 1;;
     (*) break;;
     esac
     shift
 done
 
 function log () {
+    #read lines as they are emitted from the preceding command
     while read msg; do
         if [ "$verbose" == true ] && [ -n "${msg}" ]; then
             echo ${msg}
@@ -65,8 +68,9 @@ function log () {
 }
 
 function stat () {
-    files=$(git status -s)
-    if [ "${#files}" == "0" ]; then
+    files=$(git status -s)                  #get array of all changes
+    if [ "${#files}" == "0" ]
+    then                                    #0 changes - signal there's nothing to do here
         echo "No files to commit" | log
         return 1
     else
@@ -76,51 +80,55 @@ function stat () {
 
 function pull () {
     if [ "$verbose" == true ]; then
-        git pull ${repo_remote} ${repo_branch} | log
+        git pull ${repo_remote} ${repo_branch} 2>&1 | log
     else
-        git pull --quiet ${repo_remote} ${repo_branch} | log
+        git pull --quiet ${repo_remote} ${repo_branch} 2>&1 | log
     fi
     code=$?
     if [[ "${code}" != "0" ]]; then
-        echo "Error ${code} occured while pulling"
+        echo "Error ${code} occurred while pulling"
         exit $code
     fi
 }
 
 function add () {
-    git add --all | log
+    git add --all 2>&1 | log
     code=$?
     if [[ "${code}" != "0" ]]; then
-        echo "Error ${code} occured while adding"
+        echo "Error ${code} occurred while adding"
         exit $code
     fi
 }
 
 function commit () {
-    git commit -m "Auto update @${HOSTNAME}" | log
+    git commit -m "Auto update @${HOSTNAME}" 2>&1 | log
     code=$?
     if [[ "${code}" != "0" ]]; then
-        echo "Error ${code} occured while commiting"
+        echo "Error ${code} occurred while committing"
         exit $code
     fi
 }
 
 function push () {
-    git push -q ${repo_remote} ${repo_branch} | log
+    if [ "$debug" == true ]; then echo "Pushing to remote"; fi
+    git push -q ${repo_remote} ${repo_branch} 2>&1 | log
     code=$?
     if [[ "${code}" != "0" ]]; then
-        echo "Error ${code} occured while pushing"
+        echo "Error ${code} occurred while pushing"
         exit $code
+    else
+        if [ "$debug" == true ]; then echo "Pushed to remote"; fi
     fi
 }
 
 function main () {
-    if ! eval cd ${repo_path} #eval strips single quotes
-        then
+    if ! eval cd ${repo_path}       #eval strips single quotes
+    then                            #something went wrong
         echo "${_name}: Path ${repo_path} not found"
         exit 1
     fi
-    if [ "$only_commit" == true ] || [ "$only_push" == true ] || [ "$only_pull" == true ]; then
+    if [ "$only_commit" == true ] || [ "$only_push" == true ] || [ "$only_pull" == true ]
+    then                            #Just perform the selected action(s)
         if [ "$only_pull" == true ]; then
             pull
         fi
@@ -128,7 +136,7 @@ function main () {
             if stat; then
                 add
                 commit
-            else
+            else                    #this is an error since commit was specifically asked for
                 exit 1
             fi
         fi
@@ -138,12 +146,13 @@ function main () {
         exit 0
     fi
     if stat; then
-        pull
         add
         commit
+        pull                        #commit first-then pull with rebase on top
         push
     else
-        if [ "$always_pull" == true ]; then
+        if [ "$always_pull" == true ]
+        then                        #pull despite there being no new files
             pull
         fi
     fi
