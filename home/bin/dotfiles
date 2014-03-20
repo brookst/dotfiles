@@ -2,6 +2,7 @@
 
 #echo 'dotfiles - Environment bootstrapper - Tim Brooks - http://skoorb.net'
 _name=${0##*/}
+_version=$(cd i$HOME/.dotfiles; git log -1 --pretty="format:%h: %ai")
 
 function usage () {
   echo "${_name} - Tim Brooks 2013 <brooks@skoorb.net>"
@@ -20,6 +21,8 @@ function usage () {
   echo "  -v, --verbose           verbose information about actions performed"
   echo "  -m, --message           commit message used when adding or syncing"
   echo "  -q, --quiet             suppress warnings"
+  echo
+  echo "Version ${_version}"
 }
 
 # Execute getopt
