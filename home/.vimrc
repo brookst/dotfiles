@@ -20,6 +20,10 @@ set mouse=a
 " Use British English
 set spelllang=en_gb
 
+" Use <space> as <leader>
+nnoremap <space> <nop>
+let mapleader=" "
+
 " Toggle spell checking
 nnoremap <silent> <leader>s :set spell!<CR>
 
@@ -165,7 +169,10 @@ let g:syntastic_mode_map = { 'mode': 'active',
 let wiki_user = {}
 let wiki_user.path = '~/vimwiki/'
 let wiki_user.diary_rel_path = ''
-" let wiki_user.html_template = '~/public_html/template.tpl'
-let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp'}
+let wiki_user.template_path = '~/vimwiki/templates/'
+let wiki_user.template_default = 'default'
+let wiki_user.template_ext = '.html'
+let wiki_user.path_html = '~/vimwiki_html/'
+let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'sql': 'sql', 'javascript': 'javascript'}
 
 let g:vimwiki_list = [wiki_user]

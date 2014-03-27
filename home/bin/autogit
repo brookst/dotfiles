@@ -58,6 +58,11 @@ do
     shift
 done
 
+#get keychain info if available
+if [ -f ${HOME}/.keychain/${HOSTNAME}-sh ]; then
+    source ${HOME}/.keychain/${HOSTNAME}-sh
+fi
+
 function log () {
     #read lines as they are emitted from the preceding command
     while read msg; do

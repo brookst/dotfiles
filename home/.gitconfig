@@ -10,7 +10,7 @@
         editor = vim
         whitespace = trailing-space tab-in-indent tabwidth=4
 [color]
-        ui = true
+        ui = auto
 [diff]
         tool = vimdiff
 [push]
