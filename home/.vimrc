@@ -24,8 +24,12 @@ set spelllang=en_gb
 nnoremap <space> <nop>
 let mapleader=" "
 
-" Toggle spell checking
-nnoremap <silent> <leader>s :set spell!<CR>
+" Toggle spell checking - replaced by unimpaired's `[os`
+" nnoremap <silent> <leader>s :set spell!<CR>
+
+" Highlight 81st column
+hi ColorColumn ctermbg=red
+call matchadd('ColorColumn', '\%81v', 100)
 
 hi clear SpellBad
 hi clear SpellCap
@@ -35,7 +39,7 @@ hi SpellBad cterm=standout,undercurl ctermbg=red
 hi SpellCap cterm=standout,undercurl ctermbg=darkred
 hi SpellLocal cterm=standout,undercurl ctermbg=darkblue
 hi SpellRare cterm=undercurl ctermbg=darkblue
-" this is an uncapitalized sentance.
+" Test. this is an uncapitalized sentance.
 
 " Use repeat.vim to map cp to a repeatable xp
 nnoremap <silent> <Plug>TransposeCharacters xp

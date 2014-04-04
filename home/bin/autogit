@@ -1,6 +1,8 @@
 #!/bin/bash
 
 _name=${0##*/}
+_version=2014-04-02
+
 function usage () {
     if [ $1 == 0 ]; then
     echo "${_name} - Tim Brooks 2014 <brooks@skoorb.net>"
@@ -18,7 +20,14 @@ function usage () {
     echo "  -c, --commit            only perform commit"
     echo "  -p, --push              only perform push"
     echo "  -g, --pull              only perform pull"
+    echo
+    echo "      --version           print version: ${_version}"
     exit $1
+}
+
+function version () {
+    echo "${_name} version: ${_version}"
+    exit 0
 }
 
 repo_path=${PWD}
@@ -31,7 +40,7 @@ only_commit=false
 only_push=false
 only_pull=false
 
-if ! ARGS=$(getopt -o hvdfcpgr:b: -l help,verbose,debug,fetch,commit,push,pull,remote:,branch: -- "$@"); then
+if ! ARGS=$(getopt -o hvdfcpgr:b: -l help,verbose,debug,fetch,commit,push,pull,remote:,branch:,version -- "$@"); then
     exit 1
 fi
 set -- $ARGS
@@ -41,6 +50,7 @@ do
     case $1 in
     -h|--help) usage 0 ;;
     -v|--verbose) verbose=true ;;
+    --version) version ;;
     -d|--debug) debug=true ;;
     -f|--fetch) always_pull=true ;;
     -c|--commit) only_commit=true ;;

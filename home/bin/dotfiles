@@ -26,7 +26,7 @@ function usage () {
 }
 
 # Execute getopt
-if ! ARGS=$(getopt -o m:hoqvdc -l "message:,help,overwrite,quiet,verbose,dryrun,compare" -n "getopt.sh" -- "$@"); then
+if ! ARGS=$(getopt -o m:hoqvdc -l "message:,help,overwrite,quiet,verbose,dryrun,compare,version" -n "getopt.sh" -- "$@"); then
   exit 1
 fi
 
@@ -44,6 +44,10 @@ while true; do
     -h|--help)
       shift;
       actions=help
+      ;;
+    --version)
+      shift;
+      actions=version
       ;;
     -o|--overwrite)
       shift;
@@ -163,6 +167,9 @@ function link () {
 for action in ${actions[@]}; do
   if [ "$action" == "help" ]; then
     usage
+    exit 0
+  elif [ "$action" == "version" ]; then
+    echo "${_name} version: ${_version}"
     exit 0
   elif [ "$action" == "push" ]; then
     cd ~/.dotfiles

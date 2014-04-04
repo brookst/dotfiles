@@ -137,6 +137,9 @@ HISTCONTROL=ignoredups:ignorespace
 # save lots of history
 HISTSIZE=5000
 
+# Use Vi shortcuts
+set -o vi
+
 # Expand variables in paths
 shopt -s direxpand
 
