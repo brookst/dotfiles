@@ -6,7 +6,7 @@ set expandtab
 set cindent
 set hlsearch
 set list
-set listchars=tab:>-
+set listchars=tab:>-,trail:.
 ",eol:¶
 set showcmd
 set ruler
@@ -39,7 +39,23 @@ hi SpellBad cterm=standout,undercurl ctermbg=red
 hi SpellCap cterm=standout,undercurl ctermbg=darkred
 hi SpellLocal cterm=standout,undercurl ctermbg=darkblue
 hi SpellRare cterm=undercurl ctermbg=darkblue
+hi RedOnRed cterm=standout
+hi WhiteOnRed ctermfg=white ctermbg=darkred
 " Test. this is an uncapitalized sentance.
+
+" Differentiate next search item
+function! HLNext (blinktime)
+    let [bufnum, lnum, col, off] = getpos('.')
+    let matchlen = strlen(matchstr(strpart(getline('.'),col-1),@/))
+    let target_pat = '\c\%#'.@/
+    let ring = matchadd('WhiteOnRed', target_pat, 101)
+    redraw
+    exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
+    call matchdelete(ring)
+    redraw
+endfunction
+nnoremap <silent> n n:call HLNext(0.2)<cr>
+nnoremap <silent> N N:call HLNext(0.2)<cr>
 
 " Use repeat.vim to map cp to a repeatable xp
 nnoremap <silent> <Plug>TransposeCharacters xp

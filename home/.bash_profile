@@ -140,8 +140,10 @@ HISTSIZE=5000
 # Use Vi shortcuts
 set -o vi
 
-# Expand variables in paths
-shopt -s direxpand
+# Expand variables in paths in bash v4
+if [ ${BASH_VERSION%%.*} == 4 ]; then
+    shopt -s direxpand
+fi
 
 # append to the history file, don't overwrite it
 shopt -s histappend
