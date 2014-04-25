@@ -180,7 +180,7 @@ for action in ${actions[@]}; do
       fi
       action git commit -am "\"$message\""
     else
-      action git commit -am "\"File update\""
+      action git commit -am "\"File update @${HOSTNAME}\""
     fi
     remotes=$(git remote)
     branch=$(git rev-parse --abbrev-ref HEAD)
