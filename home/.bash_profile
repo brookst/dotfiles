@@ -75,6 +75,8 @@ scp () {
 EDITOR=vim
 alias view="vim -R"
 
+alias vim='vim -w ~/.vim/log "$@"'
+
 # define some colors which will be used in the prompt
 NO_COLOUR=$'\033[0m'
 LIGHT_GRAY=$'\033[0;37m'
