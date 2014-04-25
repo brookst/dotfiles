@@ -73,6 +73,7 @@ scp () {
 
 # Env vars for a few things
 EDITOR=vim
+alias view="vim -R"
 
 # define some colors which will be used in the prompt
 NO_COLOUR=$'\033[0m'
@@ -97,7 +98,8 @@ if [[ "$TERM" =~ "linux" ]];then #-o "$STY" == "" ]; then
 elif [ -n "$STY" ]; then
   export TERM_TEXT="[${STY#*.}]"
   export TITLEBAR="$START_TITLE[${STY#*.}]$USER@${HOSTNAME%%.*}$END_TITLE"
-  export TERM=screen-256color
+  # export TERM=screen-256color
+  export TERM=xterm-256color
 # Just insert TITLEBAR in xterms etc.
 else
   export TITLEBAR="$START_TITLE$USER@${HOSTNAME%%.*}$END_TITLE"
