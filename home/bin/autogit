@@ -73,6 +73,11 @@ if [ -f ${HOME}/.keychain/${HOSTNAME}-sh ]; then
     source ${HOME}/.keychain/${HOSTNAME}-sh
 fi
 
+#get ssh-agent info if available
+if [ -f ${HOME}/.ssh/environment ]; then
+    source ${HOME}/.ssh/environment
+fi
+
 function log () {
     #read lines as they are emitted from the preceding command
     while read msg; do
