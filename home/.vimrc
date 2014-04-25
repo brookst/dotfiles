@@ -193,6 +193,6 @@ let wiki_user.template_path = '~/vimwiki/templates/'
 let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
-let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'sql': 'sql', 'javascript': 'javascript'}
+let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh'}
 
 let g:vimwiki_list = [wiki_user]
