@@ -116,7 +116,7 @@ echo -ne $TITLEBAR
 function PWD {
   es=$?
   PWD1="${PWD/$TestArea/$}"
-  PWD2="${PWD1/$HOME/~}"
+  PWD2="${PWD1/$HOME/\~}"   #Why has bash started expanding '~' here?
   PWD3="${PWD2/$AFSHOME/@}"
   echo $PWD3
   return $es
