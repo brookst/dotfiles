@@ -1,0 +1,136 @@
+#!/bin/bash
+#
+# Timothy Brooks 2012 <brooks@cern.ch>
+#
+# caproc - take over the stdout and stderr of a process
+#
+# e.g: 
+# $ ./myexec <ctrl-z>
+# [1]+  Stopped                 ./myexec
+# source caproc.sh
+# Capturing process 1234 to /tmp/brooks/1234.std{out,err}
+# 
+# or:
+# $ ./myexec <ctrl-z>
+# [1]+  Stopped                 ./myexec
+# $ jobs -l
+# [1]+  1234 Stopped                 ./myexec\
+# $ caproc -d /tmp/$USER 1234
+# Capturing process 1234 to /tmp/brooks/1234.std{out,err}
+# $ bg 1 && disown -h 1
+# $ <ctrl-d>
+# Connection closed.
+#
+VERSION=1.0                                    # first finished tested version
+VERSION=1.1                                    # added preliminary -t TERM support
+
+PROG="caproc"
+
+OUTDIR=/tmp/${USER}                            # default to dropping outputs in /tmp/${USER}
+TERM=""
+unset OPTIND
+unset PID
+unset JOB
+
+INTER=$(echo $- | grep i -q; echo $?)          # is this an interactive shell? (bash logic)
+
+while getopts "vhd:j:t:" opt; do
+  #echo opt: ${opt} arg: ${OPTARG}
+  case $opt in
+    h)
+      PID="NULL"
+      break ;;
+    v)
+      echo ${PROG} ${VERSION}
+      if [ $INTER == 0 ]; then
+        kill -SIGINT $$
+      else
+        exit 0
+      fi ;;
+    d)
+      OUTDIR=${OPTARG} ;;
+    j)
+      JOB=${OPTARG} ;;
+    t)
+      TERM=${OPTARG} ;;
+    \?)
+      echo "Invalid option: -${OPTARG}" >&2
+      PID="NULL"
+      break ;;
+    :)
+      echo "Option -${OPTARG} requires an argument." >&2
+      PID="NULL"
+      break ;;
+  esac
+done
+
+if [ -z "$PID" ]; then                         # if $PID is null, then set it to the last option:
+  eval PID=\$${OPTIND}
+  exists=$(kill -0 ${PID} &> /dev/null; echo $?)
+  if [ -n "$PID" -a "$exists" != "0" ]; then   # unless thats not a process
+    echo "PID ${PID} not found"
+    if [ $INTER == 0 ]; then
+      kill -SIGINT $$
+    else
+      exit 1
+    fi
+  fi
+fi
+
+if [ -n "$PID" -a -n "$JOB" ]; then            # warn if -j and PID used together
+  echo "Option -j is exclusive of PID" >&2
+  PID="NULL"
+elif [ -n "$JOB" ]; then                       # use JOB if -j specified
+  PID=$(jobs -l | grep "^\[${JOB}\]" | awk '{print $2}')
+  if [ -z "$PID" ]; then
+    echo "Job ${JOB} not found"
+    if [ $INTER == 0 ]; then
+      kill -SIGINT $$
+    else
+      exit 1
+    fi
+  fi
+elif [ -z "$PID" ]; then                       # if neither -j or PID specified, use the last job
+  PID=$(jobs -l | tail -n1 | awk '{print $2}')
+fi
+
+if [ -z "$PID" -o "$PID" == "NULL" ]; then     # print usage message if we still don't have PID or it's "NULL"
+  echo "usage: ${PROG} [options] [PID]" >&2
+  echo "" >&2
+  echo "options:" >&2
+  echo "  -v                    show program's version number and exit" >&2
+  echo "  -h                    show this help message and exit" >&2
+  echo "  -d OUTDIR             path to place output files" >&2
+  echo "  -j JOB                capture and background JOB" >&2
+  echo "" >&2
+  echo "if no PID or job is given, but there are jobs, the last job is taken" >&2
+  test 0 == 1
+  if [ $INTER == 0 ]; then
+    kill -SIGINT $$
+  else
+    exit 0
+  fi
+fi
+
+echo "Capturing process ${PID} to ${OUTDIR}/${PID}.std{out,err}"
+
+if [ -n "$TERM" ]; then
+  STDIN='p dup2(open("'${TERM}'",0,0))'
+  STDOUT='p dup2(open("'${TERM}'",0,1))'
+  STDERR='p dup2(open("'${TERM}'",0,2))'
+  gdb -p ${PID} --batch-silent -ex "p close(0)" -ex "$STDIN" \
+                               -ex "p close(1)" -ex "$STDOUT" \
+                               -ex "p close(2)" -ex "$STDERR"
+else
+  mkdir -p ${OUTDIR}                           # guarantee the output directory exists
+  STDOUT='p creat("'${OUTDIR}/${PID}.stdout'",0600)'
+  STDERR='p creat("'${OUTDIR}/${PID}.stderr'",0600)'
+  gdb -p ${PID} --batch-silent -ex "p close(1)" -ex "$STDOUT" \
+                               -ex "p close(2)" -ex "$STDERR"
+fi
+
+
+if [ -n "$JOB" ]; then
+  bg $JOB
+  #echo disown -h $JOB                         # we don't seem to need this
+fi
