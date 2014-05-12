@@ -90,39 +90,43 @@ LIGHT_BLUE=$'\033[1;34m'
 YELLOW=$'\033[1;33m'
 LIGHT_CYAN=$'\033[1;36m'
 
-START_TITLE=$"\033]2;"
+START_TITLE=$"\033]0;"
 END_TITLE=$"\007"
+
+function print_titlebar {
+  # Echo title command sequence to the terminal
+  if [ -n "$1" ]; then
+    printf "${START_TITLE}%s${END_TITLE}" "$1"
+  fi
+}
 
 # Don't junk up simple linux terminals
 if [[ "$TERM" =~ "linux" ]];then #-o "$STY" == "" ]; then
-  export TITLEBAR=""
-# List the screen id if this is a screen session
-elif [ -n "$STY" ]; then
-  export TERM_TEXT="[${STY#*.}]"
-  export TITLEBAR="$START_TITLE[${STY#*.}]$USER@${HOSTNAME%%.*}$END_TITLE"
-  # export TERM=screen-256color
-  export TERM=xterm-256color
-# Just insert TITLEBAR in xterms etc.
+  export PROMPT_COMMAND=""
 else
-  export TITLEBAR="$START_TITLE$USER@${HOSTNAME%%.*}$END_TITLE"
+  # List the screen id if this is a screen session
+  if [ -n "$STY" ]; then
+    TERM_TEXT="${STY#*.}"
+    TERM_TEXT="[${TERM_TEXT%.$HOSTNAME}]"
+  fi
+  titlebar="${TERM_TEXT}${USER}@${HOSTNAME%%.*}:\$(PWD)"
+  export PROMPT_COMMAND="print_titlebar ${titlebar}"
   export TERM=xterm-256color
 fi
-# Echo title command sequence to the terminal
-echo -ne $TITLEBAR
-
 
 # Set up the prompt to display user@first_part_of_server_name
 # and the pwd relative to our home directory and Testarea
 function PWD {
   es=$?
-  PWD1="${PWD/$TestArea/$}"
-  PWD2="${PWD1/$HOME/\~}"   #Why has bash started expanding '~' here?
-  PWD3="${PWD2/$AFSHOME/@}"
-  echo $PWD3
+  local ps1="${PWD/$TestArea/$}"
+  ps1="${ps1/$HOME/\~}"   #Why has bash started expanding '~' here?
+  ps1="${ps1/$AFSHOME/@}"
+  echo $ps1
   return $es
 }
 
 function prompt_exit() {
+  #Set colour red or green based on exit code of last command
   es=$?
   if [ $es -eq 0 ]; then
     status_color="$LIGHT_GREEN"
