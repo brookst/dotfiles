@@ -39,6 +39,7 @@ alias lxp="sssh lxp"
 alias la0="sssh la0"
 alias la1="ssh $LA1"
 alias la5="ssh $LA5"
+alias tree="tree -CA"
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'

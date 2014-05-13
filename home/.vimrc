@@ -29,7 +29,9 @@ let mapleader=" "
 
 " Highlight 81st column
 hi ColorColumn ctermbg=red
-call matchadd('ColorColumn', '\%81v', 100)
+if (v:version > 700)
+    call matchadd('ColorColumn', '\%81v', 100)
+endif
 
 hi clear SpellBad
 hi clear SpellCap
