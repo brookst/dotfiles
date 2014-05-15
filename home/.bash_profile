@@ -1,7 +1,12 @@
+BASH_MAJMINVERSION=${BASH_VERSION%.*}
+BASH_MAJVERSION=${BASH_VERSION%%.*}
+BASH_MINVERSION=${BASH_MAJMINVERSION#${BASH_MAJVERSION}.}
+
 # source local configuration
 if [ -f ~/.bash_local ]; then
   source ~/.bash_local
 fi
+
 #Start ssh in a screen session
 sssh () {
     if ! ssh-add -l; then
@@ -9,6 +14,7 @@ sssh () {
     fi
     screen -rd $1 || screen -S $1 ssh $1
 }
+
 # A few aliases to improve the console and save time
 SKOORB=skoorb.net
 SERVER=tims-server.skoorb.net
@@ -120,7 +126,11 @@ fi
 function PWD {
   es=$?
   local ps1="${PWD/$TestArea/$}"
-  ps1="${ps1/$HOME/\~}"   #Why has bash started expanding '~' here?
+  if [ $BASH_MAJVERSION -ge 4 ] && [ $BASH_MINVERSION -ge 3 ]; then
+    ps1="${ps1/$HOME/\~}"   #Bash 4.3 now expands in substitutions
+  else
+    ps1="${ps1/$HOME/~}"    #But prior versions didn't
+  fi
   ps1="${ps1/$AFSHOME/@}"
   echo $ps1
   return $es
@@ -150,7 +160,7 @@ HISTSIZE=5000
 set -o vi
 
 # Expand variables in paths in bash v4
-if [ ${BASH_VERSION%%.*} == 4 ]; then
+if [ $BASH_MAJVERSION == 4 ]; then
     shopt -s direxpand
 fi
 
