@@ -46,7 +46,8 @@ hi WhiteOnRed ctermfg=white ctermbg=darkred
 " Test. this is an uncapitalized sentance.
 
 " Differentiate next search item
-function! HLNext (blinktime)
+if (v:version > 700)
+  function! HLNext (blinktime)
     let [bufnum, lnum, col, off] = getpos('.')
     let matchlen = strlen(matchstr(strpart(getline('.'),col-1),@/))
     let target_pat = '\c\%#'.@/
@@ -55,9 +56,10 @@ function! HLNext (blinktime)
     exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
     call matchdelete(ring)
     redraw
-endfunction
-nnoremap <silent> n n:call HLNext(0.2)<cr>
-nnoremap <silent> N N:call HLNext(0.2)<cr>
+  endfunction
+  nnoremap <silent> n n:call HLNext(0.2)<cr>
+  nnoremap <silent> N N:call HLNext(0.2)<cr>
+endif
 
 " Use repeat.vim to map cp to a repeatable xp
 nnoremap <silent> <Plug>TransposeCharacters xp
