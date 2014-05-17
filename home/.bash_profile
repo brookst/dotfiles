@@ -160,7 +160,7 @@ HISTSIZE=5000
 set -o vi
 
 # Expand variables in paths in bash v4
-if [ $BASH_MAJVERSION == 4 ]; then
+if [ $BASH_MAJVERSION == 4 ] && [ $BASH_MINVERSION -ge 2 ]; then
     shopt -s direxpand
 fi
 
