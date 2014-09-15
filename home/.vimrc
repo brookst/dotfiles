@@ -26,6 +26,7 @@ let mapleader=" "
 
 " Toggle spell checking - replaced by unimpaired's `[os`
 " nnoremap <silent> <leader>s :set spell!<CR>
+nnoremap <leader>t :Test<CR>
 
 " Highlight 81st column
 hi ColorColumn ctermbg=red

@@ -13,8 +13,6 @@
         ui = auto
 [diff]
         tool = vimdiff
-[push]
-        default = upstream
 [branch]
         autosetuprebase = always
 [init]
