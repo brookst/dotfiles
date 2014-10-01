@@ -23,11 +23,11 @@
 #
 VERSION=1.0                                    # first finished tested version
 VERSION=1.1                                    # added preliminary -t TERM support
+VERSION=1.2                                    # Preserce $TERM
 
 PROG="caproc"
 
 OUTDIR=/tmp/${USER}                            # default to dropping outputs in /tmp/${USER}
-TERM=""
 unset OPTIND
 unset PID
 unset JOB
@@ -92,7 +92,11 @@ elif [ -n "$JOB" ]; then                       # use JOB if -j specified
   fi
 elif [ -z "$PID" ]; then                       # if neither -j or PID specified, use the last job
   PID=$(jobs -l | tail -n1 | awk '{print $2}')
+  JOB=$(jobs | tail -n1 | sed -n '/^\[\([0-9]\+\)\].*/s//\1/p')
 fi
+
+OLDTERM=$TERM
+TERM=""
 
 if [ -z "$PID" -o "$PID" == "NULL" ]; then     # print usage message if we still don't have PID or it's "NULL"
   echo "usage: ${PROG} [options] [PID]" >&2
@@ -134,3 +138,5 @@ if [ -n "$JOB" ]; then
   bg $JOB
   #echo disown -h $JOB                         # we don't seem to need this
 fi
+
+TERM=$OLDTERM
