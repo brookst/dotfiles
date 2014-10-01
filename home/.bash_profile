@@ -204,14 +204,15 @@ alias root="root -l"
 export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase
 alias atlsetup='source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh'
 
-SSH_ENV="$HOME/.ssh/environment"
+# Store ssh settings in a hostname specific script
+SSH_ENV="$HOME/.ssh/${HOSTNAME%%.*}.environment"
 
 function start_agent {
      echo "Initialising new SSH agent..."
      /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-     echo succeeded
      chmod 600 "${SSH_ENV}"
      . "${SSH_ENV}" > /dev/null
+     # Import identities immediately
 #     /usr/bin/ssh-add;
 }
 
@@ -224,7 +225,7 @@ if [ -f "${SSH_ENV}" ]; then
          start_agent;
      }
 else
-     start_agent;
+    start_agent;
 fi
 
 # End up in /home/$USER
