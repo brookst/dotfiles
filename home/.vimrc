@@ -202,4 +202,14 @@ let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
 let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh'}
 
+" Handler for precise linking
 let g:vimwiki_list = [wiki_user]
+function! VimwikiWikiIncludeHandler(value)
+    let url = matchstr(a:value, g:vimwiki_rxWikiInclMatchUrl)
+    let desc = matchstr(a:value, '{{.*|\zs\%([^|}]*\)\ze}}')
+    if url[0] == '.'
+        let url = url[1:]
+        return '<a href="'.url.'">'.desc.'</a>'
+    endif
+    return ''
+endfunction
