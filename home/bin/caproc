@@ -23,7 +23,7 @@
 #
 VERSION=1.0                                    # first finished tested version
 VERSION=1.1                                    # added preliminary -t TERM support
-VERSION=1.2                                    # Preserce $TERM
+VERSION=1.2                                    # preserve $TERM
 
 PROG="caproc"
 
