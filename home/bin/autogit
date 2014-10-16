@@ -76,6 +76,8 @@ fi
 #get ssh-agent info if available
 if [ -f ${HOME}/.ssh/environment ]; then
     source ${HOME}/.ssh/environment
+elif [ -f ${HOME}/.ssh/${HOSTNAME%%.*}.environment ]; then
+    source ${HOME}/.ssh/${HOSTNAME%%.*}.environment
 fi
 
 function log () {
