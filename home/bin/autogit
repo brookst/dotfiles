@@ -100,6 +100,15 @@ function stat () {
     fi
 }
 
+function ahead () {
+    # Check git status output to see if we are ahead of upstream
+    if git status | grep ahead &>/dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 function pull () {
     if [ "$verbose" == true ]; then
         git pull ${repo_remote} ${repo_branch} 2>&1 | log
@@ -171,6 +180,9 @@ function main () {
         add
         commit
         pull                        #commit first-then pull with rebase on top
+        push
+    elif ahead; then
+        pull
         push
     else
         if [ "$always_pull" == true ]
