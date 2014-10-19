@@ -6,11 +6,13 @@ set expandtab
 set cindent
 set hlsearch
 set list
-set listchars=tab:>-,trail:.
+set listchars=tab:▸-
+",trail:¶
 ",eol:¶
 set showcmd
 set ruler
 set incsearch
+set ignorecase
 set smartcase
 set wrap
 
@@ -28,11 +30,34 @@ let mapleader=" "
 " nnoremap <silent> <leader>s :set spell!<CR>
 nnoremap <leader>t :Test<CR>
 
+" Use <tab> to match bracket pairs
+nnoremap <tab> %
+vnoremap <tab> %
+
 " Highlight 81st column
 hi ColorColumn ctermbg=red
 if (v:version > 700)
     call matchadd('ColorColumn', '\%81v', 100)
 endif
+
+" Break lines with the same indentation as their beginning
+hi ColorColumn ctermbg=red
+if v:version > 704 || v:version == 704 && has("patch338")
+    set breakindent
+    set showbreak=↪
+endif
+
+" Line numbering
+set number
+if v:version > 739
+    set relativenumber
+    autocmd WinLeave * :set norelativenumber
+    autocmd WinEnter * :set relativenumber
+endif
+
+hi LineNr ctermbg=237
+hi LineNr ctermfg=144
+hi CursorLineNr ctermbg=darkgrey
 
 hi clear SpellBad
 hi clear SpellCap
@@ -67,6 +92,7 @@ nnoremap <silent> <Plug>TransposeCharacters xp
 \:call repeat#set("\<Plug>TransposeCharacters")<CR>
 nmap cp <Plug>TransposeCharacters
 
+" Map unimpaired's paste toggle to work at the head of a file
 nmap yp yo<BS>
 
 set background=dark
@@ -171,12 +197,13 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#example#enabled = 0
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#redgreen#enabled = 1
+let g:airline_theme="murmur"
 " let g:airline_left_sep = '▙'
 " let g:airline_right_sep = '▟'
 
 "Versions prior to 701.040 don't have the method syntastic uses for
 "highlighting
-if !(v:version > 702 || v:version == 701 && has('patch040'))
+if v:version < 702 || v:version == 701 && has('patch040')
     let g:syntastic_enable_highlighting = 0
 endif
 
