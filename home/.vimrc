@@ -30,6 +30,9 @@ let mapleader=" "
 " nnoremap <silent> <leader>s :set spell!<CR>
 nnoremap <leader>t :Test<CR>
 
+" Toggle highlighting
+nnoremap <leader>h :nohl
+
 " Use <tab> to match bracket pairs
 nnoremap <tab> %
 vnoremap <tab> %
@@ -206,7 +209,7 @@ let g:airline_theme="murmur"
 
 "Versions prior to 701.040 don't have the method syntastic uses for
 "highlighting
-if v:version < 702 || v:version == 701 && has('patch040')
+if v:version < 701 || v:version == 701 && !has('patch040')
     let g:syntastic_enable_highlighting = 0
 endif
 
