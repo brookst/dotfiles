@@ -94,7 +94,7 @@ while true; do
     if [ ! ${files} ]; then
       actions=("${actions[@]}" "$current")
     fi
-    files=("${files[@]}" "$value")
+    files=("${files[@]}" "$(readlink -f ${value})")
   else
     actions=("${actions[@]}" "$current")
   fi
@@ -236,7 +236,7 @@ for action in ${actions[@]}; do
       fi
       action git commit -m "\"$message\""
     elif [ ${#files[@]} == 1 ]; then
-      action git commit -m "\"Added ${files[@]} from ${HOSTNAME%%.*}\""
+      action git commit -m "\"Added ${files[@]##$HOME/} from ${HOSTNAME%%.*}\""
     else
       action git commit -m "\"Added multiple files @${HOSTNAME%%.*}\""
     fi
