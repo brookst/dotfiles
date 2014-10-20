@@ -31,7 +31,7 @@ let mapleader=" "
 nnoremap <leader>t :Test<CR>
 
 " Toggle highlighting
-nnoremap <leader>h :nohl
+nnoremap <leader>h :nohl<CR>
 
 " Use <tab> to match bracket pairs
 nnoremap <tab> %
