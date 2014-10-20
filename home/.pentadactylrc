@@ -1,0 +1,8 @@
+"hg7121
+
+loadplugins '\.(js|penta)$'
+group user
+" Enter passthrough mode when using gmail
+autocmd LocationChange mail.google.com :normal! <C-z>
+
+" vim: set ft=pentadactyl:
