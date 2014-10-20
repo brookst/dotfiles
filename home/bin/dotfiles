@@ -120,6 +120,17 @@ function action () {
     fi
 }
 
+function stat () {
+    files=$(git status -s)                  #get array of all changes
+    if [ "${#files}" == "0" ]
+    then                                    #0 changes - signal there's nothing to do here
+        echo "No files to commit" | log
+        return 1
+    else
+        return 0
+    fi
+}
+
 function log () {
     if [ $verbose ]; then
         echo $@
@@ -173,14 +184,16 @@ for action in ${actions[@]}; do
     exit 0
   elif [ "$action" == "push" ]; then
     cd ~/.dotfiles
-    if [ "$message" ]; then
-      if [ ${#message} -gt 50 ]; then
-        warn "specified message is too long"
-        exit 1
-      fi
-      action git commit -am "\"$message\""
-    else
-      action git commit -am "\"File update @${HOSTNAME%%.*}\""
+    if stat; then
+        if [ "$message" ]; then
+          if [ ${#message} -gt 50 ]; then
+            warn "specified message is too long"
+            exit 1
+          fi
+          action git commit -am "\"$message\""
+        else
+          action git commit -am "\"File update @${HOSTNAME%%.*}\""
+        fi
     fi
     remotes=$(git remote)
     branch=$(git rev-parse --abbrev-ref HEAD)
