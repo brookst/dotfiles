@@ -162,7 +162,7 @@ function link () {
         fi
     elif [ -e $link_path ]; then
         if [ $overwrite ]; then
-            log overwriting $link_path
+            warn overwriting $link_path
             action rm -rf $link_path
             action ln -s $target_path $link_path
         elif [ $compare ]; then
