@@ -36,7 +36,7 @@ vnoremap <tab> %
 
 " Highlight 81st column
 hi ColorColumn ctermbg=red
-if (v:version > 700)
+if v:version > 700
     call matchadd('ColorColumn', '\%81v', 100)
 endif
 
@@ -49,15 +49,18 @@ endif
 
 " Line numbering
 set number
-if v:version > 739
+if v:version > 703
     set relativenumber
     autocmd WinLeave * :set norelativenumber
     autocmd WinEnter * :set relativenumber
 endif
 
+hi DiffAdd ctermfg=15 ctermbg=70
+hi DiffChange ctermfg=15 ctermbg=166
+hi DiffDelete ctermfg=15 ctermbg=88
 hi LineNr ctermbg=237
 hi LineNr ctermfg=144
-hi CursorLineNr ctermbg=darkgrey
+hi CursorLineNr ctermfg=15 ctermbg=darkgrey
 
 hi clear SpellBad
 hi clear SpellCap
@@ -72,7 +75,7 @@ hi WhiteOnRed ctermfg=white ctermbg=darkred
 " Test. this is an uncapitalized sentance.
 
 " Differentiate next search item
-if (v:version > 700)
+if v:version > 700
   function! HLNext (blinktime)
     let [bufnum, lnum, col, off] = getpos('.')
     let matchlen = strlen(matchstr(strpart(getline('.'),col-1),@/))
