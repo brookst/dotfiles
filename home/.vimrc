@@ -33,6 +33,10 @@ nnoremap <leader>t :Test<CR>
 " Toggle highlighting
 nnoremap <leader>h :nohl<CR>
 
+" Resolve a symlink and point buffer at target
+" see https://github.com/tpope/vim-fugitive/issues/147#issuecomment-47286687
+nnoremap <leader>f :exec "file ". resolve(expand('%:p'))<CR>:e<CR>
+
 " Use <tab> to match bracket pairs
 nnoremap <tab> %
 vnoremap <tab> %
