@@ -47,8 +47,8 @@ endif
 hi ColorColumn ctermbg=red
 if v:version > 704 || v:version == 704 && has("patch338")
     set breakindent
-    set showbreak=↪
 endif
+set showbreak=↪
 
 " Line numbering
 set number
