@@ -25,6 +25,7 @@ LAP=laptop.skoorb.net
 LXP=lxplus.cern.ch
 LA0=linappserv0.pp.rhul.ac.uk
 LA1=linappserv1.pp.rhul.ac.uk
+LA2=linappserv2.pp.rhul.ac.uk
 LA5=linappserv5.pp.rhul.ac.uk
 AFSHOME=/afs/cern.ch/user/b/brooks
 SVNOFF=svn+ssh://svn.cern.ch/reps/atlasoff
