@@ -31,7 +31,7 @@ let mapleader=" "
 nnoremap <leader>t :Test<CR>
 
 " Toggle highlighting
-nnoremap <leader>h :nohl<CR>
+nnoremap <silent> <leader>h :nohl<CR>
 
 " Resolve a symlink and point buffer at target
 " see https://github.com/tpope/vim-fugitive/issues/147#issuecomment-47286687
@@ -59,6 +59,8 @@ set number
 if v:version > 703
     autocmd WinLeave * :set norelativenumber
     autocmd WinEnter * :set relativenumber
+    " The above doesn't fire if there is only one window
+    autocmd VimEnter * :set relativenumber
 endif
 
 hi DiffAdd ctermfg=15 ctermbg=70
