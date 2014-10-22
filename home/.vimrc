@@ -57,7 +57,6 @@ set showbreak=↪
 " Line numbering
 set number
 if v:version > 703
-    set relativenumber
     autocmd WinLeave * :set norelativenumber
     autocmd WinEnter * :set relativenumber
 endif
