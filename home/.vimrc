@@ -37,6 +37,16 @@ nnoremap <silent> <leader>h :nohl<CR>
 " see https://github.com/tpope/vim-fugitive/issues/147#issuecomment-47286687
 nnoremap <leader>f :exec "file ". resolve(expand('%:p'))<CR>:e<CR>
 
+" Use vim-surround to wrap a word e.g. after adding a print
+nnoremap <silent> <leader>s) :normal lysw)h<CR>
+nnoremap <silent> <leader>s] :normal lysw]h<CR>
+nnoremap <silent> <leader>s} :normal lysw}h<CR>
+nnoremap <silent> <leader>s" :normal lysw"h<CR>
+nnoremap <silent> <leader>S) :normal lys$)h<CR>
+nnoremap <silent> <leader>S] :normal lys$]h<CR>
+nnoremap <silent> <leader>S} :normal lys$}h<CR>
+nnoremap <silent> <leader>S" :normal lys$"h<CR>
+
 " Use <tab> to match bracket pairs
 nnoremap <tab> %
 vnoremap <tab> %

@@ -110,7 +110,7 @@ fi
 
 function action () {
     if [ $dryrun ]; then
-        log skipping action $@
+        log "skipping action $@"
     else
         if eval $@; then
             log $@
