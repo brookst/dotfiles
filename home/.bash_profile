@@ -31,6 +31,7 @@ AFSHOME=/afs/cern.ch/user/b/brooks
 SVNOFF=svn+ssh://svn.cern.ch/reps/atlasoff
 SVNUSR=svn+ssh://svn.cern.ch/reps/atlasusr
 SVNGRP=svn+ssh://svn.cern.ch/reps/atlasgrp
+alias s="screen -dR"
 alias ls="ls --color=auto"
 alias sl="ls -r"
 alias dir="ls *.*[^~]"
