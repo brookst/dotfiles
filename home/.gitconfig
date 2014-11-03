@@ -17,3 +17,6 @@
         autosetuprebase = always
 [init]
         templatedir = ~/.git_template
+[alias]
+	ci = commit
+	s = status

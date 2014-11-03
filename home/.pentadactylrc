@@ -9,5 +9,6 @@ autocmd LocationChange mail.google.com :normal! <C-z>
 " Let me use alt as escape key in these cases
 :map <A-:> :
 :map <A-/> /
+:map <A-b> b
 
 " vim: set ft=pentadactyl:
