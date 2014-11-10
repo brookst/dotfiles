@@ -155,10 +155,10 @@ else
 endif
 
 " Don't display push enter to continue, just pop open the quicklist
-" function! Make()
-"   ccl
-"   silent make
-"   redraw!
+function! Make()
+  ccl
+  silent make
+  redraw!
 "   for i in getqflist()
 "     if i['valid']
 "       cwin
@@ -166,7 +166,7 @@ endif
 "       return
 "     endif
 "   endfor
-" endfunction
+endfunction
 
 " " Call make silently
 " nmap <silent> <leader>m :call Make()<CR>
@@ -248,7 +248,7 @@ let wiki_user.template_path = '~/vimwiki/templates/'
 let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
-let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh'}
+let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'conf': 'conf'}
 
 " Handler for precise linking
 let g:vimwiki_list = [wiki_user]

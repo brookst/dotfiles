@@ -43,9 +43,10 @@ alias desktop="ssh $DESKTOP"
 alias pi="ssh $PI"
 alias pi2="ssh $PI2"
 alias lap="ssh $LAP"
-alias lxp="sssh lxp"
-alias la0="sssh la0"
+alias lxp="ssh lxp"
+alias la0="ssh la0"
 alias la1="ssh $LA1"
+alias la2="ssh $LA2"
 alias la5="ssh $LA5"
 alias tree="tree -CA"
 alias grep='grep --color=auto'
@@ -123,7 +124,7 @@ else
     TERM_TEXT="${STY#*.}"
     TERM_TEXT="[${TERM_TEXT%.$HOSTNAME}]"
   fi
-  titlebar="${TERM_TEXT}${USER}@${HOSTNAME%%.*}:\$(PWD)"
+  titlebar="${TERM_TEXT}@${HOSTNAME%%.*}:\$(PWD)"
   export PROMPT_COMMAND="print_titlebar ${titlebar}"
   export TERM=xterm-256color
 fi
@@ -154,7 +155,7 @@ function prompt_exit() {
   echo $status_color
   return $es
 }
-PS1="\[$YELLOW\]$TERM_TEXT\[$GREEN\]\u@\h\[$NO_COLOUR\]\$(PWD)\[\$(prompt_exit)\]\$(__git_ps1 '<%s')>\[$NO_COLOUR\] "
+PS1="\[\$(prompt_exit)\]\t\[$YELLOW\]$TERM_TEXT\[$GREEN\]@\h\[$LIGHT_BLUE\](\j)\[$NO_COLOUR\]\$(PWD)\$(__git_ps1 '<%s')>\[$NO_COLOUR\] "
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
