@@ -18,5 +18,8 @@
 [init]
         templatedir = ~/.git_template
 [alias]
-	ci = commit
-	s = status
+        s = status
+        p = pull
+        l = log
+        ci = commit
+        co = checkout
