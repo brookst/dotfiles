@@ -32,6 +32,7 @@ SVNOFF=svn+ssh://svn.cern.ch/reps/atlasoff
 SVNUSR=svn+ssh://svn.cern.ch/reps/atlasusr
 SVNGRP=svn+ssh://svn.cern.ch/reps/atlasgrp
 alias s="screen -dR"
+alias j="jobs"
 alias g="git"
 alias ls="ls --color=auto"
 alias sl="ls -r"
