@@ -23,3 +23,4 @@
         l = log
         ci = commit
         co = checkout
+        pop = stash pop
