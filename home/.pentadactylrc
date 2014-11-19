@@ -7,8 +7,11 @@ group user
 autocmd LocationChange mail.google.com :normal! <C-z>
 
 " Let me use alt as escape key in these cases
-:map <A-:> :
-:map <A-/> /
-:map <A-b> b
+map <A-:> :
+map <A-/> /
+map <A-b> b
+
+" Open a page in the wayback machine
+command! wayback -bang -nargs=? -complete url execute "open http://web.archive.org/web/" + (<q-args> == "" ? buffer.URL : <q-args>)
 
 " vim: set ft=pentadactyl:
