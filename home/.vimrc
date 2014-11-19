@@ -61,9 +61,11 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 " Mappings for incsearch.vim
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
+if v:version > 703
+    map /  <Plug>(incsearch-forward)
+    map ?  <Plug>(incsearch-backward)
+    map g/ <Plug>(incsearch-stay)
+endif
 
 " Highlight 81st column
 if v:version > 700
