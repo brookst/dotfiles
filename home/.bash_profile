@@ -163,8 +163,9 @@ PS1="\[\$(prompt_exit)\]\t\[$YELLOW\]$TERM_TEXT\[$GREEN\]@\h\[$LIGHT_BLUE\](\j)\
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace
 
-# save lots of history
-HISTSIZE=5000
+# save infinite history
+HISTSIZE=
+HISTFILESIZE=
 
 # Use Vi shortcuts
 set -o vi
