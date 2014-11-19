@@ -6,9 +6,18 @@ group user
 " Enter passthrough mode when using gmail
 autocmd LocationChange mail.google.com :normal! <C-z>
 
+" Navigation keys
+set passkeys+=github.com:?jkxogndcipw<Left><Right>
+
+" Prevent alt key opening menus
+set! ui.key.menuAccessKeyFocuses=false
+
 " Let me use alt as escape key in these cases
-:map <A-:> :
-:map <A-/> /
-:map <A-b> b
+map <A-:> :
+map <A-/> /
+map <A-b> b
+
+" Open a page in the wayback machine
+command! wayback -bang -nargs=? -complete url execute "open http://web.archive.org/web/" + (<q-args> == "" ? buffer.URL : <q-args>)
 
 " vim: set ft=pentadactyl:
