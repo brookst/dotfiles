@@ -37,6 +37,14 @@ nnoremap <silent> <leader>h :nohl<CR>
 " see https://github.com/tpope/vim-fugitive/issues/147#issuecomment-47286687
 nnoremap <leader>f :exec "file ". resolve(expand('%:p'))<CR>:e<CR>
 
+" Disable these plugins if invoked as less
+let g:pathogen_disabled = []
+if exists("loaded_less")
+    call add(g:pathogen_disabled, 'vim-surround')
+    call add(g:pathogen_disabled, 'vim-speeddating')
+    call add(g:pathogen_disabled, 'vim-yankstack')
+endif
+
 " Use vim-surround to wrap a word e.g. after adding a print
 nnoremap <silent> <leader>s) :normal lysw)h<CR>
 nnoremap <silent> <leader>s] :normal lysw]h<CR>
@@ -66,7 +74,7 @@ set showbreak=↪
 
 " Line numbering
 set number
-if v:version > 703
+if v:version > 703 && !exists("loaded_less")
     autocmd WinLeave * :set norelativenumber
     autocmd WinEnter * :set relativenumber
     " The above doesn't fire if there is only one window
@@ -188,12 +196,12 @@ noremap <Right>  <NOP>
 noremap <Left>   <NOP>
 
 "Remap line movements to traverse wrapped segments
-nmap j gj
-nmap k gk
+nnoremap j gj
+nnoremap k gk
 
-nmap <C-e> :e#<CR>
-nmap <C-n> :bnext<CR>
-nmap <C-p> :bprev<CR>
+nnoremap <C-e> :e#<CR>
+nnoremap <C-n> :bnext<CR>
+nnoremap <C-p> :bprev<CR>
 "map  :w!<CR>:!aspell check %<CR>:e! %<CR>
 
 runtime bundle/vim-pathogen/autoload/pathogen.vim
