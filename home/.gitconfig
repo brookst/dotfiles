@@ -13,6 +13,7 @@
         ui = auto
 [diff]
         tool = vimdiff
+	noprefix = true
 [branch]
         autosetuprebase = always
 [init]
