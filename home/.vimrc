@@ -15,6 +15,7 @@ set incsearch
 set ignorecase
 set smartcase
 set wrap
+set tags+=~/stl.tags
 
 " Turn on terminal mouse support
 set mouse=a
@@ -60,9 +61,13 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 " Highlight 81st column
-hi ColorColumn ctermbg=red
 if v:version > 700
     call matchadd('ColorColumn', '\%81v', 100)
+    hi ColorColumn ctermbg=red
+    hi Pmenu      ctermfg=15 ctermbg=70
+    hi PmenuSel   ctermfg=15  ctermbg=27
+    hi PmenuSbar  ctermfg=7  ctermbg=0
+    hi PmenuThumb ctermfg=15  ctermbg=27
 endif
 
 " Break lines with the same indentation as their beginning
