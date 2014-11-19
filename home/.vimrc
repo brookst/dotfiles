@@ -60,6 +60,11 @@ nnoremap <silent> <leader>S" :normal lys$"h<CR>
 nnoremap <tab> %
 vnoremap <tab> %
 
+" Mappings for incsearch.vim
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+
 " Highlight 81st column
 if v:version > 700
     call matchadd('ColorColumn', '\%81v', 100)
