@@ -6,6 +6,9 @@ group user
 " Enter passthrough mode when using gmail
 autocmd LocationChange mail.google.com :normal! <C-z>
 
+" Prevent alt key opening menus
+set! ui.key.menuAccessKeyFocuses=false
+
 " Let me use alt as escape key in these cases
 map <A-:> :
 map <A-/> /
