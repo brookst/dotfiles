@@ -6,6 +6,9 @@ group user
 " Enter passthrough mode when using gmail
 autocmd LocationChange mail.google.com :normal! <C-z>
 
+" Navigation keys
+set passkeys+=github.com:?jkxogndcipw<Left><Right>
+
 " Prevent alt key opening menus
 set! ui.key.menuAccessKeyFocuses=false
 
