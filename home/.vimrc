@@ -220,6 +220,15 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 call pathogen#infect()
 
+"Execute commands after cursor, with some reference from:
+"http://stackoverflow.com/questions/26884104/
+function! CutAndRunNormal()
+    normal! D
+    normal @"
+endfunction
+
+nnoremap <leader>e :call CutAndRunNormal()<CR><Esc>
+
 "Scratchpad from
 "http://dhruvasagar.com/2014/03/11/creating-custom-scratch-buffers-in-vim
 function! ScratchEdit(cmd, options)

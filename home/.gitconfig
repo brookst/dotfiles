@@ -13,7 +13,7 @@
         ui = auto
 [diff]
         tool = vimdiff
-	noprefix = true
+        noprefix = true
 [branch]
         autosetuprebase = always
 [init]
@@ -21,7 +21,10 @@
 [alias]
         s = status
         p = pull
+        d = diff
         l = log
         ci = commit
         co = checkout
         pop = stash pop
+
+# vim: sts=8 sw=8

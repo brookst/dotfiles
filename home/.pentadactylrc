@@ -7,7 +7,7 @@ group user
 autocmd LocationChange mail.google.com :normal! <C-z>
 
 " Navigation keys
-set passkeys+=github.com:?jkxogndcipw<Left><Right>
+set passkeys+=github.com:?jkxogncipw<Left><Right>
 
 " Prevent alt key opening menus
 set! ui.key.menuAccessKeyFocuses=false
