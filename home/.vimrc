@@ -23,6 +23,9 @@ set mouse=a
 " Use British English
 set spelllang=en_gb
 
+" Match multiple times per line
+set gdefault
+
 " Use <space> as <leader>
 nnoremap <space> <nop>
 let mapleader=" "
@@ -172,6 +175,7 @@ if $TERM ==? "linux"
   set t_Co=8
 else
   set t_Co=256
+  set ttymouse=xterm2
 endif
 
 " Don't display push enter to continue, just pop open the quicklist
