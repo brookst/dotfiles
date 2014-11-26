@@ -234,5 +234,35 @@ else
     start_agent;
 fi
 
+#Move environment between sessions, i.e. into an old screen
+ENV_FILE=${HOME}/.env
+push_env() {
+    if [ -f $ENV_FILE ]; then
+        # echo "Removing $ENV_FILE"
+        rm $ENV_FILE
+    fi
+    # mkfifo $ENV_FILE
+
+    for var in ${@}; do
+        # eval echo ${var}=\$${var}
+        eval echo ${var}=\$${var} >> $ENV_FILE
+    done
+}
+pull_env() {
+    if [ ! -e $ENV_FILE ]; then
+        echo "$ENV_FILE not found!"
+        return 1
+    fi
+    while read i; do
+        # echo -n "receiving: \"$i\""
+        # echo $i
+        eval $i
+    done < $ENV_FILE
+}
+#If this is a new shell, not a screen; save out the X DISPLAY variable
+if [ -z "$STY" ]; then
+    push_env DISPLAY
+fi
+
 # End up in /home/$USER
 #cd ~
