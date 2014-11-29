@@ -2,6 +2,8 @@ BASH_MAJMINVERSION=${BASH_VERSION%.*}
 BASH_MAJVERSION=${BASH_VERSION%%.*}
 BASH_MINVERSION=${BASH_MAJMINVERSION#${BASH_MAJVERSION}.}
 
+FULLHOST=${HOSTNAME%%.*}
+
 # source local configuration
 if [ -f ~/.bash_local ]; then
   source ~/.bash_local
@@ -126,7 +128,7 @@ else
     TERM_TEXT="${STY#*.}"
     TERM_TEXT="[${TERM_TEXT%.$HOSTNAME}]"
   fi
-  titlebar="${TERM_TEXT}@${HOSTNAME%%.*}:\$(PWD)"
+  titlebar="${TERM_TEXT}@${FULLHOST#*-}:\$(PWD)"
   export PROMPT_COMMAND="print_titlebar ${titlebar}"
   export TERM=xterm-256color
 fi
@@ -157,7 +159,7 @@ function prompt_exit() {
   echo $status_color
   return $es
 }
-PS1="\[\$(prompt_exit)\]\t\[$YELLOW\]$TERM_TEXT\[$GREEN\]@\h\[$LIGHT_BLUE\](\j)\[$NO_COLOUR\]\$(PWD)\$(__git_ps1 '<%s')>\[$NO_COLOUR\] "
+PS1="\[\$(prompt_exit)\]\t\[$YELLOW\]$TERM_TEXT\[$GREEN\]@${FULLHOST#*-}\[$LIGHT_BLUE\](\j)\[$NO_COLOUR\]\$(PWD)\$(__git_ps1 '<%s')>\[$NO_COLOUR\] "
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
