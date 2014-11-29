@@ -16,6 +16,8 @@ set ignorecase
 set smartcase
 set wrap
 set tags+=~/stl.tags
+set scrolloff=5
+set equalalways
 
 " Turn on terminal mouse support
 set mouse=a
