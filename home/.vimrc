@@ -220,6 +220,11 @@ nnoremap <C-n> :bnext<CR>
 nnoremap <C-p> :bprev<CR>
 "map  :w!<CR>:!aspell check %<CR>:e! %<CR>
 
+" Yankstack doesn't seem to work with vim 700
+if v:version < 701
+    call add(g:pathogen_disabled, 'vim-yankstack')
+endif
+
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 call pathogen#infect()
