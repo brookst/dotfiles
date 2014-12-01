@@ -32,7 +32,9 @@ set gdefault
 nnoremap <space> <nop>
 let mapleader=" "
 
-" Toggle spell checking - replaced by unimpaired's `[os`
+" Fix obvious spelling mistake
+nnoremap <leader>z 1z=
+
 " nnoremap <silent> <leader>s :set spell!<CR>
 nnoremap <leader>t :Test<CR>
 
