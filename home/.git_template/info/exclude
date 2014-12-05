@@ -4,3 +4,4 @@ build
 
 # Temp files/dirs
 *.swp
+*.pyc

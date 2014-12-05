@@ -205,6 +205,9 @@ nnoremap <F6> :GundoToggle<CR>
 "Insert date in insert mode
 inoremap <C-D>   <C-R>=strftime('%F')." "<CR>
 
+"Insert file name
+inoremap <C-f>   <C-r>=expand("%:t:r")<CR>
+
 "Unmap arrow keys
 inoremap <Up>    <NOP>
 inoremap <Down>  <NOP>
