@@ -1,0 +1,12 @@
+#!/bin/bash
+#Show detailed list of modifications to a git repository
+#Tim Brooks 2014 <brooks@skoorb.net>
+#
+#Get modified files
+modified=$(git status | grep modified)
+if [ $? != 0 ]; then
+    #Exit if there were none
+    exit
+fi
+#Pipe the file names as arguments to ls which will sort by modification time
+echo -e "$modified" | awk '{print $2}' | xargs ls -lt
