@@ -89,7 +89,17 @@ function log () {
     done
 }
 
+function log_debug () {
+    #read lines as they are emitted from the preceding command
+    while read msg; do
+        if [ "$debug" == true ]&& [ -n "${msg}" ]; then
+            echo ${msg}
+        fi
+    done
+}
+
 function stat () {
+    echo "AG: stat function" | log_debug
     files=$(git status -s)                  #get array of all changes
     if [ "${#files}" == "0" ]
     then                                    #0 changes - signal there's nothing to do here
@@ -101,6 +111,7 @@ function stat () {
 }
 
 function ahead () {
+    echo "AG: ahead function" | log_debug
     # Check git status output to see if we are ahead of upstream
     if git status | grep ahead &>/dev/null; then
         return 0
@@ -110,6 +121,7 @@ function ahead () {
 }
 
 function pull () {
+    echo "AG: pull function" | log_debug
     if [ "$verbose" == true ]; then
         git pull ${repo_remote} ${repo_branch} 2>&1 | log
     else
@@ -123,6 +135,7 @@ function pull () {
 }
 
 function add () {
+    echo "AG: add function" | log_debug
     git add --all 2>&1 | log
     code=$?
     if [[ "${code}" != "0" ]]; then
@@ -132,6 +145,7 @@ function add () {
 }
 
 function commit () {
+    echo "AG: commit function" | log_debug
     git commit -m "Auto update @${HOSTNAME}" 2>&1 | log
     code=$?
     if [[ "${code}" != "0" ]]; then
@@ -141,18 +155,19 @@ function commit () {
 }
 
 function push () {
-    if [ "$debug" == true ]; then echo "Pushing to remote"; fi
+    echo "AG: push function" | log_debug
     git push -q ${repo_remote} ${repo_branch} 2>&1 | log
     code=$?
     if [[ "${code}" != "0" ]]; then
         echo "Error ${code} occurred while pushing"
         exit $code
     else
-        if [ "$debug" == true ]; then echo "Pushed to remote"; fi
+        echo "Pushed to remote" | log_debug
     fi
 }
 
 function main () {
+    echo "AG: main function" | log_debug
     if ! eval cd ${repo_path}       #eval strips single quotes
     then                            #something went wrong
         echo "${_name}: Path ${repo_path} not found"
@@ -160,6 +175,7 @@ function main () {
     fi
     if [ "$only_commit" == true ] || [ "$only_push" == true ] || [ "$only_pull" == true ]
     then                            #Just perform the selected action(s)
+        echo "AG: forced action" | log_debug
         if [ "$only_pull" == true ]; then
             pull
         fi
@@ -177,14 +193,17 @@ function main () {
         exit 0
     fi
     if stat; then
+        echo "AG: commit branch" | log_debug
         add
         commit
         pull                        #commit first-then pull with rebase on top
         push
     elif ahead; then
+        echo "AG: update branch" | log_debug
         pull
         push
     else
+        echo "AG: fetch branch" | log_debug
         if [ "$always_pull" == true ]
         then                        #pull despite there being no new files
             pull
@@ -192,4 +211,8 @@ function main () {
     fi
 }
 
+echo "Started @ $(date)" | log_debug
+env | log_debug
 main
+echo "Ended @ $(date)" | log_debug
+echo | log_debug

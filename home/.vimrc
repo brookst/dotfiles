@@ -111,10 +111,10 @@ hi clear SpellBad
 hi clear SpellCap
 hi clear SpellLocal
 hi clear SpellRare
-hi SpellBad cterm=standout,undercurl ctermbg=red
-hi SpellCap cterm=standout,undercurl ctermbg=darkred
-hi SpellLocal cterm=standout,undercurl ctermbg=darkblue
-hi SpellRare cterm=undercurl ctermbg=darkblue
+hi SpellBad cterm=standout,undercurl
+hi SpellCap cterm=standout
+hi SpellLocal cterm=standout
+hi SpellRare cterm=undercurl
 hi RedOnRed cterm=standout
 hi WhiteOnRed ctermfg=white ctermbg=darkred
 " Test. this is an uncapitalized sentance.
