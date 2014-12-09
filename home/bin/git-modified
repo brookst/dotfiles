@@ -3,7 +3,7 @@
 #Tim Brooks 2014 <brooks@skoorb.net>
 #
 #Get modified files
-modified=$(git status | grep modified)
+modified=$(git status --porcelain | grep M)
 if [ $? != 0 ]; then
     #Exit if there were none
     exit
