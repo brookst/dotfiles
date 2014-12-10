@@ -17,6 +17,15 @@ sssh () {
     screen -rd $1 || screen -S $1 ssh $1
 }
 
+#Check an ssh key is unlocked before sshing
+ssh () {
+    if [ ${HOSTNAME#*.} == "cern.ch" ]; then
+        ssh-add -l || ssh-add -t 24h && command ssh $@
+    else
+        ssh-add -l || ssh-add && command ssh $@
+    fi
+}
+
 # A few aliases to improve the console and save time
 SKOORB=skoorb.net
 SERVER=tims-server.skoorb.net
@@ -40,7 +49,6 @@ alias ls="ls --color=auto"
 alias sl="ls -r"
 alias dir="ls *.*[^~]"
 alias pdf="evince"
-alias ssh="ssh-add -l || ssh-add && ssh"
 alias skoorb="ssh $SKOORB"
 alias server="ssh $SERVER"
 alias desktop="ssh $DESKTOP"
