@@ -94,10 +94,10 @@ set showbreak=↪
 " Line numbering
 set number
 if v:version > 703 && !exists("loaded_less")
-    autocmd WinLeave * :set norelativenumber
-    autocmd WinEnter * :set relativenumber
+    autocmd WinLeave * set norelativenumber
+    autocmd WinEnter * if &ft != "help" | set relativenumber
     " The above doesn't fire if there is only one window
-    autocmd VimEnter * :set relativenumber
+    autocmd VimEnter * set relativenumber
 endif
 
 hi DiffAdd ctermfg=15 ctermbg=70
