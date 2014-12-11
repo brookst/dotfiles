@@ -100,6 +100,9 @@ alias view="vim -R"
 
 alias vim='vim -w ~/.vim/log "$@"'
 
+# Set the LS_COLORS variable
+eval $(dircolors .config/colors)
+
 # define some colors which will be used in the prompt
 NO_COLOUR=$'\033[0m'
 RED=$'\033[0;31m'
