@@ -26,5 +26,6 @@
         ci = commit
         co = checkout
         pop = stash pop
+        vimdiff = difftool
 
 # vim: sts=8 sw=8

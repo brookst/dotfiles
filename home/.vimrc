@@ -100,6 +100,8 @@ if v:version > 703 && !exists("loaded_less")
     autocmd VimEnter * set relativenumber
 endif
 
+au BufEnter * set title | let &titlestring = "@" . substitute(hostname(), ".*-", "", "") . ":" . substitute(expand("%:p"), "/home/brooks", "~", "")
+
 hi DiffAdd ctermfg=15 ctermbg=70
 hi DiffChange ctermfg=15 ctermbg=166
 hi DiffDelete ctermfg=15 ctermbg=88
@@ -273,6 +275,8 @@ if v:version < 701 || v:version == 701 && !has('patch040')
     let g:syntastic_enable_highlighting = 0
 endif
 
+let g:better_whitespace_filetypes_blacklist=['help']
+
 let g:syntastic_check_on_open=1
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
@@ -293,6 +297,7 @@ let wiki_user.template_path = '~/vimwiki/templates/'
 let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
+let wiki_user.css_name = '~/vimwiki/style.css'
 let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'conf': 'conf'}
 
 " Handler for precise linking

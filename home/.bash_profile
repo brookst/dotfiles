@@ -26,6 +26,15 @@ ssh () {
     fi
 }
 
+#Get a Kerberos ticket before logging into lxp
+lxp () {
+    if klist -s; then
+        command ssh lxp $@
+    else
+        kinit && ssh lxp $@
+    fi
+}
+
 # A few aliases to improve the console and save time
 SKOORB=skoorb.net
 SERVER=tims-server.skoorb.net
@@ -42,6 +51,7 @@ AFSHOME=/afs/cern.ch/user/b/brooks
 SVNOFF=svn+ssh://svn.cern.ch/reps/atlasoff
 SVNUSR=svn+ssh://svn.cern.ch/reps/atlasusr
 SVNGRP=svn+ssh://svn.cern.ch/reps/atlasgrp
+SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
 alias s="screen -dR"
 alias j="jobs"
 alias g="git"
@@ -55,8 +65,7 @@ alias desktop="ssh $DESKTOP"
 alias pi="ssh $PI"
 alias pi2="ssh $PI2"
 alias lap="ssh $LAP"
-alias lxp="ssh lxp"
-alias la0="ssh la0"
+alias la0="ssh $LA0"
 alias la1="ssh $LA1"
 alias la2="ssh $LA2"
 alias la5="ssh $LA5"
@@ -101,7 +110,7 @@ alias view="vim -R"
 alias vim='vim -w ~/.vim/log "$@"'
 
 # Set the LS_COLORS variable
-eval $(dircolors .config/colors)
+eval $(dircolors ${HOME}/.config/colors)
 
 # define some colors which will be used in the prompt
 NO_COLOUR=$'\033[0m'
