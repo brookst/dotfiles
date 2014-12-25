@@ -10,4 +10,15 @@ endfunction
 
 call UnimpairedMapTransform('B64_encode','[B')
 call UnimpairedMapTransform('B64_decode',']B')
+
+function! ASCII_encode(str)
+  return system('xxd -i', a:str)
+endfunction
+
+function! ASCII_decode(str)
+  return system('xxd -r', a:str)
+endfunction
+
+call UnimpairedMapTransform('ASCII_encode','[C')
+call UnimpairedMapTransform('ASCII_decode',']C')
 " vim:set sw=2 sts=2:

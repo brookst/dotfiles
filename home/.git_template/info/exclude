@@ -5,3 +5,6 @@ build
 # Temp files/dirs
 *.swp
 *.pyc
+
+# Generated files
+README.html
