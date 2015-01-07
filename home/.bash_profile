@@ -103,8 +103,8 @@ scp () {
 }
 
 # Env vars for a few things
-EDITOR=vim
-PAGER=less
+export EDITOR=vim
+export PAGER=less
 alias view="vim -R"
 
 alias vim='vim -w ~/.vim/log "$@"'

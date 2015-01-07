@@ -1,7 +1,6 @@
 # === EDIT FILE LOCATIONS BELOW ===
 
 # Your todo.txt directory
-# export TODO_DIR=~/dev/todo.txt-cli
 export TODO_DIR=~/.todo
 
 # Your todo/done/report.txt locations
@@ -11,6 +10,8 @@ export REPORT_FILE="$TODO_DIR/report.txt"
 
 # You can customize your actions directory location
 export TODO_ACTIONS_DIR="$TODO_DIR/.todo.actions.d"
+
+export TODOTXT_SOURCEVAR=\(\$TODO_FILE\ \$TODO_DIR/maybe.txt\ \$TODO_DIR/next.txt\ \$TODO_DIR/wait.txt\)
 
 # == EDIT FILE LOCATIONS ABOVE ===
 
