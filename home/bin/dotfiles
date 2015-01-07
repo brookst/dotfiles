@@ -201,7 +201,8 @@ for action in ${actions[@]}; do
       action git push $remote $branch
     done
   elif [ "$action" == "sync" ]; then
-    targets=$(cd ~/.dotfiles; find -L home -type f -printf "%P\n")
+    targets=$(cd ~/.dotfiles;
+            find -L home -type f ! -regex '.*\.sw.' -printf "%P\n")
     for target in ${targets}; do
       target_path=~/.dotfiles/home/${target}
       link_path=~/${target}
