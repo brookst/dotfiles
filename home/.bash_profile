@@ -19,11 +19,14 @@ sssh () {
 
 #Get a Kerberos ticket before logging into lxp
 lxp () {
-    which klist &>/dev/null || (command ssh lxp $@; return)
-    if klist -s; then
-        command ssh lxp $@
+    if which klist &>/dev/null; then
+        if klist -s; then
+            command ssh lxp $@
+        else
+            kinit && command ssh lxp $@
+        fi
     else
-        kinit && command ssh lxp $@
+        command ssh lxp $@
     fi
 }
 
