@@ -37,7 +37,6 @@ ssh () {
             lxp ${@/$token}
             return
         fi
-        echo $token
     done
     if [ ${HOSTNAME#*.} == "cern.ch" ]; then
         ssh-add -l || ssh-add -t 24h && command ssh $@
