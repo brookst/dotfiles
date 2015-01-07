@@ -31,7 +31,7 @@ lxp () {
     if klist -s; then
         command ssh lxp $@
     else
-        kinit && ssh lxp $@
+        kinit && command ssh lxp $@
     fi
 }
 
