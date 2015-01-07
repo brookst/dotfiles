@@ -1,0 +1,15 @@
+#!/bin/bash
+
+function usage {
+    echo "    $(basename $0) ITEM#"
+    echo "      Move task into $(basename $0).txt"
+    echo ""
+    exit
+}
+
+action=$1
+[ "$action" = "usage" ] && usage
+shift
+task=$1
+[ -z "$task" -a "$TODOTXT_DEFAULT_ACTION" != "ls" ] && echo "Usage:" && usage
+[ -z "$task" -o "$task" = "ls" ] && $TODO_FULL_SH listfile ${action}.txt || TODOTXT_FORCE=1 $TODO_FULL_SH mv $task ${action}.txt
