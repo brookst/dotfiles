@@ -17,21 +17,29 @@ sssh () {
     screen -rd $1 || screen -S $1 ssh $1
 }
 
-#Check an ssh key is unlocked before sshing
-ssh () {
-    if [ ${HOSTNAME#*.} == "cern.ch" ]; then
-        ssh-add -l || ssh-add -t 24h && command ssh $@
-    else
-        ssh-add -l || ssh-add && command ssh $@
-    fi
-}
-
 #Get a Kerberos ticket before logging into lxp
 lxp () {
+    which klist &>/dev/null || (command ssh lxp $@; return)
     if klist -s; then
         command ssh lxp $@
     else
         kinit && command ssh lxp $@
+    fi
+}
+
+#Check an ssh key is unlocked before sshing
+ssh () {
+    for token in $@; do
+        if [ "$token" == "lxp" -o "$token" == "lxplus" -o "$token" == "lxplus.cern.ch" ]; then
+            lxp ${@/$token}
+            return
+        fi
+        echo $token
+    done
+    if [ ${HOSTNAME#*.} == "cern.ch" ]; then
+        ssh-add -l || ssh-add -t 24h && command ssh $@
+    else
+        ssh-add -l || ssh-add && command ssh $@
     fi
 }
 
