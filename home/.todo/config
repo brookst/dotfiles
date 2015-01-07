@@ -1,7 +1,8 @@
 # === EDIT FILE LOCATIONS BELOW ===
 
 # Your todo.txt directory
-export TODO_DIR=~/dev/todo.txt-cli
+# export TODO_DIR=~/dev/todo.txt-cli
+export TODO_DIR=~/.todo
 
 # Your todo/done/report.txt locations
 export TODO_FILE="$TODO_DIR/todo.txt"
@@ -65,6 +66,8 @@ export TODO_ACTIONS_DIR="$TODO_DIR/.todo.actions.d"
 
 # Prepend date on add
 export TODOTXT_DATE_ON_ADD=1
+
+export TODOTXT_DEFAULT_ACTION=ls
 
 ## customize list output
 #
