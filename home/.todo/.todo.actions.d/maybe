@@ -1,15 +1,81 @@
 #!/bin/bash
 
-function usage {
-    echo "    $(basename $0) ITEM#"
-    echo "      Move task into $(basename $0).txt"
+ACTION=$(basename $0)
+usage () {
+    echo "    ${ACTION} [-r] [ls] ITEM#"
+    echo "      Move ITEM into ${ACTION} list or vice versa with -r"
+    echo "      ls lists the ${ACTION} list"
     echo ""
-    exit
+    exit $1
 }
 
-action=$1
-[ "$action" = "usage" ] && usage
-shift
-task=$1
-[ -z "$task" -a "$TODOTXT_DEFAULT_ACTION" != "ls" ] && echo "Usage:" && usage
-[ -z "$task" -o "$task" = "ls" ] && $TODO_FULL_SH listfile ${action}.txt || TODOTXT_FORCE=1 $TODO_FULL_SH mv $task ${action}.txt
+err () {
+    echo "$ACTION: error - $1" 1>&2
+    usage 1
+}
+
+is () {
+#Do a bunch of comparisons; e.g. 'is bravo in alfa,bravo,charlie'
+    [ "$2" == "in" ] || exit 1
+    for cmp in $(echo $3|tr ',' ' '); do
+        [ "$1" == "$cmp" ] && return 0
+    done
+    return 1
+}
+
+reverse=false
+debug=false
+task=()
+while [ $# -gt 0 ]; do
+    case $1 in
+    -h|--help) echo "Usage:"; usage 0;;
+    usage) usage 0;;
+    ${ACTION}) ;;
+    ls) task="ls";;
+    -d|--debug) debug=true;;
+    -r) reverse=true;;
+    -*) err "unrecognised option $1";;
+    *) task+=($1);;
+    # *) [ -z "$task" ] || err "too many arguments"; task=$1;;
+    esac
+    shift
+done
+
+# action=$1
+# [ "$task" = "usage" ] && usage 0
+# shift
+# task=$1
+run () {
+    if $debug; then
+        echo $1
+    else
+        eval $1
+    fi
+}
+
+lists="ls","list","lsa","listall"
+
+#Print usage if there is no task or default
+[ -z "$task" ] && ! is "$TODOTXT_DEFAULT_ACTION" in $lists && echo "Usage:" && usage 0
+
+#Move a task to/from the $ACTION list
+if [ "$task" -gt 0 ] &>/dev/null; then
+    if $reverse; then
+        run "TODOTXT_FORCE=1 $TODO_FULL_SH mv $task ${TODO_FILE##*/} ${ACTION}.txt"
+        exit $?
+    else
+        run "TODOTXT_FORCE=1 $TODO_FULL_SH mv $task ${ACTION}.txt"
+        exit $?
+    fi
+fi
+
+#Print the $ACTION list
+if [ "$task" = "ls" ]; then
+    $TODO_FULL_SH listfile ${ACTION}.txt ${task[1]}
+    exit $?
+elif is "$TODOTXT_DEFAULT_ACTION" in $lists ; then
+    $TODO_FULL_SH listfile ${ACTION}.txt ${task[@]}
+    exit $?
+else
+    err "Unrecognised parameter - $task"
+fi
