@@ -25,6 +25,7 @@ is () {
 
 reverse=false
 debug=false
+dry=false
 task=()
 while [ $# -gt 0 ]; do
     case $1 in
@@ -33,6 +34,7 @@ while [ $# -gt 0 ]; do
     ${ACTION}) ;;
     ls) task="ls";;
     -d|--debug) debug=true;;
+    --dry) dry=true;;
     -r) reverse=true;;
     -*) err "unrecognised option $1";;
     *) task+=($1);;
@@ -46,10 +48,18 @@ done
 # shift
 # task=$1
 run () {
-    if $debug; then
+    if $dry; then
         echo $1
     else
         eval $1
+    fi
+}
+
+debug () {
+    if $debug; then
+        while read msg; do
+            echo $msg
+        done
     fi
 }
 
@@ -58,22 +68,43 @@ lists="ls","list","lsa","listall"
 #Print usage if there is no task or default
 [ -z "$task" ] && ! is "$TODOTXT_DEFAULT_ACTION" in $lists && echo "Usage:" && usage 0
 
-#Move a task to/from the $ACTION list
-if [ "$task" -gt 0 ] &>/dev/null; then
+#Move tasks to/from the $ACTION list
+move () {
     if $reverse; then
-        run "TODOTXT_FORCE=1 $TODO_FULL_SH mv $task ${TODO_FILE##*/} ${ACTION}.txt"
-        exit $?
+        echo "mv $1 todo.txt ${ACTION}.txt" | debug
+        run "TODOTXT_FORCE=1 $TODO_FULL_SH mv $1 ${TODO_FILE##*/} ${ACTION}.txt"
+        return $?
     else
-        run "TODOTXT_FORCE=1 $TODO_FULL_SH mv $task ${ACTION}.txt"
-        exit $?
+        echo "mv $1 ${ACTION}.txt todo.txt" | debug
+        run "TODOTXT_FORCE=1 $TODO_FULL_SH mv $1 ${ACTION}.txt"
+        return $?
     fi
+}
+
+echo "task: ${task[@]}" | debug
+
+if [ "$task" -gt 0 ] &>/dev/null; then
+    for t in ${task[@]}; do
+        echo "Moving task ${t}" | debug
+        if [ "$t" -gt 0 ] &>/dev/null; then
+            if ! move $t; then
+                exit $?
+            fi
+        else
+            echo "Error - task ${t} is invalid"
+            exit 1
+        fi
+    done
+    exit 0
 fi
 
 #Print the $ACTION list
 if [ "$task" = "ls" ]; then
+    echo "ls ${ACTION}.txt ${task[1]}" | debug
     $TODO_FULL_SH listfile ${ACTION}.txt ${task[1]}
     exit $?
 elif is "$TODOTXT_DEFAULT_ACTION" in $lists ; then
+    echo "ls ${ACTION}.txt ${task[@]}" | debug
     $TODO_FULL_SH listfile ${ACTION}.txt ${task[@]}
     exit $?
 else
