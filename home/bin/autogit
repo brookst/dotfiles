@@ -4,7 +4,7 @@ _name=${0##*/}
 _version=2014-04-02
 
 function usage () {
-    if [ $1 == 0 ]; then
+    if [ "$1" == 0 ]; then
     echo "${_name} - Tim Brooks 2014 <brooks@skoorb.net>"
     fi
     echo "Usage: ${_name} [option]... [repo_path]"
@@ -22,7 +22,7 @@ function usage () {
     echo "  -g, --pull              only perform pull"
     echo
     echo "      --version           print version: ${_version}"
-    exit $1
+    exit "$1"
 }
 
 function version () {
@@ -43,7 +43,7 @@ only_pull=false
 if ! ARGS=$(getopt -o hvdfcpgr:b: -l help,verbose,debug,fetch,commit,push,pull,remote:,branch:,version -- "$@"); then
     exit 1
 fi
-set -- $ARGS
+set -- "$ARGS"
 
 while [ $# -gt 0 ]
 do
@@ -69,22 +69,22 @@ do
 done
 
 #get keychain info if available
-if [ -f ${HOME}/.keychain/${HOSTNAME}-sh ]; then
-    source ${HOME}/.keychain/${HOSTNAME}-sh
+if [ -f "${HOME}/.keychain/${HOSTNAME}-sh" ]; then
+    source "${HOME}/.keychain/${HOSTNAME}-sh"
 fi
 
 #get ssh-agent info if available
-if [ -f ${HOME}/.ssh/environment ]; then
-    source ${HOME}/.ssh/environment
-elif [ -f ${HOME}/.ssh/${HOSTNAME%%.*}.environment ]; then
-    source ${HOME}/.ssh/${HOSTNAME%%.*}.environment
+if [ -f "${HOME}/.ssh/environment" ]; then
+    source "${HOME}/.ssh/environment"
+elif [ -f "${HOME}/.ssh/${HOSTNAME%%.*}.environment" ]; then
+    source "${HOME}/.ssh/${HOSTNAME%%.*}.environment"
 fi
 
 function log () {
     #read lines as they are emitted from the preceding command
     while read msg; do
         if [ "$verbose" == true ] && [ -n "${msg}" ]; then
-            echo ${msg}
+            echo "${msg}"
         fi
     done
 }
@@ -93,7 +93,7 @@ function log_debug () {
     #read lines as they are emitted from the preceding command
     while read msg; do
         if [ "$debug" == true ]&& [ -n "${msg}" ]; then
-            echo ${msg}
+            echo "${msg}"
         fi
     done
 }
@@ -168,7 +168,7 @@ function push () {
 
 function main () {
     echo "AG: main function" | log_debug
-    if ! eval cd ${repo_path}       #eval strips single quotes
+    if ! eval cd "${repo_path}"       #eval strips single quotes
     then                            #something went wrong
         echo "${_name}: Path ${repo_path} not found"
         exit 1
