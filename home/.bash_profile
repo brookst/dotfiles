@@ -120,7 +120,11 @@ alias view="vim -R"
 alias vim='vim -w ~/.vim/log "$@"'
 
 # Set the LS_COLORS variable
-eval $(dircolors ${HOME}/.config/colors)
+if [ "${HOSTNAME}" != "linappserv0.pp.rhul.ac.uk" ]; then
+    eval $(dircolors ${HOME}/.config/colors)
+else
+    eval $(dircolors <(grep -v "RESET\|MULTIHARDLINK\|CAPABILITY" .config/colors))
+fi
 
 # define some colors which will be used in the prompt
 NO_COLOUR=$'\033[0m'
