@@ -241,6 +241,8 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 call pathogen#infect()
 
+let g:jellybeans_background_color = "000000"
+let g:jellybeans_background_color_256 = "000"
 silent! colorscheme jellybeans
 
 "Execute commands after cursor, with some reference from:
