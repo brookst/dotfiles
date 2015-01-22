@@ -43,7 +43,7 @@ only_pull=false
 if ! ARGS=$(getopt -o hvdfcpgr:b: -l help,verbose,debug,fetch,commit,push,pull,remote:,branch:,version -- "$@"); then
     exit 1
 fi
-set -- "$ARGS"
+set -- $ARGS
 
 while [ $# -gt 0 ]
 do
