@@ -101,6 +101,7 @@ if v:version > 703 && !exists("loaded_less")
 endif
 
 au BufEnter * set title | let &titlestring = "@" . substitute(hostname(), ".*-", "", "") . ":" . substitute(expand("%:p"), "/home/brooks", "~", "")
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 
 hi DiffAdd ctermfg=15 ctermbg=70
 hi DiffChange ctermfg=15 ctermbg=166
@@ -272,7 +273,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#example#enabled = 0
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#redgreen#enabled = 1
-let g:airline_theme="murmur"
+let g:airline_theme="jellybeans"
 " let g:airline_left_sep = '▙'
 " let g:airline_right_sep = '▟'
 
