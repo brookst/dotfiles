@@ -2,7 +2,7 @@
 
 #echo 'dotfiles - Environment bootstrapper - Tim Brooks - http://skoorb.net'
 _name=${0##*/}
-_version=$(cd $HOME/.dotfiles; git log -1 --pretty="format:%h: %ai")
+_version=$(cd "$HOME/.dotfiles"; git log -1 --pretty="format:%h: %ai" "home/bin/dotfiles")
 
 function usage () {
   echo "${_name} - Tim Brooks 2013 <brooks@skoorb.net>"
@@ -91,10 +91,10 @@ while true; do
       exit 1
     fi
     args=${args#$value}
-    if [ ! ${files} ]; then
+    if [ ! "${files}" ]; then
       actions=("${actions[@]}" "$current")
     fi
-    files=("${files[@]}" "$(readlink -f ${value})")
+    files=("${files[@]}" $(readlink -f "${value}"))
   else
     actions=("${actions[@]}" "$current")
   fi
@@ -103,7 +103,7 @@ while true; do
   fi
 done
 
-if [ ! $actions ]; then
+if [ ! "${#actions[@]}" ]; then
   usage
   exit 1
 fi
@@ -112,10 +112,10 @@ function action () {
     if [ $dryrun ]; then
         log "skipping action $@"
     else
-        if eval $@; then
-            log $@
+        if eval "$@"; then
+            log "$@"
         else
-            warn failed command: $@
+            warn "failed command: $@"
         fi
     fi
 }
@@ -133,49 +133,50 @@ function stat () {
 
 function log () {
     if [ $verbose ]; then
-        echo $@
+        echo "$@"
     fi
 }
 
 function warn () {
-    if [ !$quiet ]; then
-        echo Warning $@
+    if [ ! $quiet ]; then
+        echo "Warning $@"
     fi
 }
 
 function link () {
     target_path=$1
     link_path=$2
-    if [ -L $link_path ]; then
-        old_path=$(ls -l $link_path)
+    if [ -L "$link_path" ]; then
+        old_path=$(ls -l "$link_path")
         old_path=${old_path##* }
         if [ "$old_path" == "$target_path" ]; then
-            log $link_path linked
+            log "$link_path linked"
         else
             if [ $overwrite ];then
-                log updating link $link_path
-                action rm -rf $link_path
-                action ln -s $target_path $link_path
+                log "updating link $link_path"
+                action rm -rf "$link_path"
+                action ln -s "$target_path" "$link_path"
             else
-                warn pre-existing link $link_path
+                warn pre-existing link "$link_path"
             fi
         fi
-    elif [ -e $link_path ]; then
+    elif [ -e "$link_path" ]; then
         if [ $overwrite ]; then
-            warn overwriting $link_path
-            action rm -rf $link_path
-            action ln -s $target_path $link_path
+            warn overwriting "$link_path"
+            action rm -rf "$link_path"
+            action ln -s "$target_path" "$link_path"
         elif [ $compare ]; then
-            diff -s $target_path $link_path
+            diff -s "$target_path" "$link_path"
         else
-            warn pre-existing file $link_path
+            warn pre-existing file "$link_path"
         fi
     else
-        action ln -s $target_path $link_path
+        action ln -s "$target_path" "$link_path"
     fi
 }
 
-for action in ${actions[@]}; do
+for action in ${actions[*]}; do
+  log "action: $action"
   if [ "$action" == "help" ]; then
     usage
     exit 0
@@ -198,7 +199,7 @@ for action in ${actions[@]}; do
     remotes=$(git remote)
     branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
-      action git push $remote $branch
+      action "git push $remote $branch"
     done
   elif [ "$action" == "sync" ]; then
     targets=$(cd ~/.dotfiles;
@@ -211,12 +212,12 @@ for action in ${actions[@]}; do
       elif [ -e "${link_path%/*}" ]; then
         warn "${link_path%/*} is not a directory"
       else
-        action mkdir -p ${link_path%/*}
+        action mkdir -p "${link_path%/*}"
       fi
-      link $target_path $link_path
+      link "$target_path" "$link_path"
     done
   elif [ "$action" == "add" ]; then
-    for file in ${files[@]}; do
+    for file in ${files[*]}; do
       loc="home"
       file_name=~/.dotfiles/${loc}/${file##$HOME/}
       if [ -d "${file_name%/*}" ]; then
@@ -224,13 +225,13 @@ for action in ${actions[@]}; do
       elif [ -e "${file_name%/*}" ]; then
         warn "${file_name%/*} is not a directory"
       else
-        action mkdir -p ${file_name%/*}
+        action mkdir -p "${file_name%/*}"
       fi
-      action mv ${file} ${file_name}
+      action mv "${file}" "${file_name}"
       cd ~/.dotfiles
-      action git add ${file_name}
+      action git add "${file_name}"
     done
-    if [ $message ]; then
+    if [ "$message" ]; then
       if [ ${#@} -gt 50 ]; then
         warn "specified message is too long"
         exit 1
