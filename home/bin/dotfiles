@@ -4,7 +4,7 @@
 _name=${0##*/}
 _version=$(cd "$HOME/.dotfiles"; git log -1 --pretty="format:%h: %ai" "home/bin/dotfiles")
 
-function usage () {
+usage () {
   echo "${_name} - Tim Brooks 2013 <brooks@skoorb.net>"
   echo "Usage: ${_name} [option]... [action]... [file]..."
   echo "Manage dotfiles repository"
@@ -77,7 +77,7 @@ while true; do
 done
 
 # Loop over cmd line tokens
-args=$@
+args=$*
 while true; do
   current=${args%% *}
   args=${args#$current}
@@ -108,7 +108,16 @@ if [ ! "${#actions[@]}" ]; then
   exit 1
 fi
 
-function action () {
+is () {
+#Do a bunch of comparisons; e.g. 'is bravo in alfa,bravo,charlie'
+    [ "$2" == "in" ] || exit 1
+    for cmp in $(echo "$3"|tr ',' ' '); do
+        [ "$1" == "$cmp" ] && return 0
+    done
+    return 1
+}
+
+action () {
     if [ $dryrun ]; then
         log "skipping action $@"
     else
@@ -120,7 +129,7 @@ function action () {
     fi
 }
 
-function stat () {
+stat () {
     files=$(git status -s)                  #get array of all changes
     if [ "${#files}" == "0" ]
     then                                    #0 changes - signal there's nothing to do here
@@ -131,19 +140,19 @@ function stat () {
     fi
 }
 
-function log () {
+log () {
     if [ $verbose ]; then
         echo "$@"
     fi
 }
 
-function warn () {
+warn () {
     if [ ! $quiet ]; then
         echo "Warning $@"
     fi
 }
 
-function link () {
+link () {
     target_path=$1
     link_path=$2
     if [ -L "$link_path" ]; then
@@ -242,7 +251,7 @@ for action in ${actions[*]}; do
     else
       action git commit -m "\"Added multiple files @${HOSTNAME%%.*}\""
     fi
-  elif [ "$action" == "diff" -o "$action" == "pull" -o "$action" == "status" ]; then
+  elif is "$action" in "diff,pull,status,show"; then
     cd ~/.dotfiles
     action git $action
   else
