@@ -241,6 +241,8 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 call pathogen#infect()
 
+silent! colorscheme jellybeans
+
 "Execute commands after cursor, with some reference from:
 "http://stackoverflow.com/questions/26884104/
 function! CutAndRunNormal()
