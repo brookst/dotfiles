@@ -30,7 +30,7 @@ if ! ARGS=$(getopt -o m:hoqvdc -l "message:,help,overwrite,quiet,verbose,dryrun,
   exit 1
 fi
 
-eval set -- "$ARGS";
+eval set -- "$ARGS"
 
 while true; do
   case "$1" in
@@ -119,7 +119,7 @@ is () {
 
 action () {
     if [ $dryrun ]; then
-        log "skipping action $@"
+        echo "skipping action $@"
     else
         if eval "$@"; then
             log "$@"
