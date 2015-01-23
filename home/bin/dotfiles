@@ -2,7 +2,7 @@
 
 #echo 'dotfiles - Environment bootstrapper - Tim Brooks - http://skoorb.net'
 _name=${0##*/}
-_version=$(cd "$HOME/.dotfiles"; git log -1 --pretty="format:%h: %ai" "home/bin/dotfiles")
+_version=$(cd "$HOME/.dotfiles"; git log -1 --pretty="format:%ai %h" "home/bin/dotfiles")
 
 usage () {
   echo "${_name} - Tim Brooks 2013 <brooks@skoorb.net>"
