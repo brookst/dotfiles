@@ -8,4 +8,5 @@ build
 
 # Generated files
 README.html
+readme.html
 Cargo.lock
