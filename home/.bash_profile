@@ -223,6 +223,7 @@ shopt -s checkwinsize
 # sources /etc/bash.bashrc).
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
+    complete -o default -o nospace -F _git g
 fi
 
 if go version &> /dev/null; then

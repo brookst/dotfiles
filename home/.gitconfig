@@ -14,12 +14,16 @@
 [diff]
         tool = vimdiff
         noprefix = true
+        renames = copies
 [branch]
         autosetuprebase = always
 [init]
         templatedir = ~/.git_template
 [merge]
         stat = true
+[advice]
+        statusHints = false
+        pushNonFastForward = false
 [alias]
         s = status
         p = pull
