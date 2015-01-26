@@ -306,7 +306,7 @@ let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
 let wiki_user.css_name = '~/vimwiki/style.css'
-let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'conf': 'conf'}
+let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'conf': 'conf', 'ssh': 'python', 'yaml': 'yaml', 'md': 'markdown'}
 
 " Handler for precise linking
 let g:vimwiki_list = [wiki_user]
