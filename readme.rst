@@ -5,7 +5,7 @@ Repository of my profile settings and scripts. For now, files are stored in
 
 TODO:
 -----
-* Add git info to the ``dotfiles`` script.
+* ✓ Add git info to the ``dotfiles`` script.
 * Determine repository path at runtime throughout.
 * Add external repo functionality e.g. for adding vim plugins.
 * Per-host configuration (I keep a .bash_local file for extras)
