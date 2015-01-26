@@ -1,8 +1,10 @@
 #!/bin/bash
 
 #echo 'dotfiles - Environment bootstrapper - Tim Brooks - http://skoorb.net'
+DOTFILES="${HOME}/.dotfiles"
+BASE="$DOTFILES/home"
 _name=${0##*/}
-_version=$(cd "$HOME/.dotfiles"; git log -1 --pretty="format:%ai %h" "home/bin/dotfiles")
+_version=$(cd "$DOTFILES"; git log -1 --pretty="format:%ai %h" "home/bin/dotfiles")
 
 usage () {
   echo "${_name} - Tim Brooks 2013 <brooks@skoorb.net>"
@@ -83,18 +85,25 @@ while true; do
   args=${args#$current}
   args=${args# }
   if [ "$current" == "add" ]; then
-    value=${args%% *}
-    if [ "$value" == "" ]; then
-      echo "${_name}: add action requires filename"
-      echo
-      usage
-      exit 1
-    fi
-    args=${args#$value}
-    if [ ! "${files}" ]; then
-      actions=("${actions[@]}" "$current")
-    fi
-    files=("${files[@]}" $(readlink -f "${value}"))
+    while true; do
+        value=${args%% *}
+        if [ ! "${files}" -a "$value" == "" ]; then
+          echo "${_name}: add action requires filename"
+          echo
+          usage
+          exit 1
+        fi
+        if [ -e "$value" ]; then
+            args=${args#$value\ }
+            args=${args#$value}
+            if [ ! "${files}" ]; then
+              actions=("${actions[@]}" "$current")
+            fi
+            files=("${files[@]}" $(readlink -f "${value}"))
+        else
+            break
+        fi
+    done
   else
     actions=("${actions[@]}" "$current")
   fi
@@ -133,7 +142,7 @@ stat () {
     files=$(git status -s)                  #get array of all changes
     if [ "${#files}" == "0" ]
     then                                    #0 changes - signal there's nothing to do here
-        echo "No files to commit" | log
+        echo "no files to commit" | log
         return 1
     else
         return 0
@@ -159,7 +168,7 @@ link () {
         old_path=$(ls -l "$link_path")
         old_path=${old_path##* }
         if [ "$old_path" == "$target_path" ]; then
-            log "$link_path linked"
+            : log "$link_path linked"
         else
             if [ $overwrite ];then
                 log "updating link $link_path"
@@ -217,7 +226,7 @@ for action in ${actions[*]}; do
       target_path=~/.dotfiles/home/${target}
       link_path=~/${target}
       if [ -d "${link_path%/*}" ]; then
-        log "${link_path%/*} exists"
+        : log "${link_path%/*} exists"
       elif [ -e "${link_path%/*}" ]; then
         warn "${link_path%/*} is not a directory"
       else
@@ -227,8 +236,11 @@ for action in ${actions[*]}; do
     done
   elif [ "$action" == "add" ]; then
     for file in ${files[*]}; do
-      loc="home"
-      file_name=~/.dotfiles/${loc}/${file##$HOME/}
+      if [ "${file:0:${#DOTFILES}}" == "$DOTFILES" ]; then
+        log "file $file already tracked in dotfiles"
+        continue
+      fi
+      file_name=${BASE}/${file##$HOME/}
       if [ -d "${file_name%/*}" ]; then
         log "${file_name%/*} exists"
       elif [ -e "${file_name%/*}" ]; then
@@ -258,5 +270,6 @@ for action in ${actions[*]}; do
     echo "${_name}: unrecognised action $action"
     echo
     usage
+    exit 1
   fi
 done
