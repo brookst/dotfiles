@@ -18,6 +18,8 @@
         autosetuprebase = always
 [init]
         templatedir = ~/.git_template
+[merge]
+        stat = true
 [alias]
         s = status
         p = pull
