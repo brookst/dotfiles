@@ -14,54 +14,54 @@ sssh () {
     if ! ssh-add -l; then
         ssh-add
     fi
-    screen -rd $1 || screen -S $1 ssh $1
+    screen -rd "$1" || screen -S "$1" "command ssh" "$1"
 }
 
 #Get a Kerberos ticket before logging into lxp
 lxp () {
     if which klist &>/dev/null; then
         if klist -s; then
-            command ssh lxp $@
+            command ssh lxp "$@"
         else
-            kinit && command ssh lxp $@
+            kinit && command ssh lxp "$@"
         fi
     else
-        command ssh lxp $@
+        command ssh lxp "$@"
     fi
 }
 
 #Check an ssh key is unlocked before sshing
 ssh () {
-    for token in $@; do
+    for token in "$@"; do
         if [ "$token" == "lxp" -o "$token" == "lxplus" -o "$token" == "lxplus.cern.ch" ]; then
-            lxp ${@/$token}
+            lxp "${@/$token}"
             return
         fi
     done
-    if [ ${HOSTNAME#*.} == "cern.ch" ]; then
-        ssh-add -l || ssh-add -t 24h && command ssh $@
+    if [ "${HOSTNAME#*.}" == "cern.ch" ]; then
+        ssh-add -l &> /dev/null || ssh-add -t 24h && command ssh "$@"
     else
-        ssh-add -l || ssh-add && command ssh $@
+        ssh-add -l &> /dev/null || ssh-add && command ssh "$@"
     fi
 }
 
 # A few aliases to improve the console and save time
-SKOORB=skoorb.net
-SERVER=tims-server.skoorb.net
-DESKTOP=tims-desktop.skoorb.net
-PI=pi.skoorb.net
-PI2=pi2.skoorb.net
-LAP=laptop.skoorb.net
-LXP=lxplus.cern.ch
-LA0=linappserv0.pp.rhul.ac.uk
-LA1=linappserv1.pp.rhul.ac.uk
-LA2=linappserv2.pp.rhul.ac.uk
-LA5=linappserv5.pp.rhul.ac.uk
-AFSHOME=/afs/cern.ch/user/b/brooks
-SVNOFF=svn+ssh://svn.cern.ch/reps/atlasoff
-SVNUSR=svn+ssh://svn.cern.ch/reps/atlasusr
-SVNGRP=svn+ssh://svn.cern.ch/reps/atlasgrp
-SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
+export SKOORB=skoorb.net
+export SERVER=server.skoorb.net
+export DESKTOP=desktop.skoorb.net
+export PI=pi.skoorb.net
+export PI2=pi2.skoorb.net
+export LAP=laptop.skoorb.net
+export LXP=lxplus.cern.ch
+export LA0=linappserv0.pp.rhul.ac.uk
+export LA1=linappserv1.pp.rhul.ac.uk
+export LA2=linappserv2.pp.rhul.ac.uk
+export LA5=linappserv5.pp.rhul.ac.uk
+export AFSHOME=/afs/cern.ch/user/b/brooks
+export SVNOFF=svn+ssh://svn.cern.ch/reps/atlasoff
+export SVNUSR=svn+ssh://svn.cern.ch/reps/atlasusr
+export SVNGRP=svn+ssh://svn.cern.ch/reps/atlasgrp
+export SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
 alias s="screen -dR"
 alias j="jobs"
 alias g="git"
@@ -69,16 +69,16 @@ alias ls="ls --color=auto"
 alias sl="ls -r"
 alias dir="ls *.*[^~]"
 alias pdf="evince"
-alias skoorb="ssh $SKOORB"
-alias server="ssh $SERVER"
-alias desktop="ssh $DESKTOP"
-alias pi="ssh $PI"
-alias pi2="ssh $PI2"
-alias lap="ssh $LAP"
-alias la0="ssh $LA0"
-alias la1="ssh $LA1"
-alias la2="ssh $LA2"
-alias la5="ssh $LA5"
+alias skoorb='ssh $SKOORB'
+alias server='ssh $SERVER'
+alias desktop='ssh $DESKTOP'
+alias pi='ssh $PI'
+alias pi2='ssh $PI2'
+alias lap='ssh $LAP'
+alias la0='ssh $LA0'
+alias la1='ssh $LA1'
+alias la2='ssh $LA2'
+alias la5='ssh $LA5'
 alias tree="tree -CA"
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
