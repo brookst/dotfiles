@@ -263,9 +263,15 @@ for action in ${actions[*]}; do
     else
       action git commit -m "\"Added multiple files @${HOSTNAME%%.*}\""
     fi
-  elif is "$action" in "diff,pull,status,show"; then
+  elif is "$action" in "pull"; then
     cd ~/.dotfiles
     action git $action
+  elif is "$action" in "diff,status,show,log"; then
+    temp=${actions[*]}
+    # echo ${temp#*$action}
+    cd ~/.dotfiles
+    action git $action ${temp#*$action}
+    exit 0
   else
     echo "${_name}: unrecognised action $action"
     echo
