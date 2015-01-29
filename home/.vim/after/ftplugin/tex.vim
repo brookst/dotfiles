@@ -1,4 +1,5 @@
 set spell
+
 if filereadable(expand('%:p:h'). '/spell.utf-8.add')
  let b:spellfile = expand('%:p:h'). '/spell.utf-8.add'
  let &l:spf = b:spellfile
