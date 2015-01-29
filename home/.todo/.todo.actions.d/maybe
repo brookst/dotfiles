@@ -1,12 +1,12 @@
 #!/bin/bash
 
-ACTION=$(basename $0)
+ACTION=$(basename "$0")
 usage () {
     echo "    ${ACTION} [-r] [ls] ITEM#"
     echo "      Move ITEM into ${ACTION} list or vice versa with -r"
     echo "      ls lists the ${ACTION} list"
     echo ""
-    exit $1
+    exit "$1"
 }
 
 err () {
@@ -17,7 +17,7 @@ err () {
 is () {
 #Do a bunch of comparisons; e.g. 'is bravo in alfa,bravo,charlie'
     [ "$2" == "in" ] || exit 1
-    for cmp in $(echo $3|tr ',' ' '); do
+    for cmp in $(echo "$3"|tr ',' ' '); do
         [ "$1" == "$cmp" ] && return 0
     done
     return 1
@@ -49,24 +49,24 @@ done
 # task=$1
 run () {
     if $dry; then
-        echo $1
+        echo "$1"
     else
-        eval $1
+        eval "$1"
     fi
 }
 
 debug () {
     if $debug; then
         while read msg; do
-            echo $msg
+            echo "$msg"
         done
     fi
 }
 
-lists="ls","list","lsa","listall"
+lists="ls,list,lsa,listall"
 
 #Print usage if there is no task or default
-[ -z "$task" ] && ! is "$TODOTXT_DEFAULT_ACTION" in $lists && echo "Usage:" && usage 0
+[ -z "${task[0]}" ] && ! is "$TODOTXT_DEFAULT_ACTION" in $lists && echo "Usage:" && usage 0
 
 #Move tasks to/from the $ACTION list
 move () {
@@ -83,8 +83,8 @@ move () {
 
 echo "task: ${task[@]}" | debug
 
-if [ "$task" -gt 0 ] &>/dev/null; then
-    for t in ${task[@]}; do
+if [ "${task[0]}" -gt 0 ] &>/dev/null; then
+    for t in "${task[@]}"; do
         echo "Moving task ${t}" | debug
         if [ "$t" -gt 0 ] &>/dev/null; then
             if ! move $t; then
@@ -99,14 +99,14 @@ if [ "$task" -gt 0 ] &>/dev/null; then
 fi
 
 #Print the $ACTION list
-if [ "$task" = "ls" ]; then
+if [ "${task[0]}" = "ls" ]; then
     echo "ls ${ACTION}.txt ${task[1]}" | debug
-    $TODO_FULL_SH listfile ${ACTION}.txt ${task[1]}
+    $TODO_FULL_SH listfile "${ACTION}.txt" ${task[1]}
     exit $?
 elif is "$TODOTXT_DEFAULT_ACTION" in $lists ; then
     echo "ls ${ACTION}.txt ${task[@]}" | debug
-    $TODO_FULL_SH listfile ${ACTION}.txt ${task[@]}
+    $TODO_FULL_SH listfile "${ACTION}".txt "${task[@]}"
     exit $?
 else
-    err "Unrecognised parameter - $task"
+    err "Unrecognised parameter - ${task[0]}"
 fi
