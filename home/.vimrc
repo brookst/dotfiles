@@ -230,6 +230,8 @@ nnoremap <C-n> :bnext<CR>
 nnoremap <C-p> :bprev<CR>
 "map  :w!<CR>:!aspell check %<CR>:e! %<CR>
 
+let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'x', 'X', 'y', 'Y']
+
 " These plugins don't seem to work with vim 700
 if v:version < 701
     call add(g:pathogen_disabled, 'vim-signify')
@@ -245,6 +247,9 @@ call pathogen#infect()
 let g:jellybeans_background_color = "000000"
 let g:jellybeans_background_color_256 = "000"
 silent! colorscheme jellybeans
+
+nmap <leader>p <Plug>yankstack_substitute_newer_paste
+nmap <leader>P <Plug>yankstack_substitute_older_paste
 
 "Execute commands after cursor, with some reference from:
 "http://stackoverflow.com/questions/26884104/
