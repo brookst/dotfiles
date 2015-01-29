@@ -117,7 +117,7 @@ export EDITOR=vim
 export PAGER=less
 alias view="vim -R"
 
-alias vim='vim -w ~/.vim/log "$@"'
+alias vim='vim -w ~/.vim/log'
 
 # Set the LS_COLORS variable
 if [ "${HOSTNAME}" != "linappserv0.pp.rhul.ac.uk" ]; then
@@ -240,7 +240,7 @@ export PYTHONSTARTUP=/home/$USER/.pythonrc
 
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$MINUIT2DIR/lib:$PYTHIA8/lib
 export PYTHONPATH=$ROOTSYS/lib:$PYTHONDIR/lib
-export PATH=~/bin:$ROOTSYS/bin:$PATH
+export PATH=$HOME/.local/bin:$ROOTSYS/bin:$PATH
 alias root="root -l"
 
 # Set up ATLAS computing environment

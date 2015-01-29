@@ -4,7 +4,7 @@
 DOTFILES="${HOME}/.dotfiles"
 BASE="$DOTFILES/home"
 _name=${0##*/}
-_version=$(cd "$DOTFILES"; git log -1 --pretty="format:%ai %h" "home/bin/dotfiles")
+_version=$(cd "$DOTFILES"; git log -1 --pretty="format:%ai %h" "home/.local/bin/dotfiles")
 
 usage () {
   echo "${_name} - Tim Brooks 2013 <brooks@skoorb.net>"
