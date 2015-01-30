@@ -223,7 +223,23 @@ shopt -s checkwinsize
 # sources /etc/bash.bashrc).
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
-    complete -o default -o nospace -F _git g
+    # Override dynamic completion loading to resolve aliases
+    _completion_loader()
+    {
+        # Resolve alias
+        name=${BASH_ALIASES[$1]:-$1}
+        local compfile=/usr/share/bash-completion/completions
+        compfile+="/${name##*/}"
+        echo " -completing $1 as $name with $compfile"
+
+        # Avoid trying to source dirs; https://bugzilla.redhat.com/903540
+        # Set alias completion to real completion
+        [[ -f "$compfile" ]] && . "$compfile" &>/dev/null &&
+        complete -F "_$name" "$1" && return 124
+
+        # Need to define *something*, otherwise there will be no completion at all.
+        complete -F _minimal "$1" && return 124
+    }
 fi
 
 if go version &> /dev/null; then
