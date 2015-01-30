@@ -230,7 +230,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
         name=${BASH_ALIASES[$1]:-$1}
         local compfile=/usr/share/bash-completion/completions
         compfile+="/${name##*/}"
-        echo " -completing $1 as $name with $compfile"
+        # echo " -completing $1 as $name with $compfile"
 
         # Avoid trying to source dirs; https://bugzilla.redhat.com/903540
         # Set alias completion to real completion
