@@ -85,8 +85,8 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias screen='env screen' # Forward through env vars to get X11 DISPLAY working
 alias tbrowse='python -i ~/bin/browser.py '
-tmplog=/tmp/$USER/tmp.log
-alias mailme='tee '$tmplog';cat '$tmplog' | mail -s "Job done" "morphit2k@googlemail.com";rm '$tmplog
+export tmplog=/tmp/$USER/tmp.log
+alias mailme='tee $tmplog;cat $tmplog | mail -s "Job done" "morphit2k@googlemail.com";rm $tmplog'
 alias Date='date --rfc-3339=date' # YYYY-mm-dd format date
 
 scp () {
@@ -121,27 +121,27 @@ alias vim='vim -w ~/.vim/log'
 
 # Set the LS_COLORS variable
 if [ "${HOSTNAME}" != "linappserv0.pp.rhul.ac.uk" ]; then
-    eval $(dircolors ${HOME}/.config/colors)
+    eval "$(dircolors "${HOME}"/.config/colors)"
 else
-    eval $(dircolors <(grep -v "RESET\|MULTIHARDLINK\|CAPABILITY" .config/colors))
+    eval "$(dircolors <(grep -v "RESET\|MULTIHARDLINK\|CAPABILITY" .config/colors))"
 fi
 
 # define some colors which will be used in the prompt
-NO_COLOUR=$'\033[0m'
-RED=$'\033[0;31m'
-LIGHT_RED=$'\033[1;31m'
-GREEN=$'\033[0;32m'
-LIGHT_GREEN=$'\033[1;32m'
-YELLOW=$'\033[0;33m'
-LIGHT_YELLOW=$'\033[1;33m'
-BLUE=$'\033[0;34m'
-LIGHT_BLUE=$'\033[1;34m'
-MAGENTA=$'\033[0;35m'
-LIGHT_MAGENTA=$'\033[1;35m'
-CYAN=$'\033[0;36m'
-LIGHT_CYAN=$'\033[1;36m'
-WHITE=$'\033[0;37m'
-LIGHT_WHITE=$'\033[1;37m'
+export NO_COLOUR=$'\033[0m'
+export RED=$'\033[0;31m'
+export LIGHT_RED=$'\033[1;31m'
+export GREEN=$'\033[0;32m'
+export LIGHT_GREEN=$'\033[1;32m'
+export YELLOW=$'\033[0;33m'
+export LIGHT_YELLOW=$'\033[1;33m'
+export BLUE=$'\033[0;34m'
+export LIGHT_BLUE=$'\033[1;34m'
+export MAGENTA=$'\033[0;35m'
+export LIGHT_MAGENTA=$'\033[1;35m'
+export CYAN=$'\033[0;36m'
+export LIGHT_CYAN=$'\033[1;36m'
+export WHITE=$'\033[0;37m'
+export LIGHT_WHITE=$'\033[1;37m'
 
 START_TITLE=$"\033]0;"
 END_TITLE=$"\007"
@@ -154,7 +154,7 @@ function print_titlebar {
 }
 
 # Don't junk up simple linux terminals
-if [[ "$TERM" =~ "linux" ]];then #-o "$STY" == "" ]; then
+if [[ "$TERM" =~ linux ]];then #-o "$STY" == "" ]; then
   export PROMPT_COMMAND=""
 else
   # List the screen id if this is a screen session
@@ -172,13 +172,13 @@ fi
 function PWD {
   es=$?
   local ps1="${PWD/$TestArea/$}"
-  if [ $BASH_MAJVERSION -ge 4 ] && [ $BASH_MINVERSION -ge 3 ]; then
+  if [ "$BASH_MAJVERSION" -ge 4 ] && [ "$BASH_MINVERSION" -ge 3 ]; then
     ps1="${ps1/$HOME/\~}"   #Bash 4.3 now expands in substitutions
   else
     ps1="${ps1/$HOME/~}"    #But prior versions didn't
   fi
   ps1="${ps1/$AFSHOME/@}"
-  echo $ps1
+  echo "$ps1"
   return $es
 }
 
@@ -207,7 +207,7 @@ HISTFILESIZE=
 set -o vi
 
 # Expand variables in paths in bash v4
-if [ $BASH_MAJVERSION == 4 ] && [ $BASH_MINVERSION -ge 2 ]; then
+if [ "$BASH_MAJVERSION" == 4 ] && [ "$BASH_MINVERSION" -ge 2 ]; then
     shopt -s direxpand
 fi
 
@@ -279,8 +279,8 @@ function start_agent {
 
 if [ -f "${SSH_ENV}" ]; then
      . "${SSH_ENV}" > /dev/null
-     #ps ${SSH_AGENT_PID} doesn't work under cywgin
-     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+     #ps ${SSH_AGENT_PID} doesn't work under cywgin, hopefully pgrep does
+     pgrep ssh-agent > /dev/null || {
          start_agent;
      }
 else
@@ -290,27 +290,27 @@ fi
 #Move environment between sessions, i.e. into an old screen
 ENV_FILE=${HOME}/.env
 push_env() {
-    if [ -f $ENV_FILE ]; then
+    if [ -f "$ENV_FILE" ]; then
         # echo "Removing $ENV_FILE"
-        rm $ENV_FILE
+        rm "$ENV_FILE"
     fi
     # mkfifo $ENV_FILE
 
-    for var in ${@}; do
+    for var in "$@"; do
         # eval echo ${var}=\$${var}
-        eval echo ${var}=\$${var} >> $ENV_FILE
+        eval echo "${var}=\$${var} >> $ENV_FILE"
     done
 }
 pull_env() {
-    if [ ! -e $ENV_FILE ]; then
+    if [ ! -e "$ENV_FILE" ]; then
         echo "$ENV_FILE not found!"
         return 1
     fi
     while read i; do
         # echo -n "receiving: \"$i\""
         # echo $i
-        eval $i
-    done < $ENV_FILE
+        eval "$i"
+    done < "$ENV_FILE"
 }
 #If this is a new shell, not a screen; save out the X DISPLAY variable
 if [ -z "$STY" ]; then
