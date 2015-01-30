@@ -1,7 +1,7 @@
 dotfiles
 ========
 Repository of my profile settings and scripts. For now, files are stored in
-``home/`` and the script ``home/bin/dotfiles`` is used to manage updates.
+``home/`` and the script ``home/.local/bin/dotfiles`` is used to manage updates.
 
 TODO:
 -----
