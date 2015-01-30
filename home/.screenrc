@@ -10,6 +10,7 @@ hardstatus string ""
 # Monitor windows
 defmonitor on
 activity ""
+bell_msg ""
 
 # Turns off alternate screen switching in xterms,
 # so that text in screen will go into the xterm's scrollback buffer:
