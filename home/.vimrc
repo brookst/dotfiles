@@ -39,7 +39,13 @@ nnoremap <leader>z 1z=
 nnoremap <leader>t :Test<CR>
 
 " Toggle highlighting
-nnoremap <silent> <leader>h :nohl<CR>
+nnoremap <silent> <leader>n :nohl<CR>
+
+" Window movements
+nnoremap <leader>h <C-w>h
+nnoremap <leader>j <C-w>j
+nnoremap <leader>k <C-w>k
+nnoremap <leader>l <C-w>l
 
 " Resolve a symlink and point buffer at target
 " see https://github.com/tpope/vim-fugitive/issues/147#issuecomment-47286687
@@ -66,6 +72,9 @@ nnoremap <silent> <leader>S" :normal lys$"h<CR>
 " Use <tab> to match bracket pairs
 nnoremap <tab> %
 vnoremap <tab> %
+
+" Easier map for switching to last used buffer
+nnoremap <BS> <C-^>
 
 " Mappings for incsearch.vim
 if v:version > 703
