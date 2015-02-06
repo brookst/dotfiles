@@ -38,7 +38,7 @@ ssh () {
             return
         fi
     done
-    if [ "${HOSTNAME#*.}" == "cern.ch" ]; then
+    if [ -z "${HOSTNAME/*cern.ch}" ]; then
         ssh-add -l &> /dev/null || ssh-add -t 24h && command ssh "$@"
     else
         ssh-add -l &> /dev/null || ssh-add && command ssh "$@"
@@ -81,8 +81,8 @@ alias la2='ssh $LA2'
 alias la5='ssh $LA5'
 alias tree="tree -CA"
 alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+alias fgrep='grep -F --color=auto'
+alias egrep='grep -E --color=auto'
 alias screen='env screen' # Forward through env vars to get X11 DISPLAY working
 alias tbrowse='python -i ~/bin/browser.py '
 export tmplog=/tmp/$USER/tmp.log

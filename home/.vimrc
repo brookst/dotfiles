@@ -19,6 +19,15 @@ set tags+=~/stl.tags
 set scrolloff=5
 set equalalways
 
+if version >= 703
+    if exists("&undodir")
+        set undodir=~/.vim/undo/
+    endif
+    set undofile
+    set undoreload=10000
+endif
+set undolevels=10000
+
 " Turn on terminal mouse support
 set mouse=a
 
