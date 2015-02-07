@@ -1,0 +1,76 @@
+#
+# Tim Brooks 2012 <brooks@skoorb.net>
+#
+# nsupdater - Updates dns record for $HOSTNAME at $NAMESERVER
+#
+
+#Options:
+TTL=3600
+ALIAS=$HOSTNAME
+DOMAIN="skoorb.net"
+KEYFILE="/home/brooks/.dnskey.private"
+NAMESERVER="ns1.skoorb.net"
+
+#Test an ip is valid
+valid_ip() {
+    local  ip=$1
+    local  stat=1
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
+}
+
+#Collect ips and send update to $NAMESERVER
+ns_update() {
+    #Get current external ip
+    local localip=$new_ip_address
+    if [ "$localip" == "" ]; then
+        localip=$DHCP4_IP_ADDRESS
+    fi
+    #Cleanly extract the first global ip addr
+    local localip=$(ip addr | grep -P 'inet .*global (?!docker)' | tr '/' ' ' | cut -d' ' -f 6 | head -n1)
+    local newip=$(curl --silent ifconfig.me)
+    local stat
+    if valid_ip $newip; then
+        local update="server $NAMESERVER\n"
+        update+="zone $DOMAIN\n"
+        update+="update delete $ALIAS.$DOMAIN. A\n"
+        update+="update add $ALIAS.$DOMAIN. $TTL A $newip\n"
+        update+="update delete $ALIAS-local.$DOMAIN. A\n"
+        update+="update add $ALIAS-local.$DOMAIN. $TTL A $localip\n"
+        update+="send"
+        echo -e $update | nsupdate -v -k $KEYFILE
+        stat=$?
+    #   Log how things went to syslog
+        if [ $stat == 0 ]; then
+            logger -it nsupdate Updated dns record $ALIAS.$DOMAIN. to $newip
+            logger -it nsupdate Updated dns record $ALIAS-local.$DOMAIN. to $localip
+        else
+            logger -ist nsupdate Failed to update dns record - nsupdate returned $stat
+        fi
+    else
+        logger -ist nsupdate "Got invalid IP address '$newip'"
+    fi
+}
+
+ns_setup() {
+#   Check if we have made a connection:
+    if [ "$DHCP4_IP_ADDRESS" != "" ]; then
+        ns_update
+    fi
+#   Old dhcp style
+    case $reason in
+        BOUND|RENEW|REBIND|REBOOT|TEST)
+            ns_update;;
+    esac
+}
+
+ns_setup
