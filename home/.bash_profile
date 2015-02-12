@@ -79,7 +79,7 @@ alias la0='ssh $LA0'
 alias la1='ssh $LA1'
 alias la2='ssh $LA2'
 alias la5='ssh $LA5'
-alias tree="tree -CA"
+alias tree="tree -C"
 alias grep='grep --color=auto'
 alias fgrep='grep -F --color=auto'
 alias egrep='grep -E --color=auto'
