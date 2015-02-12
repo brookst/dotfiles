@@ -266,7 +266,7 @@ for action in ${actions[*]}; do
   elif is "$action" in "pull"; then
     cd ~/.dotfiles
     action git $action
-  elif git help $action &>/dev/null; then
+  elif is "$action" in "diff,pull,status,show" || git help $action &>/dev/null; then
     temp=${actions[*]}
     # echo ${temp#*$action}
     cd ~/.dotfiles
