@@ -13,11 +13,14 @@ set passkeys+=github.com:?jkxogncipw<Left><Right>
 set! ui.key.menuAccessKeyFocuses=false
 
 " Let me use alt as escape key in these cases
-map <A-:> :
-map <A-/> /
-map <A-b> b
+imap <A-:> <ESC>:
+imap <A-/> <ESC>/
+imap <A-b> <ESC>b
 
 " Open a page in the wayback machine
 command! wayback -bang -nargs=? -complete url execute "open http://web.archive.org/web/" + (<q-args> == "" ? buffer.URL : <q-args>)
+
+" Translate a page automatically into English
+command! translate -bang -nargs=? -complete url execute "open https://translate.google.co.uk/translate?sl=auto&tl=en&js=y&prev=_t&hl=en&ie=UTF-8&u=" + (<q-args> == "" ? buffer.URL : <q-args>)
 
 " vim: set ft=pentadactyl:
