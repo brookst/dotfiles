@@ -4,6 +4,7 @@ build
 
 # Temp files/dirs
 *.swp
+*.swo
 *.pyc
 
 # Generated files
