@@ -61,7 +61,7 @@ nnoremap <leader>l <C-w>l
 nnoremap <leader>f :exec "file ". resolve(expand('%:p'))<CR>:e<CR>
 
 " Disable these plugins if invoked as less
-let g:pathogen_disabled = []
+let g:pathogen_disabled = ['vim-css-color']
 if exists("loaded_less")
     call add(g:pathogen_disabled, 'vim-surround')
     call add(g:pathogen_disabled, 'vim-speeddating')
