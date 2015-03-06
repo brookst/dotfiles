@@ -6,10 +6,11 @@ group user
 colorscheme molokai
 
 " Enter passthrough mode when using gmail
-autocmd LocationChange mail.google.com :normal! <C-z>
+" autocmd LocationChange mail.google.com :normal! <C-z>
 
 " Navigation keys
-set passkeys+=github.com:?jkxogncipw<Left><Right>
+set passkeys+=github.com:?jkxncipw<Left><Right>
+set passkeys+=mail.google.com:?jkexvis
 
 " Prevent alt key opening menus
 set! ui.key.menuAccessKeyFocuses=false
