@@ -13,8 +13,9 @@ usage () {
   echo
   echo "Actions: pull - pull updates from attached repos"
   echo "         push - push updates to attached repos"
+  echo "         send - commit updates and push them"
   echo "         sync - sync dotfiles to this repo"
-  echo "         add - add a dotfile to this repo"
+  echo "         add - add a dotfile to this repo and sync it"
   echo
   echo "Options:"
   echo "  -h, --help              this help message"
@@ -205,6 +206,10 @@ for action in ${actions[*]}; do
     echo "${_name} version: ${_version}"
     exit 0
   elif [ "$action" == "push" ]; then
+    for remote in $remotes; do
+      action "git push $remote $branch"
+    done
+  elif [ "$action" == "send" ]; then
     cd ~/.dotfiles
     if stat; then
         if [ "$message" ]; then
@@ -254,6 +259,7 @@ for action in ${actions[*]}; do
         action mkdir -p "${file_name%/*}"
       fi
       action mv "${file}" "${file_name}"
+      link "$file_name" "$file"
       cd ~/.dotfiles
       action git add "${file_name}"
     done
