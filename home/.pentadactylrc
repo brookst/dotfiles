@@ -20,10 +20,16 @@ imap <A-:> <ESC>:
 imap <A-/> <ESC>/
 imap <A-b> <ESC>b
 
-" Open a page in the wayback machine
-command! wayback -bang -nargs=? -complete url execute "open http://web.archive.org/web/" + (<q-args> == "" ? buffer.URL : <q-args>)
-
-" Translate a page automatically into English
-command! translate -bang -nargs=? -complete url execute "open https://translate.google.co.uk/translate?sl=auto&tl=en&js=y&prev=_t&hl=en&ie=UTF-8&u=" + (<q-args> == "" ? buffer.URL : <q-args>)
+command reddit,r -description="Open a subreddit or the front page"
+        \ -nargs=? execute "open http://reddit.com/" + (<q-args> == "" ? "" : "r/" + <q-args>)
+command proxy -description="Use proxy specified in manual proxy settings"
+        \ -bang execute "set! network.proxy.type=" + ("<bang>"=="!"?0:1)
+command wayback -description="Open a page in the wayback machine"
+        \ -nargs=? -complete url
+        \ execute "open http://web.archive.org/web/" + (<q-args> == "" ? buffer.URL : <q-args>)
+command translate -description="Translate a page automatically into English"
+        \ -nargs=? -complete url
+        \ execute "open https://translate.google.co.uk/translate?sl=auto&tl=en&js=y&prev=_t&hl=en&ie=UTF-8&u="
+        \ + (<q-args> == "" ? buffer.URL : <q-args>)
 
 " vim: set ft=pentadactyl:

@@ -7,7 +7,9 @@
 " Version: 0.1
 " Name: Molokai
 
-hi clear
+" This lags out pentadactyl: See https://code.google.com/p/dactyl/issues/detail?id=1150
+" hi clear
+
 " Section: Javascript - General{{{1
 hi -a Boolean color: #AE81FF;
 hi -a Function color: #A6E22E;
