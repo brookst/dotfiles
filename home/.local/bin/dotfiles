@@ -95,7 +95,10 @@ while true; do
         fi
         if [ -e "$value" ]; then
             args=${args#$value\ }
-            args=${args#$value}
+            if [ "$args" == "$value" ]; then
+                args=""
+                break
+            fi
             if [ ! "${files}" ]; then
               actions=("${actions[@]}" "$current")
             fi
