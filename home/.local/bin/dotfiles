@@ -238,6 +238,8 @@ for action in ${actions[*]}; do
     for file in ${files[*]}; do
       if [ "${file:0:${#DOTFILES}}" == "$DOTFILES" ]; then
         log "file $file already tracked in dotfiles"
+        cd ~/.dotfiles
+        action git add "${file}"
         continue
       fi
       file_name=${BASE}/${file##$HOME/}
