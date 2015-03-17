@@ -193,7 +193,6 @@ function prompt_exit() {
   echo $status_color
   return $es
 }
-PS1="\[\$(prompt_exit)\]\t\[$YELLOW\]$TERM_TEXT\[$GREEN\]@${FULLHOST#*-}\[$LIGHT_BLUE\](\j)\[$NO_COLOUR\]\$(PWD)\$(__git_ps1 '<%s')>\[$NO_COLOUR\] "
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
@@ -240,6 +239,12 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
         # Need to define *something*, otherwise there will be no completion at all.
         complete -F _minimal "$1" && return 124
     }
+fi
+
+if type __git_ps1 &> /dev/null; then
+PS1="\[\$(prompt_exit)\]\t\[$YELLOW\]$TERM_TEXT\[$GREEN\]@${FULLHOST#*-}\[$LIGHT_BLUE\](\j)\[$NO_COLOUR\]\$(PWD)\$(__git_ps1 '<%s')>\[$NO_COLOUR\] "
+else
+PS1="\[\$(prompt_exit)\]\t\[$YELLOW\]$TERM_TEXT\[$GREEN\]@${FULLHOST#*-}\[$LIGHT_BLUE\](\j)\[$NO_COLOUR\]\$(PWD)>\[$NO_COLOUR\] "
 fi
 
 if go version &> /dev/null; then
