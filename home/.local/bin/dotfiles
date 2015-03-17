@@ -95,10 +95,13 @@ while true; do
           exit 1
         fi
         if [ -e "$value" ]; then
-            args=${args#$value\ }
-            if [ "$args" == "$value" ]; then
+            if [ "$args" == "" -o "$args" == " " ]; then
                 args=""
                 break
+            fi
+            args=${args#$value}
+            if [ "${args:0:1}" == " " ]; then
+              args="${args:1}"
             fi
             if [ ! "${files}" ]; then
               actions=("${actions[@]}" "$current")
@@ -206,6 +209,8 @@ for action in ${actions[*]}; do
     echo "${_name} version: ${_version}"
     exit 0
   elif [ "$action" == "push" ]; then
+    remotes=$(git remote)
+    branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
       action "git push $remote $branch"
     done
@@ -270,7 +275,11 @@ for action in ${actions[*]}; do
       fi
       action git commit -m "\"$message\""
     elif [ ${#files[@]} == 1 ]; then
-      action git commit -m "\"Added ${files[@]##$HOME/} from ${HOSTNAME%%.*}\""
+      if [ "${files[0]:0:${#DOTFILES}}" == "$DOTFILES" ]; then
+        action git commit -m "\"File update @${HOSTNAME%%.*}\""
+      else
+        action git commit -m "\"Added ${files[@]##$HOME/} from ${HOSTNAME%%.*}\""
+      fi
     else
       action git commit -m "\"Added multiple files @${HOSTNAME%%.*}\""
     fi
