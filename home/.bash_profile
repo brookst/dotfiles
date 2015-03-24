@@ -257,7 +257,7 @@ export PROJECT_HOME=$HOME/dev
 
 # Set up environment variables for Python and ROOT (Allowing pyROOT)
 export PYTHONDIR=/usr/bin/python
-export PYTHONSTARTUP=/home/$USER/.pythonrc
+export PYTHONSTARTUP=$HOME/.pythonrc
 
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$MINUIT2DIR/lib:$PYTHIA8/lib
 export PYTHONPATH=$ROOTSYS/lib:$PYTHONDIR/lib
