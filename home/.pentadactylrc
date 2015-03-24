@@ -10,7 +10,7 @@ colorscheme molokai
 
 " Navigation keys
 set passkeys+=github.com:?jkxncipw<Left><Right>
-set passkeys+=mail.google.com:?jkexvis
+set passkeys+=mail.google.com:?jkexvlis
 
 " Prevent alt key opening menus
 set! ui.key.menuAccessKeyFocuses=false
