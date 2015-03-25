@@ -38,8 +38,8 @@ ssh () {
             return
         fi
     done
-    if [ -z "${HOSTNAME/*cern.ch}" ]; then
-        ssh-add -l &> /dev/null || ssh-add -t 24h && command ssh "$@"
+    if [ -z "${HOSTNAME/*cern.ch}" -o "$HOSTNAME" == "pi3" ]; then
+        ssh-add -l &> /dev/null || ssh-add -t 16h && command ssh "$@"
     else
         ssh-add -l &> /dev/null || ssh-add && command ssh "$@"
     fi
