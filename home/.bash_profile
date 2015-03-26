@@ -303,7 +303,7 @@ push_env() {
 
     for var in "$@"; do
         # eval echo ${var}=\$${var}
-        eval echo "${var}=\$${var} >> $ENV_FILE"
+        eval echo "export ${var}=\$${var} >> $ENV_FILE"
     done
 }
 pull_env() {
