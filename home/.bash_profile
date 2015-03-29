@@ -64,6 +64,7 @@ export AFSHOME=/afs/cern.ch/user/b/brooks
 export SVNOFF=svn+ssh://svn.cern.ch/reps/atlasoff
 export SVNUSR=svn+ssh://svn.cern.ch/reps/atlasusr
 export SVNGRP=svn+ssh://svn.cern.ch/reps/atlasgrp
+export SVNTDAQ=svn+ssh://svn.cern.ch/reps/atlastdaq
 export SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
 alias s="screen -dR"
 alias j="jobs"
