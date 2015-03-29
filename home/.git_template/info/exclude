@@ -6,6 +6,7 @@ build
 *.swp
 *.swo
 *.pyc
+*bak
 
 # Generated files
 README.html

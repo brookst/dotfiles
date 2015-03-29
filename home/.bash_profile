@@ -45,6 +45,9 @@ ssh () {
     fi
 }
 
+#Turn off echoing of ^C when interrupting a process - saves mangling the following prompt
+stty -ctlecho
+
 # A few aliases to improve the console and save time
 export SKOORB=skoorb.net
 export SERVER=server.skoorb.net
@@ -233,8 +236,13 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 
         # Avoid trying to source dirs; https://bugzilla.redhat.com/903540
         # Set alias completion to real completion
-        [[ -f "$compfile" ]] && . "$compfile" &>/dev/null &&
-        complete -F "_$name" "$1" && return 124
+        if [[ -f "$compfile" ]] && . "$compfile" &>/dev/null; then
+            # Find the completion set by $compfile and substitute in the alias
+            local comp_line=$(complete | grep "${name}\$" | sed "s/${name}\$/${1}/")
+            eval "$comp_line"
+            # Tell bash to retry completion now this alias has been set
+            return 124
+        fi
 
         # Need to define *something*, otherwise there will be no completion at all.
         complete -F _minimal "$1" && return 124
