@@ -32,12 +32,21 @@ lxp () {
 
 #Check an ssh key is unlocked before sshing
 ssh () {
+    title=""
     for token in "$@"; do
+        if [ "${token:0:1}" == "-" ]; then
+            : #NOP
+        elif [[ "$token" =~ @ ]]; then
+            title="$token"
+        else
+            title="@$token"
+        fi
         if [ "$token" == "lxp" -o "$token" == "lxplus" -o "$token" == "lxplus.cern.ch" ]; then
             lxp "${@/$token}"
             return
         fi
     done
+    print_titlebar "$title"
     if [ -z "${HOSTNAME/*cern.ch}" -o "$HOSTNAME" == "pi3" ]; then
         ssh-add -l &> /dev/null || ssh-add -t 16h && command ssh "$@"
     else
@@ -71,6 +80,7 @@ alias j="jobs"
 alias g="git"
 alias ls="ls --color=auto"
 alias sl="ls -r"
+alias cda='cd $AFSHOME'
 alias dir="ls *.*[^~]"
 alias pdf="evince"
 alias skoorb='ssh $SKOORB'
