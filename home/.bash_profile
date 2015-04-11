@@ -304,7 +304,7 @@ function start_agent {
 if [ -f "${SSH_ENV}" ]; then
      . "${SSH_ENV}" > /dev/null
      #ps ${SSH_AGENT_PID} doesn't work under cywgin, hopefully pgrep does
-     pgrep ssh-agent > /dev/null || {
+     pgrep -u "$USER" ssh-agent > /dev/null || {
          start_agent;
      }
 else
