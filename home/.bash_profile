@@ -160,7 +160,7 @@ export LIGHT_WHITE=$'\033[1;37m'
 START_TITLE=$"\033]0;"
 END_TITLE=$"\007"
 
-function print_titlebar {
+print_titlebar () {
   # Echo title command sequence to the terminal
   if [ -n "$1" ]; then
     printf "${START_TITLE}%s${END_TITLE}" "$1"
@@ -183,7 +183,7 @@ fi
 
 # Set up the prompt to display user@first_part_of_server_name
 # and the pwd relative to our home directory and Testarea
-function PWD {
+PWD () {
   es=$?
   local ps1="${PWD/$TestArea/$}"
   if [ "$BASH_MAJVERSION" -ge 4 ] && [ "$BASH_MINVERSION" -ge 3 ]; then
@@ -196,7 +196,7 @@ function PWD {
   return $es
 }
 
-function prompt_exit() {
+prompt_exit () {
   #Set colour red or green based on exit code of last command
   es=$?
   if [ $es -eq 0 ]; then
@@ -290,7 +290,7 @@ alias atlsetup='source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh'
 # Store ssh settings in a hostname specific script
 SSH_ENV="$HOME/.ssh/${HOSTNAME%%.*}.environment"
 
-function start_agent {
+start_agent () {
      echo "Initialising new SSH agent..."
      /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
      chmod 600 "${SSH_ENV}"

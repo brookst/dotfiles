@@ -209,6 +209,7 @@ for action in ${actions[*]}; do
     echo "${_name} version: ${_version}"
     exit 0
   elif [ "$action" == "push" ]; then
+    cd ~/.dotfiles
     remotes=$(git remote)
     branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
