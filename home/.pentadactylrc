@@ -21,19 +21,18 @@ imap <A-:> <ESC>:
 imap <A-/> <ESC>/
 imap <A-b> <ESC>b
 
-command reddit,r -description="Open a subreddit or the front page"
-        \ -nargs=? execute "open http://reddit.com/" + (<q-args> == "" ? "" : "r/" + <q-args>)
-command proxy -description="Use proxy specified in manual proxy settings"
+command! reddit,r -description="Open a subreddit or the front page"
+        \ -nargs=? execute "open http://reddit.com/" + ("<args>" == "" ? "" : "r/" + "<args>")
+command! proxy -description="Use proxy specified in manual proxy settings"
         \ -bang execute "set! network.proxy.type=" + ("<bang>"=="!"?0:1)
-command wayback -description="Open a page in the wayback machine"
+command! wayback -description="Open a page in the wayback machine"
         \ -nargs=? -complete url
-        \ execute "open http://web.archive.org/web/" + (<q-args> == "" ? buffer.URL : <q-args>)
-command translate -description="Translate a page automatically into English"
+        \ execute "open http://web.archive.org/web/" + ("<args>" == "" ? buffer.URL : "<args>")
+command! translate -description="Translate a page automatically into English"
         \ -nargs=? -complete url
-        \ execute "open https://translate.google.co.uk/translate?sl=auto&tl=en&js=y&prev=_t&hl=en&ie=UTF-8&u="
-        \ + (<q-args> == "" ? buffer.URL : <q-args>)
+        \ execute "open https://translate.google.co.uk/translate?sl=auto&tl=en&js=y&prev=_t&hl=en&ie=UTF-8&u=" + ("<args>" == "" ? buffer.URL : "<args>")
 
-" Workaround to let ublock pop-up menu to work on status bar
+" Workaround to let ublock pop-up menu display from status bar
 style -name ublick * #nav-bar * { visibility: visible; }
 
 " vim: set ft=pentadactyl:

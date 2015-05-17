@@ -286,6 +286,9 @@ function! ScratchEdit(cmd, options)
     if !empty(a:options) | exe 'setl' a:options | endif
 endfunction
 
+command! Gutter set invnumber | set invrelativenumber | SignifyToggle
+nmap <silent> gh :Gutter<CR>
+
 command! -bar -nargs=* Sedit call ScratchEdit('edit', <q-args>)
 command! -bar -nargs=* Ssplit call ScratchEdit('split', <q-args>)
 command! -bar -nargs=* Svsplit call ScratchEdit('vsplit', <q-args>)
