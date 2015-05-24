@@ -1,0 +1,38 @@
+#!/bin/bash
+
+DATA=${1-$(mktemp)}
+GNUPLOT=$$.gnuplot-pipe
+mkfifo $GNUPLOT
+
+script="plot '$DATA' using 1:2"
+
+# Read in the first data points
+while read -t 0.1 line; do
+    [ -n "$line" ] && echo "$line" >> "$DATA"
+done
+
+gnuplot -p <$GNUPLOT &
+pid=$!
+exec 3>$GNUPLOT
+echo "$script" >&3
+sleep .1s
+
+running=1
+trap 'running=0' SIGINT
+
+while read line && [ "$running" -eq 1 ]; do
+    echo "$line" >> "$DATA"
+    echo "replot" >&3
+    sleep .5s
+done
+
+exec 3>&-
+rm "$GNUPLOT"
+[ -z "$1" ] && rm "$DATA"
+pid=$(ps | awk '/gnuplot_qt/{ print $1; exit }')
+
+running=1
+while kill -0 "$pid" &>/dev/null && [ "$running" -eq 1 ]; do
+    sleep 0.1
+done
+kill "$pid" &>/dev/null
