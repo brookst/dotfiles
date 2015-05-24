@@ -240,8 +240,8 @@ noremap <Right>  <NOP>
 noremap <Left>   <NOP>
 
 "Remap line movements to traverse wrapped segments
-nnoremap j gj
-nnoremap k gk
+nnoremap <expr> j v:count ? 'j' : 'gj'
+nnoremap <expr> k v:count ? 'k' : 'gk'
 
 nnoremap <C-e> :e#<CR>
 nnoremap <C-n> :bnext<CR>
