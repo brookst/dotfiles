@@ -200,7 +200,6 @@ if $TERM ==? "linux"
   set t_Co=8
 else
   set t_Co=256
-  set ttymouse=xterm2
 endif
 
 " Don't display push enter to continue, just pop open the quicklist
@@ -286,13 +285,33 @@ function! ScratchEdit(cmd, options)
     if !empty(a:options) | exe 'setl' a:options | endif
 endfunction
 
-command! Gutter set invnumber | set invrelativenumber | SignifyToggle
-nmap <silent> gh :Gutter<CR>
-
 command! -bar -nargs=* Sedit call ScratchEdit('edit', <q-args>)
 command! -bar -nargs=* Ssplit call ScratchEdit('split', <q-args>)
 command! -bar -nargs=* Svsplit call ScratchEdit('vsplit', <q-args>)
 command! -bar -nargs=* Stabedit call ScratchEdit('tabe', <q-args>)
+
+" Disable everything that inserts characters in the margins
+function! Gutter()
+    set invnumber
+    set invrelativenumber
+    SignifyToggle
+    if &showbreak == "↪"
+        set showbreak=
+    else
+        set showbreak=↪
+    endif
+endfunction
+nmap <silent> gh :call Gutter()<CR>
+
+" See http://vim.wikia.com/wiki/Diff_current_buffer_and_the_original_file
+function! s:DiffWithSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+com! DiffSaved call s:DiffWithSaved()
 
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
@@ -303,7 +322,7 @@ let g:airline_theme="jellybeans"
 " let g:airline_left_sep = '▙'
 " let g:airline_right_sep = '▟'
 
-"Versions prior to 701.040 don't have the method syntastic uses for
+"Versions prior to 701.040 don't have the method Syntastic uses for
 "highlighting
 if v:version < 701 || v:version == 701 && !has('patch040')
     let g:syntastic_enable_highlighting = 0

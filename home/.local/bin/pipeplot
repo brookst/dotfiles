@@ -1,27 +1,81 @@
 #!/bin/bash
 
-DATA=${1-$(mktemp)}
-GNUPLOT=$$.gnuplot-pipe
-mkfifo $GNUPLOT
+usage () {
+    if [ "$1" == 0 ]; then
+    echo "${_name} - Tim Brooks 2015 <brooks@skoorb.net>"
+    fi
+    echo "Usage: echo data | ${_name} [options]"
+    echo "Auto update git repo"
+    echo
+    echo "Options:"
+    echo "  -h, --help              this help message"
+    echo "  -s, --store=FILE        store data to FILE"
+    echo "  -o, --options=OPTIONS   gnuplot options"
+    echo "  -p, --plot=OPTIONS      gnuplot plot command"
+    exit "$1"
+}
 
-script="plot '$DATA' using 1:2"
+# Execute getopt
+if ! ARGS=$(getopt -o hs:o:p: -l "help,store:,options:,plot:" -n "getopt.sh" -- "$@"); then
+  usage 1
+fi
+
+eval set -- "$ARGS"
+
+while true; do
+  case "$1" in
+    -s|--store)
+      shift;
+      DATA=$1
+      shift;
+      ;;
+    -p|--plot)
+      shift;
+      PLOT=$1
+      shift;
+      ;;
+    -o|--options)
+      shift;
+      OPTIONS=$1
+      shift;
+      ;;
+    -h|--help)
+      usage 0;
+      ;;
+    --)
+      shift
+      break
+      ;;
+  esac
+done
+
+DATA=${DATA-$(mktemp)}
+OPTIONS=${OPTIONS-""}
+PLOT=${PLOT-"1:2"}
+GNUPLOT=${TMPDIR-"/tmp"}/$$.gnuplot-pipe
+mkfifo "$GNUPLOT"
+
+script="plot '$DATA' using $PLOT"
 
 # Read in the first data points
 while read -t 0.1 line; do
     [ -n "$line" ] && echo "$line" >> "$DATA"
 done
 
-gnuplot -p <$GNUPLOT &
+gnuplot -p <"$GNUPLOT" &
 pid=$!
-exec 3>$GNUPLOT
+exec 3>"$GNUPLOT"
+echo "$OPTIONS" >&3
 echo "$script" >&3
 sleep .1s
 
 running=1
 trap 'running=0' SIGINT
 
+head "$DATA"
 while read line && [ "$running" -eq 1 ]; do
     echo "$line" >> "$DATA"
+    echo "$line"
     echo "replot" >&3
     sleep .5s
 done
@@ -36,3 +90,5 @@ while kill -0 "$pid" &>/dev/null && [ "$running" -eq 1 ]; do
     sleep 0.1
 done
 kill "$pid" &>/dev/null
+
+exit 0

@@ -13,6 +13,9 @@ import atexit
 import os
 import readline
 import rlcompleter
+from pint import UnitRegistry
+REG = UnitRegistry("/home/brooks/units.txt")
+Qty = REG.Quantity
 
 historyPath = os.path.expanduser("~/.pyhistory")
 historyTmp = os.path.expanduser("~/.pyhisttmp.py")
