@@ -202,6 +202,20 @@ else
   set t_Co=256
 endif
 
+" Split line to complement `J`
+" https://www.reddit.com/r/vim/comments/3g8y3r
+function! BreakHere()
+    s/\(.\{-}\)\(\s*\)\(\%#\)\(\s*\)\(.*\)/\1\r\3\5
+    call histdel("/", -1)
+endfunction
+
+nnoremap S :call BreakHere()<CR>
+
+" Use repeat.vim to map S
+" nnoremap <silent> <Plug>BreakHere s<CR>
+" \:call repeat#set("\<Plug>BreakHere")<CR>
+" nmap S <Plug>BreakHere
+
 " Don't display push enter to continue, just pop open the quicklist
 function! Make()
   ccl
