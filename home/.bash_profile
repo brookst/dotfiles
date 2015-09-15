@@ -262,11 +262,29 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     }
 fi
 
+# Set prompt
+# See http://www.gnu.org/software/bash/manual/bash.html#Controlling-the-Prompt
+
+# Set colour to red or green based on last command status
+PS1="\[\$(prompt_exit)\]"
+# Time in HH:MM:SS form
+PS1+="\t"
+# Screen name
+PS1+="\[$YELLOW\]$TERM_TEXT"
+# Hostname
+PS1+="\[$GREEN\]@${FULLHOST#*-}"
+# Number of this shells TTY
+PS1+="/\l"
+# Number of jobs managed by this shell
+PS1+="\[$LIGHT_BLUE\](\j)"
+# Present working directory, with some abbreviations
+PS1+="\[$NO_COLOUR\]\$(PWD)"
+# Git branch, if available
 if type __git_ps1 &> /dev/null; then
-PS1="\[\$(prompt_exit)\]\t\[$YELLOW\]$TERM_TEXT\[$GREEN\]@${FULLHOST#*-}\[$LIGHT_BLUE\](\j)\[$NO_COLOUR\]\$(PWD)\$(__git_ps1 '<%s')>\[$NO_COLOUR\] "
-else
-PS1="\[\$(prompt_exit)\]\t\[$YELLOW\]$TERM_TEXT\[$GREEN\]@${FULLHOST#*-}\[$LIGHT_BLUE\](\j)\[$NO_COLOUR\]\$(PWD)>\[$NO_COLOUR\] "
+    PS1+="\$(__git_ps1 '<%s')"
 fi
+# End of prompt
+PS1+=">\[$NO_COLOUR\] "
 
 if go version &> /dev/null; then
     export GOROOT=$(go env GOROOT)

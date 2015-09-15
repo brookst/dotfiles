@@ -1,4 +1,6 @@
 #!/bin/bash
+# autogit - automatic git commit generator
+# Tim Brooks <brooks@cern.ch>
 
 _name=${0##*/}
 _version=$(cd "$HOME/.dotfiles"; git log -1 --pretty="format:%ai %h" "home/.local/bin/autogit")
@@ -8,7 +10,7 @@ function usage () {
     echo "${_name} - Tim Brooks 2014 <brooks@skoorb.net>"
     fi
     echo "Usage: ${_name} [option]... [repo_path]"
-    echo "Auto update git repo"
+    echo "Automatically update a git repo"
     echo
     echo "Options:"
     echo "  -h, --help              this help message"

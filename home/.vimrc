@@ -350,7 +350,7 @@ let g:syntastic_warning_symbol='⚠'
 let g:syntastic_style_error_symbol='✗'
 let g:syntastic_style_warning_symbol='⚠'
 
-let g:syntastic_cpp_config_file='.syntastic.conf'
+let g:syntastic_cpp_config_file='.syntastic_cpp_config'
 
 " On by default, turn it off for html
 let g:syntastic_mode_map = { 'mode': 'active',
