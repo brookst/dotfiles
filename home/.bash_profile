@@ -161,8 +161,13 @@ export LIGHT_CYAN=$'\033[1;36m'
 export WHITE=$'\033[0;37m'
 export LIGHT_WHITE=$'\033[1;37m'
 
-START_TITLE=$"\033]0;"
-END_TITLE=$"\007"
+if [[ "$TERM" =~ screen ]]; then
+    START_TITLE=$"\033k"
+    END_TITLE=$"\033\\"
+else
+    START_TITLE=$"\033]0;"
+    END_TITLE=$"\007"
+fi
 
 print_titlebar () {
   # Echo title command sequence to the terminal
@@ -184,7 +189,7 @@ else
   TTY=${TTY##*/}
   titlebar="${TERM_TEXT}@${FULLHOST#*-}/${TTY}:\$(PWD)"
   export PROMPT_COMMAND="print_titlebar ${titlebar}"
-  export TERM=xterm-256color
+  # export TERM=xterm-256color
 fi
 
 # Set up the prompt to display user@first_part_of_server_name

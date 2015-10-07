@@ -118,6 +118,11 @@ if v:version > 703 && !exists("loaded_less")
     autocmd VimEnter * set relativenumber
 endif
 
+if &term == "screen"
+    set t_ts=k
+    set t_fs=\
+endif
+
 au BufEnter * set title | let &titlestring = "@" . substitute(hostname(), ".*-", "", "") . ":" . substitute(expand("%:p"), "/home/brooks", "~", "")
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 

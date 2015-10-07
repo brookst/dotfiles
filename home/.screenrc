@@ -5,7 +5,8 @@ msgwait 1
 defutf8 on
 encoding UTF-8
 compacthist on
-hardstatus string ""
+hardstatus off
+defhstatus "^Et"
 
 # Monitor windows
 defmonitor on
