@@ -80,6 +80,8 @@ export SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
 alias s="screen -dR"
 alias j="jobs"
 alias g="git"
+alias py="python"
+alias py3="python3"
 alias ls="ls --color=auto"
 alias sl="ls -r"
 alias cda='cd $AFSHOME'
@@ -176,9 +178,11 @@ else
   # List the screen id if this is a screen session
   if [ -n "$STY" ]; then
     TERM_TEXT="${STY#*.}"
-    TERM_TEXT="[${TERM_TEXT%.$HOSTNAME}]"
+    TERM_TEXT="[${TERM_TEXT%.$HOSTNAME}.${WINDOW}]"
   fi
-  titlebar="${TERM_TEXT}@${FULLHOST#*-}:\$(PWD)"
+  TTY=$(tty)
+  TTY=${TTY##*/}
+  titlebar="${TERM_TEXT}@${FULLHOST#*-}/${TTY}:\$(PWD)"
   export PROMPT_COMMAND="print_titlebar ${titlebar}"
   export TERM=xterm-256color
 fi
