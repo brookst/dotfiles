@@ -118,12 +118,19 @@ if v:version > 703 && !exists("loaded_less")
     autocmd VimEnter * set relativenumber
 endif
 
-if &term == "screen"
+if &term =~ "screen"
     set t_ts=k
     set t_fs=\
+    " set t_AF=[3%p1%dm]
+    " set t_AB=[4%p1%dm]
+    " set t_AF=[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5;%p1%d%;m
+    " set t_AB=[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;5;%p1%d%;m
 endif
 
-au BufEnter * set title | let &titlestring = "@" . substitute(hostname(), ".*-", "", "") . ":" . substitute(expand("%:p"), "/home/brooks", "~", "")
+let g:ttyname = substitute($PROMPT_COMMAND, "print_titlebar ", "", "")
+let g:ttyname = substitute(g:ttyname, "$(PWD)", "", "")
+
+au BufEnter * set title | let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 
 hi DiffAdd ctermfg=15 ctermbg=70
@@ -203,8 +210,6 @@ au FilterWritePre * if &diff | set wrap | endif
 
 if $TERM ==? "linux"
   set t_Co=8
-else
-  set t_Co=256
 endif
 
 " Split line to complement `J`
@@ -340,6 +345,28 @@ let g:airline#extensions#redgreen#enabled = 1
 let g:airline_theme="jellybeans"
 " let g:airline_left_sep = '▙'
 " let g:airline_right_sep = '▟'
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_symbols.paste = 'P'
+let g:airline_mode_map = {
+    \ '__' : '------',
+    \ 'n'  : 'N',
+    \ 'i'  : 'I',
+    \ 'R'  : 'R',
+    \ 'v'  : 'v',
+    \ 'V'  : 'V',
+    \ 'c'  : 'C',
+    \ '' : 'B',
+    \ 's'  : 's',
+    \ 'S'  : 'S',
+    \ '' : 'b',
+    \ 't'  : 'T',
+    \ }
+" Hide filetype
+" let g:airline_section_x = ""
+" Hide encoding
+let g:airline_section_y = ""
 
 "Versions prior to 701.040 don't have the method Syntastic uses for
 "highlighting

@@ -189,7 +189,7 @@ else
   TTY=${TTY##*/}
   titlebar="${TERM_TEXT}@${FULLHOST#*-}/${TTY}:\$(PWD)"
   export PROMPT_COMMAND="print_titlebar ${titlebar}"
-  # export TERM=xterm-256color
+  export TERM=xterm-256color
 fi
 
 # Set up the prompt to display user@first_part_of_server_name

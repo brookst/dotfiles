@@ -7,6 +7,7 @@ encoding UTF-8
 compacthist on
 hardstatus off
 defhstatus "^Et"
+term screen-256color
 
 # Monitor windows
 defmonitor on
@@ -20,9 +21,9 @@ altscreen on
 
 # Enable 256 color terminal
 # attrcolor b ".I"
-# termcapinfo xterm 'Co#256:AB=E[48;5;%dm:AF=E[38;5;%dm'
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 # termcapinfo xterm|xterms|xs|rxvt ti@:te@
-# defbce "on"
+defbce "on"
 
 # Log 50000 lines
 defscrollback 50000
