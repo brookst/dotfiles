@@ -28,6 +28,9 @@ usage () {
   echo "      --version           print version: ${_version}"
 }
 
+YELLOW=$'\033[0;33m'
+NO_COLOUR=$'\033[0m'
+
 # Execute getopt
 if ! ARGS=$(getopt -o m:hoqvdc -l "message:,help,overwrite,quiet,verbose,dryrun,compare,version" -n "getopt.sh" -- "$@"); then
   exit 1
@@ -145,7 +148,7 @@ log () {
 
 warn () {
     if [ ! $quiet ]; then
-        echo "Warning $@"
+        echo "${YELLOW}Warning ${@}${NO_COLOUR}"
     fi
 }
 
