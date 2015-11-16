@@ -152,9 +152,10 @@ warn () {
 link () {
     target_path=$1
     link_path=$2
+    # Pull out link targets non-recursively
     if [ -L "$link_path" ]; then
-        old_path=$(ls -l "$link_path")
-        old_path=${old_path##* }
+        old_path="$(file -h "$link_path" | sed -es/^.*\`// -es/\'//)"
+
         if [ "$old_path" == "$target_path" ]; then
             : log "$link_path linked"
         else
@@ -215,11 +216,13 @@ for action in ${actions[*]}; do
       action "git push $remote $branch"
     done
   elif [ "$action" == "sync" ]; then
-    targets=$(cd ~/.dotfiles;
-            find -L home -type f ! -regex '.*\.sw.' -printf "%P\n")
-    for target in ${targets}; do
-      target_path=~/.dotfiles/home/${target}
-      link_path=~/${target}
+    while IFS= read -r -d $'\0' file; do
+        targets[i++]="$file"
+    done < <(cd ~/.dotfiles; find -L home -type f ! -regex '.*\.sw.' -print0)
+
+    for target in "${targets[@]}"; do
+      target_path="${HOME}/.dotfiles/${target}"
+      link_path="${HOME}/${target#home/}"
       if [ -d "${link_path%/*}" ]; then
         : log "${link_path%/*} exists"
       elif [ -e "${link_path%/*}" ]; then
