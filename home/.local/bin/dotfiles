@@ -194,14 +194,14 @@ for command in ${commands[*]}; do
     echo "${_name} version: ${_version}"
     exit 0
   elif [ "$command" == "push" ]; then
-    cd ~/.dotfiles
+    cd "${DOTFILES}"
     remotes=$(git remote)
     branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
       action git push "$remote" "$branch"
     done
   elif [ "$command" == "send" ]; then
-    cd ~/.dotfiles
+    cd "${DOTFILES}"
     if stat; then
         if [ "$message" ]; then
           if [ ${#message} -gt 50 ]; then
@@ -221,10 +221,10 @@ for command in ${commands[*]}; do
   elif [ "$command" == "sync" ]; then
     while IFS= read -r -d $'\0' file; do
         targets[i++]="$file"
-    done < <(cd ~/.dotfiles; find -L home -type f ! -regex '.*\.sw.' -print0)
+    done < <(cd "${DOTFILES}"; find -L home -type f ! -regex '.*\.sw.' -print0)
 
     for target in "${targets[@]}"; do
-      target_path="${HOME}/.dotfiles/${target}"
+      target_path="${DOTFILES}/${target}"
       link_path="${HOME}/${target#home/}"
       if [ -d "${link_path%/*}" ]; then
         : log "${link_path%/*} exists"
@@ -239,7 +239,7 @@ for command in ${commands[*]}; do
     for file in "${files[@]}"; do
       if [ "${file:0:${#DOTFILES}}" == "$DOTFILES" ]; then
         log "file $file already tracked in dotfiles"
-        cd ~/.dotfiles
+        cd "${DOTFILES}"
         action git add "${file}"
         continue
       fi
@@ -253,7 +253,7 @@ for command in ${commands[*]}; do
       fi
       action mv "${file}" "${file_name}"
       link "$file_name" "$file"
-      cd ~/.dotfiles
+      cd "${DOTFILES}"
       action git add "${file_name}"
     done
     if [ "$message" ]; then
@@ -272,11 +272,11 @@ for command in ${commands[*]}; do
       action git commit -m "Added multiple files @${HOSTNAME%%.*}"
     fi
   elif is "$command" in "pull"; then
-    cd ~/.dotfiles
+    cd "${DOTFILES}"
     action git $command
   elif is "$command" in "diff,pull,status,show" || git help $command &>/dev/null; then
     temp=${commands[*]}
-    cd ~/.dotfiles
+    cd "${DOTFILES}"
     action git $command ${temp#*$command}
     exit 0
   else
