@@ -80,46 +80,26 @@ while true; do
 done
 
 # Loop over cmd line tokens
-args=$*
-while true; do
-  current=${args%% *}
-  args=${args#$current}
-  args=${args# }
+current="none"
+for arg do
   if [ "$current" == "add" ]; then
-    while true; do
-        value=${args%% *}
-        if [ ! "${files}" -a "$value" == "" ]; then
-          echo "${_name}: add action requires filename"
-          echo
-          usage
-          exit 1
-        fi
-        if [ -e "$value" ]; then
-            if [ "$args" == "" -o "$args" == " " ]; then
-                args=""
-                break
-            fi
-            args=${args#$value}
-            if [ "${args:0:1}" == " " ]; then
-              args="${args:1}"
-            fi
-            if [ ! "${files}" ]; then
-              actions=("${actions[@]}" "$current")
-            fi
-            files=("${files[@]}" $(readlink -f "${value}"))
-        else
-            break
-        fi
-    done
+    files=("${files[@]}" "$(readlink -f "${arg}")")
+  elif [ "$arg" == "add" ]; then
+    current="add"
+    actions=("${actions[@]}" "add")
   else
-    actions=("${actions[@]}" "$current")
-  fi
-  if [ "$args" == "$current" ]; then
-    break
+    actions=("${actions[@]}" "$arg")
   fi
 done
 
-if [ ! "${#actions[@]}" ]; then
+if [ ! "${files}" -a "$current" == "add" ]; then
+  echo "${_name}: add action requires filename"
+  echo
+  usage
+  exit 1
+fi
+
+if [ ! "${actions[@]}" ]; then
   usage
   exit 1
 fi
@@ -137,7 +117,8 @@ action () {
     if [ $dryrun ]; then
         echo "skipping action $@"
     else
-        if eval "$@"; then
+        "$@"
+        if [ $? == 0 ]; then
             log "$@"
         else
             warn "failed command: $@"
@@ -223,9 +204,9 @@ for action in ${actions[*]}; do
             warn "specified message is too long"
             exit 1
           fi
-          action git commit -am "\"$message\""
+          action git commit -am "$message"
         else
-          action git commit -am "\"File update @${HOSTNAME%%.*}\""
+          action git commit -am "File update @${HOSTNAME%%.*}"
         fi
     fi
     remotes=$(git remote)
@@ -249,14 +230,14 @@ for action in ${actions[*]}; do
       link "$target_path" "$link_path"
     done
   elif [ "$action" == "add" ]; then
-    for file in ${files[*]}; do
+    for file in "${files[@]}"; do
       if [ "${file:0:${#DOTFILES}}" == "$DOTFILES" ]; then
         log "file $file already tracked in dotfiles"
         cd ~/.dotfiles
         action git add "${file}"
         continue
       fi
-      file_name=${BASE}/${file##$HOME/}
+      file_name="${BASE}/${file##$HOME/}"
       if [ -d "${file_name%/*}" ]; then
         log "${file_name%/*} exists"
       elif [ -e "${file_name%/*}" ]; then
@@ -274,15 +255,15 @@ for action in ${actions[*]}; do
         warn "specified message is too long"
         exit 1
       fi
-      action git commit -m "\"$message\""
+      action git commit -m "$message"
     elif [ ${#files[@]} == 1 ]; then
       if [ "${files[0]:0:${#DOTFILES}}" == "$DOTFILES" ]; then
-        action git commit -m "\"File update @${HOSTNAME%%.*}\""
+        action git commit -m "File update @${HOSTNAME%%.*}"
       else
-        action git commit -m "\"Added ${files[@]##$HOME/} from ${HOSTNAME%%.*}\""
+        action git commit -m "Added ${files[@]##$HOME/} from ${HOSTNAME%%.*}"
       fi
     else
-      action git commit -m "\"Added multiple files @${HOSTNAME%%.*}\""
+      action git commit -m "Added multiple files @${HOSTNAME%%.*}"
     fi
   elif is "$action" in "pull"; then
     cd ~/.dotfiles
