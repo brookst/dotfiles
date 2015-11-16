@@ -95,7 +95,7 @@ for arg do
   fi
 done
 
-if [ ! "${files}" -a "$current" == "add" ]; then
+if [ "${#files[@]}" == 0 -a "$current" == "add" ]; then
   echo "${_name}: add action requires filename"
   echo
   usage
