@@ -8,14 +8,14 @@ _version=$(cd "$DOTFILES"; git log -1 --pretty="format:%ai %h" "home/.local/bin/
 
 usage () {
   echo "${_name} - Tim Brooks 2013 <brooks@skoorb.net>"
-  echo "Usage: ${_name} [option]... [action]... [file]..."
+  echo "Usage: ${_name} [option]... [command]... [file]..."
   echo "Manage dotfiles repository"
   echo
-  echo "Actions: pull - pull updates from attached repos"
-  echo "         push - push updates to attached repos"
-  echo "         send - commit updates and push them"
-  echo "         sync - sync dotfiles to this repo"
-  echo "         add - add a dotfile to this repo and sync it"
+  echo "Commmands: pull - pull updates from attached repos"
+  echo "           push - push updates to attached repos"
+  echo "           send - commit updates and push them"
+  echo "           sync - sync dotfiles to this repo"
+  echo "           add - add a dotfile to this repo and sync it"
   echo
   echo "Options:"
   echo "  -h, --help              this help message"
@@ -49,11 +49,11 @@ while true; do
       ;;
     -h|--help)
       shift;
-      actions=help
+      commands=help
       ;;
     --version)
       shift;
-      actions=version
+      commands=version
       ;;
     -o|--overwrite)
       shift;
@@ -89,20 +89,20 @@ for arg do
     files=("${files[@]}" "$(readlink -f "${arg}")")
   elif [ "$arg" == "add" ]; then
     current="add"
-    actions=("${actions[@]}" "add")
+    commands=("${commands[@]}" "add")
   else
-    actions=("${actions[@]}" "$arg")
+    commands=("${commands[@]}" "$arg")
   fi
 done
 
 if [ "${#files[@]}" == 0 -a "$current" == "add" ]; then
-  echo "${_name}: add action requires filename"
+  echo "${_name}: add command requires filename"
   echo
   usage
   exit 1
 fi
 
-if [ ! "${actions[@]}" ]; then
+if [ ! "${commands[@]}" ]; then
   usage
   exit 1
 fi
@@ -185,22 +185,22 @@ link () {
     fi
 }
 
-for action in ${actions[*]}; do
-  log "action: $action"
-  if [ "$action" == "help" ]; then
+for command in ${commands[*]}; do
+  log "command: $command"
+  if [ "$command" == "help" ]; then
     usage
     exit 0
-  elif [ "$action" == "version" ]; then
+  elif [ "$command" == "version" ]; then
     echo "${_name} version: ${_version}"
     exit 0
-  elif [ "$action" == "push" ]; then
+  elif [ "$command" == "push" ]; then
     cd ~/.dotfiles
     remotes=$(git remote)
     branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
       action git push "$remote" "$branch"
     done
-  elif [ "$action" == "send" ]; then
+  elif [ "$command" == "send" ]; then
     cd ~/.dotfiles
     if stat; then
         if [ "$message" ]; then
@@ -218,7 +218,7 @@ for action in ${actions[*]}; do
     for remote in $remotes; do
       action git push "$remote" "$branch"
     done
-  elif [ "$action" == "sync" ]; then
+  elif [ "$command" == "sync" ]; then
     while IFS= read -r -d $'\0' file; do
         targets[i++]="$file"
     done < <(cd ~/.dotfiles; find -L home -type f ! -regex '.*\.sw.' -print0)
@@ -235,7 +235,7 @@ for action in ${actions[*]}; do
       fi
       link "$target_path" "$link_path"
     done
-  elif [ "$action" == "add" ]; then
+  elif [ "$command" == "add" ]; then
     for file in "${files[@]}"; do
       if [ "${file:0:${#DOTFILES}}" == "$DOTFILES" ]; then
         log "file $file already tracked in dotfiles"
@@ -271,17 +271,16 @@ for action in ${actions[*]}; do
     else
       action git commit -m "Added multiple files @${HOSTNAME%%.*}"
     fi
-  elif is "$action" in "pull"; then
+  elif is "$command" in "pull"; then
     cd ~/.dotfiles
-    action git $action
-  elif is "$action" in "diff,pull,status,show" || git help $action &>/dev/null; then
-    temp=${actions[*]}
-    # echo ${temp#*$action}
+    action git $command
+  elif is "$command" in "diff,pull,status,show" || git help $command &>/dev/null; then
+    temp=${commands[*]}
     cd ~/.dotfiles
-    action git $action ${temp#*$action}
+    action git $command ${temp#*$command}
     exit 0
   else
-    echo "${_name}: unrecognised action $action"
+    echo "${_name}: unrecognised command $command"
     echo
     usage
     exit 1
