@@ -198,7 +198,7 @@ for action in ${actions[*]}; do
     remotes=$(git remote)
     branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
-      action "git push $remote $branch"
+      action git push "$remote" "$branch"
     done
   elif [ "$action" == "send" ]; then
     cd ~/.dotfiles
@@ -216,7 +216,7 @@ for action in ${actions[*]}; do
     remotes=$(git remote)
     branch=$(git rev-parse --abbrev-ref HEAD)
     for remote in $remotes; do
-      action "git push $remote $branch"
+      action git push "$remote" "$branch"
     done
   elif [ "$action" == "sync" ]; then
     while IFS= read -r -d $'\0' file; do
