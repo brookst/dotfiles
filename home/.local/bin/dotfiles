@@ -28,7 +28,8 @@ usage () {
   echo "      --version           print version: ${_version}"
 }
 
-YELLOW=$'\033[0;33m'
+RED=$'\033[1;31m'
+YELLOW=$'\033[1;33m'
 NO_COLOUR=$'\033[0m'
 
 # Execute getopt
@@ -82,11 +83,19 @@ while true; do
   esac
 done
 
+error () {
+    echo "${RED}Error: ${@}${NO_COLOUR}"
+}
+
 # Loop over cmd line tokens
 current="none"
 for arg do
   if [ "$current" == "add" ]; then
     files=("${files[@]}" "$(readlink -f "${arg}")")
+    if [ $? != 0 ]; then
+      error "File ${arg} not found"
+      exit 1
+    fi
   elif [ "$arg" == "add" ]; then
     current="add"
     commands=("${commands[@]}" "add")
@@ -148,7 +157,7 @@ log () {
 
 warn () {
     if [ ! $quiet ]; then
-        echo "${YELLOW}Warning ${@}${NO_COLOUR}"
+        echo "${YELLOW}Warning: ${@}${NO_COLOUR}"
     fi
 }
 
