@@ -157,7 +157,7 @@ link () {
     link_path=$2
     # Pull out link targets non-recursively
     if [ -L "$link_path" ]; then
-        old_path="$(file -h "$link_path" | sed -es/^.*\`// -es/\'//)"
+        old_path="$(find "$link_path" -printf '%l')"
 
         if [ "$old_path" == "$target_path" ]; then
             : log "$link_path linked"
