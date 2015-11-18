@@ -133,7 +133,12 @@ scp () {
 # Env vars for a few things
 export EDITOR=vim
 export PAGER=less
-alias view="vim -R"
+export LESS=-aiRsx4
+# -a : search from end of this screen
+# -i : ignore case when searching
+# -R : output ANSI color codes as raw control characters (use ^notation for other control codes)
+# -s : truncate multiple blank lines to a single one
+# -x4 : set tab stops to multiples of 4 characters
 
 alias vim='vim -w ~/.vim/log'
 
