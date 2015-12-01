@@ -14,7 +14,7 @@ import os
 import readline
 import rlcompleter
 from pint import UnitRegistry
-REG = UnitRegistry("/home/brooks/units.txt")
+REG = UnitRegistry(os.path.join(os.getenv("HOME"), "units.txt"))
 Qty = REG.Quantity
 
 historyPath = os.path.expanduser("~/.pyhistory")

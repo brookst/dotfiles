@@ -56,6 +56,9 @@ nnoremap <leader>j <C-w>j
 nnoremap <leader>k <C-w>k
 nnoremap <leader>l <C-w>l
 
+" Add typical directories to path
+set path+=src,inc,include,
+
 " Resolve a symlink and point buffer at target
 " see https://github.com/tpope/vim-fugitive/issues/147#issuecomment-47286687
 nnoremap <leader>f :exec "file ". resolve(expand('%:p'))<CR>:e<CR>
@@ -241,7 +244,7 @@ function! Make()
 endfunction
 
 " " Call make silently
-" nmap <silent> <leader>m :call Make()<CR>
+nmap <silent> <leader>m :call Make()<CR>
 
 nnoremap <F5> :call Make()<CR>
 nnoremap <F6> :GundoToggle<CR>
