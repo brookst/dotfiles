@@ -87,6 +87,9 @@ rydberg_constant = 10973731.568539 m^-1
 # 0.000 000 40 e-31
 electron_mass = 9.10938291e-31 kg = m_e
 
+# 0.000 006 2 e-28
+pion_mass = 2.4880642913e-28 kg = m_pi
+
 # 0.000 000 074 e-27
 neutron_mass = 1.674927351e-27 kg = m_n
 
@@ -183,7 +186,7 @@ baud = bit / second = Bd = bps
 
 # Length
 angstrom = 1e-10 * meter
-inch = 2.54 * centimeter = in = international_inch = inches = international_inches 
+inch = 2.54 * centimeter = in = international_inch = inches = international_inches
 foot = 12 * inch = ft = international_foot = feet = international_feet
 mile = 5280 * foot = mi = international_mile
 yard = 3 * feet = yd = international_yard
@@ -357,6 +360,11 @@ firkin = barrel / 4
     [length] <-> [frequency]: speed_of_light / n / value
     [frequency] -> [energy]: planck_constant * value
     [energy] -> [frequency]: value / planck_constant
+@end
+
+@context hep = pp
+    [energy] <-> [mass]: value * speed_of_light ** 2
+    [length] <-> [time]: value * speed_of_light
 @end
 
 @context boltzmann

@@ -15,6 +15,9 @@
         tool = vimdiff
         noprefix = true
         renames = copies
+[difftool]
+        prompt = false
+        trustExitCode = true
 [branch]
         autosetuprebase = always
 [init]
@@ -27,8 +30,9 @@
 [alias]
         s = status
         p = pull
-        d = diff
         l = log
+        d = diff
+        dt = difftool
         ci = commit
         co = checkout
         pop = stash pop

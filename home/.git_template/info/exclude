@@ -12,3 +12,6 @@ build
 README.html
 readme.html
 Cargo.lock
+
+# Syntastic config
+.syntastic_*_config

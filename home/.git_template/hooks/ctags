@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
 PATH="/usr/local/bin:$PATH"
-trap "rm -f .git/tags.$$" EXIT
+trap 'rm -f .git/tags.$$' EXIT
 ctags --tag-relative -Rf.git/tags.$$ --exclude=.git --exclude=build --exclude=trove --languages=-javascript,sql --c++-kinds=+p --fields=+iaS --extra=+q
 mv .git/tags.$$ .git/tags
