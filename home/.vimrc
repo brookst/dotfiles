@@ -133,6 +133,9 @@ endif
 let g:ttyname = substitute($PROMPT_COMMAND, "print_titlebar ", "", "")
 let g:ttyname = substitute(g:ttyname, "$(PWD)", "", "")
 
+" Default to bash, not kornshell
+let g:is_bash = 1
+
 au BufEnter * set title | let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 

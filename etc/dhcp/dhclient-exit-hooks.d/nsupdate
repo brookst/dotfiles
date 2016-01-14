@@ -39,7 +39,11 @@ ns_update() {
     #Cleanly extract the first global ip addr
     local localip=$(ip addr | grep -P 'inet .*global (?!docker)' | tr '/' ' ' | cut -d' ' -f 6 | head -n1)
     # local newip=$(curl --silent ifconfig.me/ip)
-    local newip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+    local newip=""
+    newip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+    valid_ip "$newip" || newip=$(curl -s http://whatismijnip.nl | cut -d" " -f5)
+    valid_ip "$newip" || newip=$(curl -s http://ifconfig.me/ip)
+
     local stat
     if valid_ip "$newip"; then
         local update="server $NAMESERVER\n"
