@@ -1,0 +1,7 @@
+"3.10.1 (created: 2015/08/25 00:41:59)
+
+map s o
+set complete=Sl
+source! /home/brooks/.vimperatorrc.local
+
+" vim: set ft=vimperator:
