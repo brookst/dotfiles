@@ -2,6 +2,7 @@
 
 map s o
 set complete=Sl
+set gui=addons,nobookmarks,nomenu,nonavigation,tabs
 source! /home/brooks/.vimperatorrc.local
 
 " vim: set ft=vimperator:
