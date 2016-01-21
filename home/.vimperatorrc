@@ -1,5 +1,6 @@
 "3.10.1 (created: 2015/08/25 00:41:59)
 
+colorscheme molokai
 map s o
 set complete=Sl
 set gui=addons,nobookmarks,nomenu,nonavigation,tabs
