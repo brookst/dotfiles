@@ -23,6 +23,7 @@
 [init]
         templatedir = ~/.git_template
 [merge]
+        tool = vimdiff
         stat = true
 [advice]
         statusHints = false

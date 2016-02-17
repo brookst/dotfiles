@@ -322,14 +322,16 @@ command! -bar -nargs=* Stabedit call ScratchEdit('tabe', <q-args>)
 
 " Disable everything that inserts characters in the margins
 function! Gutter()
-    set invnumber
-    set invrelativenumber
-    SignifyToggle
-    if &showbreak == "↪"
+    if &number || &relativenumber || &showbreak == "↪"
+        set nonumber
+        set norelativenumber
         set showbreak=
     else
+        set number
+        set relativenumber
         set showbreak=↪
     endif
+    SignifyToggle
 endfunction
 nmap <silent> gh :call Gutter()<CR>
 
