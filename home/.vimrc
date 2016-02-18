@@ -88,12 +88,16 @@ vnoremap <tab> %
 " Easier map for switching to last used buffer
 nnoremap <BS> <C-^>
 
-" Mappings for incsearch.vim
-if v:version > 703
-    map /  <Plug>(incsearch-forward)
-    map ?  <Plug>(incsearch-backward)
-    map g/ <Plug>(incsearch-stay)
-endif
+function! PostEnter()
+    " Mappings for incsearch.vim
+    if exists(':IncSearchMap')
+        map /  <Plug>(incsearch-forward)
+        map ?  <Plug>(incsearch-backward)
+        map g/ <Plug>(incsearch-stay)
+    endif
+    redraw
+endfunction
+au VimEnter * call PostEnter()
 
 " Highlight 81st column
 if v:version > 700
