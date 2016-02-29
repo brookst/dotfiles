@@ -205,8 +205,8 @@ link () {
 
 for command in ${commands[*]}; do
   log "command: $command"
-  [ "${#add_files[@]}" == 0 ] || log "add_files: ${add_files[@]}"
-  [ "${#send_files[@]}" == 0 ] || log "send_files: ${send_files[@]}"
+  [ "${#add_files[@]}" == 0 ] || log "add_files: ${add_files[*]}"
+  [ "${#send_files[@]}" == 0 ] || log "send_files: ${send_files[*]}"
   if [ "$command" == "help" ]; then
     usage
     exit 0
