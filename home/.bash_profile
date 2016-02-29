@@ -87,6 +87,7 @@ alias sl="ls -r"
 alias cda='cd $AFSHOME'
 alias dir="ls *.*[^~]"
 alias pdf="evince"
+alias psgrep="ps aux | grep -v grep | grep"
 alias skoorb='ssh $SKOORB'
 alias server='ssh $SERVER'
 alias desktop='ssh $DESKTOP'

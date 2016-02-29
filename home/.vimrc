@@ -50,6 +50,8 @@ nnoremap <leader>t :Test<CR>
 " Toggle highlighting
 nnoremap <silent> <leader>n :nohl<CR>
 
+nnoremap <leader>r :%s//<left>
+
 " Window movements
 nnoremap <leader>h <C-w>h
 nnoremap <leader>j <C-w>j
@@ -124,6 +126,11 @@ if v:version > 703 && !exists("loaded_less")
     " The above doesn't fire if there is only one window
     autocmd VimEnter * set relativenumber
 endif
+
+augroup VimReload
+    " autocmd!
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC
+augroup END
 
 if &term =~ "screen"
     set t_ts=k
@@ -410,6 +417,9 @@ let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
 let wiki_user.css_name = '~/vimwiki/style.css'
 let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'bash': 'sh', 'conf': 'conf', 'ssh': 'python', 'yaml': 'yaml', 'md': 'markdown'}
+
+" Shortcut to search wiki faster that :VWS
+command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.wiki' | :copen | :redraw!
 
 " Handler for precise linking
 let g:vimwiki_list = [wiki_user]
