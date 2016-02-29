@@ -1,0 +1,18 @@
+#!/bin/bash
+#Show detailed list of modifications to a git repository
+#Tim Brooks 2015 <brooks@skoorb.net>
+#
+#Find the git commit that last modified a given line
+path=$1
+line=$2
+
+if [ "$path" == "" -o "$line" == "" ]; then
+    echo "Usage: git lineblame <file> <line>"
+    exit 1
+fi
+
+rev=$(git blame "${path}" "-L${line},${line}" | awk '{print $1}')
+if [ "$rev" == "" ]; then
+    exit 1
+fi
+git show "$rev"
