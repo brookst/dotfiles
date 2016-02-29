@@ -91,7 +91,13 @@ error () {
 current="none"
 for arg do
   if [ "$current" == "add" ]; then
-    files=("${files[@]}" "$(readlink -f "${arg}")")
+    add_files=("${add_files[@]}" "$(readlink -f "${arg}")")
+    if [ $? != 0 ]; then
+      error "File ${arg} not found"
+      exit 1
+    fi
+  elif [ "$current" == "send" ]; then
+    send_files=("${send_files[@]}" "$(readlink -f "${arg}")")
     if [ $? != 0 ]; then
       error "File ${arg} not found"
       exit 1
@@ -99,12 +105,15 @@ for arg do
   elif [ "$arg" == "add" ]; then
     current="add"
     commands=("${commands[@]}" "add")
+  elif [ "$arg" == "send" ]; then
+    current="send"
+    commands=("${commands[@]}" "send")
   else
     commands=("${commands[@]}" "$arg")
   fi
 done
 
-if [ "${#files[@]}" == 0 -a "$current" == "add" ]; then
+if [ "${#add_files[@]}" == 0 -a "$current" == "add" ]; then
   echo "${_name}: add command requires filename"
   echo
   usage
@@ -196,6 +205,8 @@ link () {
 
 for command in ${commands[*]}; do
   log "command: $command"
+  [ "${#add_files[@]}" == 0 ] || log "add_files: ${add_files[@]}"
+  [ "${#send_files[@]}" == 0 ] || log "send_files: ${send_files[@]}"
   if [ "$command" == "help" ]; then
     usage
     exit 0
@@ -217,9 +228,17 @@ for command in ${commands[*]}; do
             warn "specified message is too long"
             exit 1
           fi
-          action git commit -am "$message"
+          if [ "${#send_files[@]}" == 0 ]; then
+              action git commit -am "$message"
+          else
+              action git commit -m "$message" ${send_files[*]}
+          fi
         else
-          action git commit -am "File update @${HOSTNAME%%.*}"
+          if [ "${#send_files[@]}" == 0 ]; then
+              action git commit -am "File update @${HOSTNAME%%.*}"
+          else
+              action git commit -m "File update @${HOSTNAME%%.*}" ${send_files[*]}
+          fi
         fi
     fi
     remotes=$(git remote)
@@ -245,7 +264,7 @@ for command in ${commands[*]}; do
       link "$target_path" "$link_path"
     done
   elif [ "$command" == "add" ]; then
-    for file in "${files[@]}"; do
+    for file in "${add_files[@]}"; do
       if [ "${file:0:${#DOTFILES}}" == "$DOTFILES" ]; then
         log "file $file already tracked in dotfiles"
         cd "${DOTFILES}"
@@ -271,11 +290,11 @@ for command in ${commands[*]}; do
         exit 1
       fi
       action git commit -m "$message"
-    elif [ ${#files[@]} == 1 ]; then
-      if [ "${files[0]:0:${#DOTFILES}}" == "$DOTFILES" ]; then
+    elif [ ${#add_files[@]} == 1 ]; then
+      if [ "${add_files[0]:0:${#DOTFILES}}" == "$DOTFILES" ]; then
         action git commit -m "File update @${HOSTNAME%%.*}"
       else
-        action git commit -m "Added ${files[@]##$HOME/} from ${HOSTNAME%%.*}"
+        action git commit -m "Added ${add_files[@]##$HOME/} from ${HOSTNAME%%.*}"
       fi
     else
       action git commit -m "Added multiple files @${HOSTNAME%%.*}"
