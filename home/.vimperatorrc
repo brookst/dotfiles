@@ -1,7 +1,8 @@
 "3.10.1 (created: 2015/08/25 00:41:59)
 
 colorscheme molokai
-map s o
+map s ogoogle 
+map S tgoogle 
 set complete=Sl
 set gui=addons,nobookmarks,nomenu,nonavigation,tabs
 source! /home/brooks/.vimperatorrc.local
