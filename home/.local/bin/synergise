@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+HOST="pcatlas190"
+PORT=24801
+
+cleanup () {
+    killall -s SIGKILL synergys &>/dev/null
+    ssh -N ${HOST} "killall synergyc &>/dev/null; killall gnome-screensaver-command &>/dev/null; DISPLAY=:0 gnome-screensaver-command -l"
+}
+trap cleanup EXIT
+
+datetime () {
+    while IFS= read -r line; do
+        echo "$(date --rfc-3339=seconds) $line"
+    done
+}
+
+# Startup synergy on this machine
+killall -s SIGKILL synergys &>/dev/null
+"${HOME}"/dev/synergy/bin/synergys -a 0:${PORT} -f | datetime &
+
+# Start synergy on remote machine and deactivate screensaver
+# shellcheck disable=SC2029
+ssh -R${PORT}:localhost:${PORT} -N ${HOST} "killall synergyc &>/dev/null; DISPLAY=:0 dev/synergy/bin/synergyc localhost:${PORT}; DISPLAY=:0 gnome-screensaver-command -d"
+if [ $? != 0 ]; then
+    echo "Failed to connect"
+    exit 1
+fi
+
+# Inhibit screensaver on remote machine
+ssh -N ${HOST} "DISPLAY=:0 gnome-screensaver-command -i -n synergise -r 'Under remote control'" &
+
+# Propagate screensavers on this machine to the remote
+DISPLAY=:0 dbus-monitor --session "type='signal',interface='org.gnome.ScreenSaver'" | while read event; do
+    # echo "==$event"
+    case "$event" in
+        *"boolean true") ssh -N $HOST 'DISPLAY=:0 gnome-screensaver-command -l' 0</dev/null && echo "Screen lock" | datetime;;
+        *"boolean false") ssh -N $HOST 'DISPLAY=:0 gnome-screensaver-command -d' 0</dev/null && echo "Screen unlock" | datetime;;
+        *) echo "Unknown: $event" | datetime
+    esac
+done
