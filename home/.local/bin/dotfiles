@@ -103,11 +103,15 @@ for arg do
     fi
     add_files=("${add_files[@]}" "$new_file")
   elif [ "$current" == "send" ]; then
-    send_files=("${send_files[@]}" "$(readlink -f "${arg}")")
+    new_file="$(readlink -f "${arg}")"
     if [ $? != 0 ]; then
-      error "File ${arg} not found"
-      exit 1
+      new_file="$(readlink -f "$DOTFILES/${arg}")"
+      if [ $? != 0 ]; then
+        error "File ${arg} not found"
+        exit 1
+      fi
     fi
+    send_files=("${send_files[@]}" "$new_file")
   elif [ "$arg" == "add" ]; then
     current="add"
     commands=("${commands[@]}" "add")
