@@ -84,18 +84,24 @@ while true; do
 done
 
 error () {
-    echo "${RED}Error: ${@}${NO_COLOUR}"
+    echo "${RED}Error: ${*}${NO_COLOUR}"
 }
 
 # Loop over cmd line tokens
 current="none"
 for arg do
   if [ "$current" == "add" ]; then
-    add_files=("${add_files[@]}" "$(readlink -f "${arg}")")
+    new_file="$(readlink -f "${arg}")"
     if [ $? != 0 ]; then
-      error "File ${arg} not found"
-      exit 1
+      echo "$arg"
+      new_file="$(readlink -f "$DOTFILES/${arg}")"
+      if [ $? != 0 ]; then
+        echo "$DOTFILES/$arg"
+        error "File ${arg} not found"
+        exit 1
+      fi
     fi
+    add_files=("${add_files[@]}" "$new_file")
   elif [ "$current" == "send" ]; then
     send_files=("${send_files[@]}" "$(readlink -f "${arg}")")
     if [ $? != 0 ]; then
@@ -136,12 +142,12 @@ is () {
 
 action () {
     if [ $dryrun ]; then
-        echo "skipping action $@"
+        echo "skipping action $*"
     else
         log "$@"
         "$@"
         if [ $? != 0 ]; then
-            warn "failed command: $@"
+            warn "failed command: $*"
         fi
     fi
 }
@@ -165,7 +171,7 @@ log () {
 
 warn () {
     if [ ! $quiet ]; then
-        echo "${YELLOW}Warning: ${@}${NO_COLOUR}"
+        echo "${YELLOW}Warning: ${*}${NO_COLOUR}"
     fi
 }
 
@@ -270,6 +276,7 @@ for command in ${commands[*]}; do
         action git add "${file}"
         continue
       fi
+      ADDED=true
       file_name="${BASE}/${file##$HOME/}"
       if [ -d "${file_name%/*}" ]; then
         log "${file_name%/*} exists"
@@ -289,14 +296,14 @@ for command in ${commands[*]}; do
         exit 1
       fi
       action git commit -m "$message"
-    elif [ ${#add_files[@]} == 1 ]; then
-      if [ "${add_files[0]:0:${#DOTFILES}}" == "$DOTFILES" ]; then
-        action git commit -m "File update @${HOSTNAME%%.*}"
+    elif [ $ADDED ]; then
+      if [ ${#add_files[@]} == 1 ]; then
+        action git commit -m "Added ${add_files[0]##$HOME/} from ${HOSTNAME%%.*}"
       else
-        action git commit -m "Added ${add_files[@]##$HOME/} from ${HOSTNAME%%.*}"
+        action git commit -m "Added multiple files @${HOSTNAME%%.*}"
       fi
     else
-      action git commit -m "Added multiple files @${HOSTNAME%%.*}"
+      action git commit -m "File update @${HOSTNAME%%.*}"
     fi
   elif is "$command" in "pull"; then
     cd "${DOTFILES}"
