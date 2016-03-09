@@ -8,6 +8,7 @@
         user = brookst
 [core]
         editor = vim
+        pager = less -FX
         whitespace = trailing-space tab-in-indent tabwidth=4
 [color]
         ui = auto
