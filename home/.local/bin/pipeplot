@@ -26,17 +26,17 @@ while true; do
   case "$1" in
     -s|--store)
       shift;
-      DATA=$1
+      FILE=$1
       shift;
       ;;
     -p|--plot)
       shift;
-      PLOT=$1
+      PLOT+=("$1")
       shift;
       ;;
     -o|--options)
       shift;
-      OPTIONS=$1
+      OPTIONS+=("$1")
       shift;
       ;;
     -h|--help)
@@ -49,23 +49,29 @@ while true; do
   esac
 done
 
-DATA=${DATA-$(mktemp)}
-OPTIONS=${OPTIONS-""}
+DATA=${FILE-$(mktemp)}
 PLOT=${PLOT-"1:2"}
 GNUPLOT=${TMPDIR-"/tmp"}/$$.gnuplot-pipe
 mkfifo "$GNUPLOT"
+[ -f "${DATA}" ] || touch "$DATA"
 
-script="plot '$DATA' using $PLOT"
+script="plot '$DATA' using ${PLOT[0]}"
+for arg in "${PLOT[@]:1}"; do
+    script+=", '$DATA' using ${arg}"
+done
 
-# Read in the first data points
-while read -t 0.1 line; do
+# Read in the first few data points
+while [ "$(wc -l "$DATA" | awk '{print $1}')" -lt 2 ]; do
+    IFS= read line
     [ -n "$line" ] && echo "$line" >> "$DATA"
 done
 
 gnuplot -p <"$GNUPLOT" &
 pid=$!
 exec 3>"$GNUPLOT"
-echo "$OPTIONS" >&3
+for option in "${OPTIONS[@]}"; do
+    echo "$option" >&3
+done
 echo "$script" >&3
 sleep .1s
 
@@ -82,7 +88,7 @@ done
 
 exec 3>&-
 rm "$GNUPLOT"
-[ -z "$1" ] && rm "$DATA"
+[ -z "$FILE" ] && rm "$DATA"
 pid=$(ps | awk '/gnuplot_qt/{ print $1; exit }')
 
 running=1
