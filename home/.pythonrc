@@ -13,9 +13,13 @@ import atexit
 import os
 import readline
 import rlcompleter
-from pint import UnitRegistry
-REG = UnitRegistry(os.path.join(os.getenv("HOME"), "units.txt"))
-Qty = REG.Quantity
+try: # Pint throws an exception under python2.6
+    from pint import UnitRegistry
+except:
+    pass
+else:
+    REG = UnitRegistry(os.path.join(os.getenv("HOME"), "units.txt"))
+    Qty = REG.Quantity
 
 historyPath = os.path.expanduser("~/.pyhistory")
 historyTmp = os.path.expanduser("~/.pyhisttmp.py")

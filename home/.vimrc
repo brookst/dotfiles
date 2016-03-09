@@ -147,6 +147,9 @@ let g:ttyname = substitute(g:ttyname, "$(PWD)", "", "")
 " Default to bash, not kornshell
 let g:is_bash = 1
 
+" Default to LaTeX, not plain TeX
+let g:tex_flavor = "latex"
+
 au BufEnter * set title | let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 

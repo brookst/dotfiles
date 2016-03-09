@@ -138,10 +138,9 @@ action () {
     if [ $dryrun ]; then
         echo "skipping action $@"
     else
+        log "$@"
         "$@"
-        if [ $? == 0 ]; then
-            log "$@"
-        else
+        if [ $? != 0 ]; then
             warn "failed command: $@"
         fi
     fi
