@@ -82,6 +82,8 @@ alias j="jobs"
 alias g="git"
 alias py="python"
 alias py3="python3"
+alias ipy="ipython"
+alias ipy3="ipython3"
 alias ls="ls --color=auto"
 alias sl="ls -r"
 alias cda='cd $AFSHOME'
@@ -107,6 +109,12 @@ alias tbrowse='python -i ~/bin/browser.py '
 export tmplog=/tmp/$USER/tmp.log
 alias mailme='tee $tmplog;cat $tmplog | mail -s "Job done" "morphit2k@googlemail.com";rm $tmplog'
 alias Date='date --rfc-3339=date' # YYYY-mm-dd format date
+
+define () {
+    expression=$(printf "/ && /%s" "$@")
+    grep_expression=$(printf "\|%s" "$@")
+    grep '^.\{1,50\}[^ ]:: ' "${HOME}"/vimwiki/*.wiki | gawk "${expression:5}/" IGNORECASE=1 | sed -e's/: *[*-] /:/' -e's/\[\[\([^]]*\)\]\]/\1/' -e's/\$\([^$]*\)\$/\1/' -e's/.*\/\(.*\)\.wiki:\(.*\):: \(.*\)/\2 [\1]: \3/' | grep -i -e "$grep_expression"
+}
 
 scp () {
     # wrapper function to prevent scp of local-only files
@@ -315,7 +323,7 @@ export PYTHONSTARTUP=$HOME/.pythonrc
 
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$MINUIT2DIR/lib:$PYTHIA8/lib
 export PYTHONPATH=$ROOTSYS/lib:$PYTHONDIR/lib
-export PATH=$HOME/.local/bin:$ROOTSYS/bin:$PATH
+export PATH=$HOME/.local/bin:$HOME/.cargo/bin:$ROOTSYS/bin:$PATH
 alias root="root -l"
 
 # Set up ATLAS computing environment

@@ -9,41 +9,44 @@
 # Note that PYTHONSTARTUP does *not* expand "~", so you have to put in the
 # full path to your home directory.
 
+from __future__ import division
 import atexit
 import os
 import readline
 import rlcompleter
+from math import *
 try: # Pint throws an exception under python2.6
     from pint import UnitRegistry
-except:
+except Exception:
     pass
 else:
     REG = UnitRegistry(os.path.join(os.getenv("HOME"), "units.txt"))
     Qty = REG.Quantity
 
-historyPath = os.path.expanduser("~/.pyhistory")
-historyTmp = os.path.expanduser("~/.pyhisttmp.py")
+HISTORYPATH = os.path.expanduser("~/.pyhistory")
+HISTORYTMP = os.path.expanduser("~/.pyhisttmp.py")
 
-endMarkerStr= "# # # histDUMP # # #"
+ENDMARKERSTR = "# # # histDUMP # # #"
 
-saveMacro= "import readline; readline.write_history_file('"+historyTmp+"'); \
-    print('####>>>>>>>>>>'); print(''.join(list(filter(lambda lineP: not lineP.strip().endswith('"+endMarkerStr+"'), open('"+historyTmp+"').readlines()))[:-1])+'####<<<<<<<<<<')"
+SAVEMACRO = "import readline; readline.write_history_file('"+HISTORYTMP+"'); \
+    print('####>>>>>>>>>>'); print(''.join(list(filter(lambda lineP: not lineP.strip().endswith('"+ENDMARKERSTR+"'), open('"+HISTORYTMP+"').readlines()))[:-1])+'####<<<<<<<<<<')"
 
 readline.parse_and_bind('tab: complete')
-readline.parse_and_bind('\C-w: "'+saveMacro+'"')
+readline.parse_and_bind('\C-w: "'+SAVEMACRO+'"')
 
-def save_history(historyPath=historyPath, endMarkerStr=endMarkerStr):
-    import readline
-    readline.write_history_file(historyPath)
-    # Now filter out those line containing the saveMacro
-    lines= filter(lambda lineP, endMarkerStr=endMarkerStr:
-                      not lineP.strip().endswith(endMarkerStr), open(historyPath).readlines())
-    open(historyPath, 'w+').write(''.join(lines))
+def save_history(history_path=HISTORYPATH, endmarker_str=ENDMARKERSTR):
+    from readline import write_history_file
+    write_history_file(history_path)
+    # Now filter out those line containing the SAVEMACRO
+    lines = filter(lambda lineP, endmarker_str=endmarker_str:
+                   not lineP.strip().endswith(endmarker_str),
+                   open(history_path).readlines())
+    open(history_path, 'w+').write(''.join(lines))
 
-if os.path.exists(historyPath):
-    readline.read_history_file(historyPath)
+if os.path.exists(HISTORYPATH):
+    readline.read_history_file(HISTORYPATH)
 
 atexit.register(save_history)
 
-del os, atexit, readline, rlcompleter, save_history, historyPath
-del historyTmp, endMarkerStr, saveMacro
+del os, atexit, readline, rlcompleter, save_history, HISTORYPATH
+del HISTORYTMP, ENDMARKERSTR, SAVEMACRO

@@ -151,7 +151,10 @@ let g:is_bash = 1
 let g:tex_flavor = "latex"
 
 au BufEnter * set title | let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
-autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+augroup filetype
+    au! BufNewFile,BufReadPost *.md set filetype=markdown
+    au! BufRead,BufNewFile *.plt    set filetype=gnuplot
+augroup END
 
 hi DiffAdd ctermfg=15 ctermbg=70
 hi DiffChange ctermfg=15 ctermbg=166
