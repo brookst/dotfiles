@@ -1,0 +1,16 @@
+let configpath = '/home/brooks/.cvimrc'
+set localconfig
+
+set noautofocus
+let barposition = "top"
+let locale = "uk"
+
+map d closeTab
+map u lastClosedTab
+
+altclose -> {{
+    Command.execute("quit")
+    Command.execute("tabprevious")
+}}
+
+map D :call altclose<CR>
