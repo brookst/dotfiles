@@ -3,7 +3,7 @@
 colorscheme molokai
 map s ogoogle 
 map S tgoogle 
-set complete=Sl
+set complete=lS
 set gui=addons,nobookmarks,nomenu,nonavigation,tabs
 source! /home/brooks/.vimperatorrc.local
 
