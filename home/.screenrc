@@ -9,6 +9,9 @@ hardstatus off
 defhstatus "^Et"
 term screen-256color
 
+# Start $SHELL as login-shell
+shell -$SHELL
+
 # Monitor windows
 defmonitor on
 activity ""
