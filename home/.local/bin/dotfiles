@@ -2,7 +2,7 @@
 
 #echo 'dotfiles - Environment bootstrapper - Tim Brooks - http://skoorb.net'
 DOTFILES="${HOME}/.dotfiles"
-BASE="$DOTFILES/home"
+BASE="home"
 _name=${0##*/}
 _version=$(cd "$DOTFILES"; git log -1 --pretty="format:%ai %h" "home/.local/bin/dotfiles")
 
@@ -101,6 +101,7 @@ for arg do
         exit 1
       fi
     fi
+    new_file=${new_file/\/zfs_home\//\/home\/}  # Fudge for RHUL machines
     add_files=("${add_files[@]}" "$new_file")
   elif [ "$current" == "send" ]; then
     new_file="$(readlink -f "${arg}")"
@@ -273,15 +274,15 @@ for command in ${commands[*]}; do
       link "$target_path" "$link_path"
     done
   elif [ "$command" == "add" ]; then
+    cd "${DOTFILES}"
     for file in "${add_files[@]}"; do
       if [ "${file:0:${#DOTFILES}}" == "$DOTFILES" ]; then
         log "file $file already tracked in dotfiles"
-        cd "${DOTFILES}"
         action git add "${file}"
         continue
       fi
       ADDED=true
-      file_name="${BASE}/${file##$HOME/}"
+      file_name="${file/${HOME}\//${BASE}/}"    # Trust that the cwd is $DOTFILES
       if [ -d "${file_name%/*}" ]; then
         log "${file_name%/*} exists"
       elif [ -e "${file_name%/*}" ]; then
@@ -291,7 +292,6 @@ for command in ${commands[*]}; do
       fi
       action mv "${file}" "${file_name}"
       link "$file_name" "$file"
-      cd "${DOTFILES}"
       action git add "${file_name}"
     done
     if [ "$message" ]; then
