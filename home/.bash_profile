@@ -56,6 +56,11 @@ ssh () {
     fi
 }
 
+# Sanely search for process details
+psgrep () {
+    ps aux | { read titles; echo "${titles}"; grep -v grep | grep "$1"; }
+}
+
 #Turn off echoing of ^C when interrupting a process - saves mangling the following prompt
 stty -ctlecho
 
@@ -89,7 +94,6 @@ alias sl="ls -r"
 alias cda='cd $AFSHOME'
 alias dir="ls *.*[^~]"
 alias pdf="evince"
-alias psgrep="ps aux | grep -v grep | grep"
 alias skoorb='ssh $SKOORB'
 alias server='ssh $SERVER'
 alias desktop='ssh $DESKTOP'
