@@ -91,22 +91,25 @@ error () {
 current="none"
 for arg do
   if [ "$current" == "add" ]; then
-    new_file="$(readlink -f "${arg}")"
-    if [ $? != 0 ]; then
-      echo "$arg"
-      new_file="$(readlink -f "$DOTFILES/${arg}")"
-      if [ $? != 0 ]; then
-        echo "$DOTFILES/$arg"
-        error "File ${arg} not found"
-        exit 1
-      fi
+    new_file="$(readlink -f -- "${arg}")"
+    ls "$new_file" &>/dev/null
+    if [ $? == 0 ]; then
+      new_file=${new_file/\/zfs_home\//\/home\/}  # Fudge for RHUL machines
+      add_files=("${add_files[@]}" "$new_file")
+      continue
     fi
-    new_file=${new_file/\/zfs_home\//\/home\/}  # Fudge for RHUL machines
-    add_files=("${add_files[@]}" "$new_file")
+    new_file="$(readlink -f -- "$DOTFILES/${arg}")"
+    ls "$new_file" &>/dev/null
+    if [ $? == 0 ]; then
+      new_file=${new_file/\/zfs_home\//\/home\/}  # Fudge for RHUL machines
+      add_files=("${add_files[@]}" "$new_file")
+      continue
+    fi
+    add_args=("${add_args[@]}" "$arg")
   elif [ "$current" == "send" ]; then
-    new_file="$(readlink -f "${arg}")"
+    new_file="$(readlink -f -- "${arg}")"
     if [ $? != 0 ]; then
-      new_file="$(readlink -f "$DOTFILES/${arg}")"
+      new_file="$(readlink -f -- "$DOTFILES/${arg}")"
       if [ $? != 0 ]; then
         error "File ${arg} not found"
         exit 1
@@ -278,7 +281,7 @@ for command in ${commands[*]}; do
     for file in "${add_files[@]}"; do
       if [ "${file:0:${#DOTFILES}}" == "$DOTFILES" ]; then
         log "file $file already tracked in dotfiles"
-        action git add "${file}"
+        action git add ${add_args[@]} "${file}"
         continue
       fi
       ADDED=true
@@ -292,7 +295,7 @@ for command in ${commands[*]}; do
       fi
       action mv "${file}" "${file_name}"
       link "$file_name" "$file"
-      action git add "${file_name}"
+      action git add ${add_args[@]} "${file_name}"
     done
     if [ "$message" ]; then
       if [ ${#@} -gt 50 ]; then
