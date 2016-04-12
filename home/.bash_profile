@@ -117,7 +117,20 @@ alias Date='date --rfc-3339=date' # YYYY-mm-dd format date
 define () {
     expression=$(printf "/ && /%s" "$@")
     grep_expression=$(printf "\|%s" "$@")
-    grep '^.\{1,50\}[^ ]:: ' "${HOME}"/vimwiki/*.wiki | gawk "${expression:5}/" IGNORECASE=1 | sed -e's/: *[*-] /:/' -e's/\[\[\([^]]*\)\]\]/\1/' -e's/\$\([^$]*\)\$/\1/' -e's/.*\/\(.*\)\.wiki:\(.*\):: \(.*\)/\2 [\1]: \3/' | grep -i -e "$grep_expression"
+    grep '^.\{1,50\}[^ ]:: ' "${HOME}"/vimwiki/*.wiki | gawk "${expression:5}/" IGNORECASE=1 | sed -e's/: *[*-] /:/' -e's/\[\[\(.*|\)\{0,1\}\([^]|]*\)\]\]/\2/' -e's/\$\([^$]*\)\$/\1/' -e's/.*\/\(.*\)\.wiki:\(.*\):: \(.*\)/\2 [\1]: \3/' | grep -i -e "$grep_expression"
+}
+
+todo () {
+    IFS="
+"
+    file_list=($(grep '\[ \]' "${HOME}"/vimwiki/*-*-*.wiki))
+    select file_name in ${file_list[*]}
+    do
+        if [ -n "$file_name" ]; then
+            vim -w ~/.vim/log "${file_name%%:*}"
+        fi
+        break
+    done
 }
 
 scp () {
