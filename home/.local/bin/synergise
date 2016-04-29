@@ -16,7 +16,7 @@ PORT=${arg_right:-24800}
 
 cleanup () {
     killall -s SIGKILL synergys &>/dev/null
-    ssh -N "${HOST}" "killall synergyc &>/dev/null; killall gnome-screensaver-command &>/dev/null; DISPLAY=:0 gnome-screensaver-command -l" | err
+    ssh -R"${PORT}:localhost:${PORT}" -N "${HOST}" "killall synergyc &>/dev/null; killall gnome-screensaver-command &>/dev/null; DISPLAY=:0 gnome-screensaver-command -l" | err
     echo "Terminated" | log
 }
 trap cleanup EXIT
@@ -51,7 +51,7 @@ ssh -N "${HOST}" "DISPLAY=:0 gnome-screensaver-command -i -n synergise -r 'Under
 DISPLAY=:0 dbus-monitor --session "type='signal',interface='org.gnome.ScreenSaver'" | while read event; do
     # echo "==$event"
     case "$event" in
-        *"boolean true") ssh -N "$HOST" 'DISPLAY=:0 gnome-screensaver-command -l' 0</dev/null && echo "Screen lock" | log;;
-        *"boolean false") ssh -N "$HOST" 'DISPLAY=:0 gnome-screensaver-command -d' 0</dev/null && echo "Screen unlock" | log;;
+        *"boolean true") ssh -R"${PORT}:localhost:${PORT}" -N "$HOST" 'DISPLAY=:0 gnome-screensaver-command -l' 0</dev/null && echo "Screen lock" | log;;
+        *"boolean false") ssh -R"${PORT}:localhost:${PORT}" -N "$HOST" 'DISPLAY=:0 gnome-screensaver-command -d' 0</dev/null && echo "Screen unlock" | log;;
     esac
 done

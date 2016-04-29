@@ -31,6 +31,10 @@ set undolevels=10000
 " Turn on terminal mouse support
 set mouse=a
 
+" GNU screen sometimes borks dragging in 'xterm' mode
+" See: http://stackoverflow.com/questions/8939043/gnu-screen-and-vim-adjusting-the-split-window-buffer-size-with-mouse
+set ttymouse=xterm2
+
 " Use British English
 set spelllang=en_gb
 
@@ -422,7 +426,7 @@ let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
 let wiki_user.css_name = '~/vimwiki/style.css'
-let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'bash': 'sh', 'conf': 'conf', 'ssh': 'python', 'yaml': 'yaml', 'md': 'markdown'}
+let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'bash': 'sh', 'conf': 'conf', 'ssh': 'python', 'yaml': 'yaml', 'md': 'markdown', 'makefile': 'make'}
 
 " Shortcut to search wiki faster that :VWS
 command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.wiki' | :copen | :redraw!

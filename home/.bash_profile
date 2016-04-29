@@ -58,7 +58,7 @@ ssh () {
 
 # Sanely search for process details
 psgrep () {
-    ps aux | { read titles; echo "${titles}"; grep -v grep | grep "$1"; }
+    ps aux | { read titles; echo "${titles}"; grep -v grep | grep --color "$1"; }
 }
 
 #Turn off echoing of ^C when interrupting a process - saves mangling the following prompt
@@ -255,8 +255,13 @@ prompt_exit () {
 HISTCONTROL=ignoredups:ignorespace
 
 # save infinite history
-HISTSIZE=
-HISTFILESIZE=
+if [ "$BASH_MAJVERSION" -ge 4 ] && [ "$BASH_MINVERSION" -ge 3 ]; then
+    HISTSIZE=-1
+    HISTFILESIZE=-1
+else
+    HISTSIZE=
+    HISTFILESIZE=
+fi
 
 # Use Vi shortcuts
 set -o vi
