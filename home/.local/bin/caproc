@@ -24,6 +24,7 @@
 VERSION=1.0                                    # first finished tested version
 VERSION=1.1                                    # added preliminary -t TERM support
 VERSION=1.2                                    # preserve $TERM
+VERSION=1.3                                    # add redirection to a file (and /dev/null)
 
 PROG="caproc"
 
@@ -34,7 +35,15 @@ unset JOB
 
 INTER=$(echo $- | grep i -q; echo $?)          # is this an interactive shell? (bash logic)
 
-while getopts "vhd:j:t:" opt; do
+term () {
+    TERM=$OLDTERM
+}
+
+OLDTERM=$TERM
+trap term EXIT
+TERM=""
+
+while getopts "vhnf:d:j:t:" opt; do
   #echo opt: ${opt} arg: ${OPTARG}
   case $opt in
     h)
@@ -42,11 +51,15 @@ while getopts "vhd:j:t:" opt; do
       break ;;
     v)
       echo ${PROG} ${VERSION}
-      if [ $INTER == 0 ]; then
+      if [ "$INTER" == 0 ]; then
         kill -SIGINT $$
       else
         exit 0
       fi ;;
+    n)
+      OUTFILE="/dev/null" ;;
+    f)
+      OUTFILE=${OPTARG} ;;
     d)
       OUTDIR=${OPTARG} ;;
     j)
@@ -69,7 +82,7 @@ if [ -z "$PID" ]; then                         # if $PID is null, then set it to
   exists=$(kill -0 ${PID} &> /dev/null; echo $?)
   if [ -n "$PID" -a "$exists" != "0" ]; then   # unless thats not a process
     echo "PID ${PID} not found"
-    if [ $INTER == 0 ]; then
+    if [ "$INTER" == 0 ]; then
       kill -SIGINT $$
     else
       exit 1
@@ -84,7 +97,7 @@ elif [ -n "$JOB" ]; then                       # use JOB if -j specified
   PID=$(jobs -l | grep "^\[${JOB}\]" | awk '{print $2}')
   if [ -z "$PID" ]; then
     echo "Job ${JOB} not found"
-    if [ $INTER == 0 ]; then
+    if [ "$INTER" == 0 ]; then
       kill -SIGINT $$
     else
       exit 1
@@ -95,48 +108,53 @@ elif [ -z "$PID" ]; then                       # if neither -j or PID specified,
   JOB=$(jobs | tail -n1 | sed -n '/^\[\([0-9]\+\)\].*/s//\1/p')
 fi
 
-OLDTERM=$TERM
-TERM=""
-
 if [ -z "$PID" -o "$PID" == "NULL" ]; then     # print usage message if we still don't have PID or it's "NULL"
   echo "usage: ${PROG} [options] [PID]" >&2
   echo "" >&2
   echo "options:" >&2
-  echo "  -v                    show program's version number and exit" >&2
+  echo "  -v                    show program's version number ($VERSION) and exit" >&2
   echo "  -h                    show this help message and exit" >&2
+  echo "  -n                    redirect stdout,err to /dev/null" >&2
+  echo "  -f OUTFILE            path to direct stdout,err to" >&2
   echo "  -d OUTDIR             path to place output files" >&2
   echo "  -j JOB                capture and background JOB" >&2
   echo "" >&2
   echo "if no PID or job is given, but there are jobs, the last job is taken" >&2
   test 0 == 1
-  if [ $INTER == 0 ]; then
+  if [ "$INTER" == 0 ]; then
     kill -SIGINT $$
   else
     exit 0
   fi
 fi
 
-echo "Capturing process ${PID} to ${OUTDIR}/${PID}.std{out,err}"
 
 if [ -n "$TERM" ]; then
+  echo "Capturing process ${PID} to ${OUTDIR}/${PID}.std{out,err}"
   STDIN='p dup2(open("'${TERM}'",0,0))'
   STDOUT='p dup2(open("'${TERM}'",0,1))'
   STDERR='p dup2(open("'${TERM}'",0,2))'
-  gdb -p ${PID} --batch-silent -ex "p close(0)" -ex "$STDIN" \
+  gdb -p "${PID}" --batch-silent -ex "p close(0)" -ex "$STDIN" \
                                -ex "p close(1)" -ex "$STDOUT" \
                                -ex "p close(2)" -ex "$STDERR"
+elif [ -n "$OUTFILE" ]; then
+  echo "Redirecting process ${PID} to ${OUTFILE}"
+  [ -f "$OUTFILE" ] && touch "$OUTFILE"        # guarantee the output file exists
+  STDOUT='p creat("'${OUTFILE}'",0600)'
+  STDERR='p creat("'${OUTFILE}'",0600)'
+  gdb -p "${PID}" --batch-silent -ex "p close(1)" -ex "$STDOUT" \
+                               -ex "p close(2)" -ex "$STDERR"
 else
-  mkdir -p ${OUTDIR}                           # guarantee the output directory exists
+  echo "Redirecting process ${PID} to ${OUTDIR}/${PID}.std{out,err}"
+  mkdir -p "${OUTDIR}"                         # guarantee the output directory exists
   STDOUT='p creat("'${OUTDIR}/${PID}.stdout'",0600)'
   STDERR='p creat("'${OUTDIR}/${PID}.stderr'",0600)'
-  gdb -p ${PID} --batch-silent -ex "p close(1)" -ex "$STDOUT" \
+  gdb -p "${PID}" --batch-silent -ex "p close(1)" -ex "$STDOUT" \
                                -ex "p close(2)" -ex "$STDERR"
 fi
 
 
 if [ -n "$JOB" ]; then
-  bg $JOB
+  bg "$JOB"
   #echo disown -h $JOB                         # we don't seem to need this
 fi
-
-TERM=$OLDTERM
