@@ -1,5 +1,6 @@
 set nocompatible
 set notitle
+set nojoinspaces
 set shiftwidth=4
 set softtabstop=4
 set expandtab
@@ -15,6 +16,8 @@ set incsearch
 set ignorecase
 set smartcase
 set wrap
+set splitright
+set splitbelow
 set tags+=~/stl.tags
 set scrolloff=5
 set equalalways
@@ -68,6 +71,9 @@ set path+=src,inc,include,
 " Resolve a symlink and point buffer at target
 " see https://github.com/tpope/vim-fugitive/issues/147#issuecomment-47286687
 nnoremap <leader>f :exec "file ". resolve(expand('%:p'))<CR>:e<CR>
+
+" Vimwiki bullet point a line
+nnoremap <leader>* ^i	* <esc>l
 
 " Disable these plugins if invoked as less
 let g:pathogen_disabled = ['vim-css-color']
