@@ -65,6 +65,9 @@ neutron_mass = 1.674927351e-27 kg = m_n
 # 0.000 000 074 e-27
 proton_mass = 1.672621777e-27 kg = m_p
 
+#            ±0.16
+tau_mass = 1776.82 MeV / c^2 = m_τ
+
 #             ±0.011
 Jpsi_mass = 3096.916 MeV / c^2 = m_Jpsi = m_Jψ
 
