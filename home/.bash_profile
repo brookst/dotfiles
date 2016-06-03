@@ -207,6 +207,14 @@ print_titlebar () {
   fi
 }
 
+newline () {
+    # Return if cursor is not at col 1, see: http://unix.stackexchange.com/questions/88296/get-vertical-cursor-position/183121#183121
+    IFS=';' read -sdR -p $'\E[6n' _ COL
+    if [ "$COL" != 1 ]; then
+        echo
+    fi
+}
+
 # Don't junk up simple linux terminals
 if [[ "$TERM" =~ linux ]];then #-o "$STY" == "" ]; then
   export PROMPT_COMMAND=""
@@ -219,7 +227,7 @@ else
   TTY=$(tty)
   TTY=${TTY##*/}
   titlebar="${TERM_TEXT}@${FULLHOST#*-}/${TTY}:\$(PWD)"
-  export PROMPT_COMMAND="print_titlebar ${titlebar}"
+  export PROMPT_COMMAND="newline;print_titlebar ${titlebar}"
   export TERM=xterm-256color
 fi
 
