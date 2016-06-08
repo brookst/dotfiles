@@ -1,3 +1,4 @@
+#!/bin/bash
 BASH_MAJMINVERSION=${BASH_VERSION%.*}
 BASH_MAJVERSION=${BASH_VERSION%%.*}
 BASH_MINVERSION=${BASH_MAJMINVERSION#${BASH_MAJVERSION}.}
@@ -304,7 +305,8 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
         # Set alias completion to real completion
         if [[ -f "$compfile" ]] && . "$compfile" &>/dev/null; then
             # Find the completion set by $compfile and substitute in the alias
-            local comp_line=$(complete | grep "${name}\$" | sed "s/${name}\$/${1}/")
+            local comp_line
+            comp_line=$(complete | grep "${name}\$" | sed "s/${name}\$/${1}/")
             eval "$comp_line"
             # Tell bash to retry completion now this alias has been set
             return 124
@@ -340,7 +342,8 @@ fi
 PS1+=">\[$NO_COLOUR\] "
 
 if go version &> /dev/null; then
-    export GOROOT=$(go env GOROOT)
+    export GOROOT
+    GOROOT=$(go env GOROOT)
 fi
 
 # Set up virtualenv
