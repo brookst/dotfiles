@@ -49,7 +49,7 @@ ssh () {
     print_titlebar "$title"
     if [ -z "${HOSTNAME/*cern.ch}" ]; then
         command ssh "$@"
-    elif [ "$HOSTNAME" == "pi3" ]; then
+    elif [[ $HOSTNAME == "pi3" || $HOSTNAME =~ .+\.cern\.ch$ ]]; then
         ssh-add -l &> /dev/null || ssh-add -t 16h && command ssh "$@"
     else
         ssh-add -l &> /dev/null || ssh-add && command ssh "$@"
