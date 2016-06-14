@@ -12,10 +12,17 @@
         whitespace = trailing-space tab-in-indent tabwidth=4
 [color]
         ui = auto
+[pager]
+        diff = diff-highlight | less
+        show = diff-highlight | less
+        log = diff-highlight | less
+[interactive]
+        diffFilter = diff-highlight
 [diff]
         tool = vimdiff
         noprefix = true
         renames = copies
+        compactionHeuristic = true
 [difftool]
         prompt = false
         trustExitCode = true
