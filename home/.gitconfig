@@ -1,9 +1,11 @@
+# See also .config/git/config
 [include]
         # For username / creds / etc
         path = ~/.gitconfig.local
 [user]
         name = Tim Brooks
         email = brooks@cern.ch
+        signingkey = 0C66D5A7
 [github]
         user = brookst
 [core]
@@ -12,12 +14,6 @@
         whitespace = trailing-space tab-in-indent tabwidth=4
 [color]
         ui = auto
-[pager]
-        diff = diff-highlight | less
-        show = diff-highlight | less
-        log = diff-highlight | less
-[interactive]
-        diffFilter = diff-highlight
 [diff]
         tool = vimdiff
         noprefix = true
