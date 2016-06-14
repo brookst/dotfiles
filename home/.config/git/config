@@ -1,0 +1,7 @@
+# These settings break git ~1.7
+[pager]
+        diff = diff-highlight | less
+        show = diff-highlight | less
+        log = diff-highlight | less
+[interactive]
+        diffFilter = diff-highlight
