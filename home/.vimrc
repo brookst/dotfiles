@@ -160,7 +160,7 @@ let g:is_bash = 1
 " Default to LaTeX, not plain TeX
 let g:tex_flavor = "latex"
 
-au BufEnter * set title | let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
+au BufEnter * set title | let &titlestring = split(g:ttyname, ";")[-1] . substitute(expand("%:p"), "/home/brooks", "~", "")
 augroup filetype
     au! BufNewFile,BufReadPost *.md set filetype=markdown
     au! BufRead,BufNewFile *.plt    set filetype=gnuplot
@@ -280,7 +280,7 @@ nnoremap <F5> :call Make()<CR>
 nnoremap <F6> :GundoToggle<CR>
 
 "Insert date in insert mode
-inoremap <C-D>   <C-R>=strftime('%F')." "<CR>
+inoremap <C-d>   <C-R>=strftime('%F')." "<CR>
 
 "Insert file name
 inoremap <C-f>   <C-r>=expand("%:t:r")<CR>
@@ -294,6 +294,9 @@ noremap <Up>     <NOP>
 noremap <Down>   <NOP>
 noremap <Right>  <NOP>
 noremap <Left>   <NOP>
+
+"Unmap ex mode
+noremap Q <NOP>
 
 "Remap line movements to traverse wrapped segments
 nnoremap <expr> j v:count ? 'j' : 'gj'
