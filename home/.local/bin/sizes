@@ -8,7 +8,4 @@ OUT=$(mktemp) || { echo "Failed to create temp file"; exit 1; }
 SPEC="${1:-.}"
 trap 'rm -f ${OUT}' EXIT
 du -hd 1 "${SPEC%/}" > "${OUT}"
-sed -n -e's/^\([ ]*[0-9][0-9.]*\t\)/\1/p' < "$OUT" | sort -n
-sed -n -e's/^\([ ]*[0-9][0-9.]*K\)/\1/p' < "$OUT" | sort -n
-sed -n -e's/^\([ ]*[0-9][0-9.]*M\)/\1/p' < "$OUT" | sort -n
-sed -n -e's/^\([ ]*[0-9][0-9.]*G\)/\1/p' < "$OUT" | sort -n
+sort -h < "$OUT"
