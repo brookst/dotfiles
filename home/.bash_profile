@@ -134,6 +134,38 @@ todo () {
     done
 }
 
+paper () {
+    files=()
+    while IFS= read -d $'\0' -r file; do
+        files=("${files[@]}" "$file")
+    done < <(find ~/papers -xtype f -iname "*$1*" -print0)
+
+    case "${#files[@]}" in
+        0)
+        echo "${RED}No candidates found${RESET}"
+        return;;
+        1)
+        xdg-open "${files[0]}"
+        return;;
+    esac
+
+    select file_name in "${files[@]}"; do
+        if [ -f "$file_name" ]; then
+            xdg-open "$file_name"
+        elif [ -z "$file_name" ]; then
+            return
+        else
+            echo "${RED}Could not open $file_name${RESET}"
+        fi
+        break
+    done
+}
+
+tar () {
+    # https://xkcd.com/1168/
+    command tar "$@" || { echo "BOOM!"; false; }
+}
+
 scp () {
     # wrapper function to prevent scp of local-only files
     options="1246BCpqrvc:F:i:l:o:P:S:"
