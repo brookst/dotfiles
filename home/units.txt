@@ -85,7 +85,6 @@ siemens = ampere / volt = S = mho
 weber = volt * second = Wb
 tesla = weber / meter ** 2 = T
 henry = weber / ampere = H
-elementary_charge = 1.602176487e-19 * coulomb = e
 chemical_faraday = 9.64957e4 * coulomb
 physical_faraday = 9.65219e4 * coulomb
 faraday =  96485.3399 * coulomb = C12_faraday

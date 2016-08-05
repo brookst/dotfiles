@@ -45,7 +45,7 @@ rydberg_constant = 10973731.568539 m^-1
 electron_mass = 9.10938291e-31 kg = m_e
 
 #            ±0.0000035
-muon_mass = 105.6583715 MeV/c2 = m_mu = m_μ
+muon_mass = 105.6583715 MeV/c^2 = m_mu = m_μ
 
 #           ±0.0006
 pi0_mass = 134.9766 MeV / c^2 = m_pi0 = m_π0
