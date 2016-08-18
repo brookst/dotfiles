@@ -12,6 +12,7 @@
         editor = vim
         pager = less -FX
         whitespace = trailing-space tab-in-indent tabwidth=4
+        autocrlf = input
 [color]
         ui = auto
 [diff]
@@ -22,6 +23,8 @@
 [difftool]
         prompt = false
         trustExitCode = true
+[diff "exif"]
+        textconv = exiftool
 [branch]
         autosetuprebase = always
 [init]
