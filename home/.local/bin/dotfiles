@@ -33,7 +33,7 @@ YELLOW=$'\033[1;33m'
 NO_COLOUR=$'\033[0m'
 
 # Execute getopt
-if ! ARGS=$(getopt -o m:hoqvdc -l "message:,help,overwrite,quiet,verbose,dryrun,compare,version" -n "getopt.sh" -- "$@"); then
+if ! ARGS=$(getopt -o m:hoqvdc -l "message:,help,overwrite,quiet,verbose,dryrun,compare,version" -n "${_name}" -- "$@"); then
   exit 1
 fi
 
@@ -294,7 +294,7 @@ for command in ${commands[*]}; do
         action mkdir -p "${file_name%/*}"
       fi
       action mv "${file}" "${file_name}"
-      link "$file_name" "$file"
+      link "${DOTFILES}/$file_name" "$file"
       action git add "${add_args[@]}" "${file_name}"
     done
     if [ "$message" ]; then
@@ -316,9 +316,20 @@ for command in ${commands[*]}; do
     cd "${DOTFILES}"
     action git $command
   elif is "$command" in "diff,pull,status,show" || git help $command &>/dev/null; then
-    temp=${commands[*]}
     cd "${DOTFILES}"
-    action git $command ${temp#*$command}
+    # Follow any paths with symbolic links
+    tmp_commands=( $command )
+    while read -r tmp_com; do
+        new_path=$(readlink -f -- "$tmp_com")
+        if [ -f "$new_path" ]; then
+            tmp_commands=( "${tmp_commands[@]}" "$new_path" )
+        elif [ -z "$new_path" ]; then
+            :
+        else
+            tmp_commands=( "${tmp_commands[@]}" "$tmp_com" )
+        fi
+    done < <(printf '%s\n' "${commands[@]:1}")
+    action git "${tmp_commands[@]}"
     exit 0
   else
     echo "${_name}: unrecognised command $command"
