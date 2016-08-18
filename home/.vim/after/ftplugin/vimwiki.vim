@@ -1,9 +1,3 @@
-set spell
-setlocal foldmethod=expr
-setlocal foldexpr=GetVimWikiFold(v:lnum)
-setlocal foldtext=VimWikiFoldText()
-setlocal foldlevel=1
-
 function! GetVimWikiFold(lnum)
     if getline(a:lnum) =~? '\v^\s*$'
         return '-1'
@@ -49,3 +43,10 @@ function! NextNonBlankLine(lnum)
 
     return -2
 endfunction
+
+set spell
+setlocal foldexpr=GetVimWikiFold(v:lnum)
+setlocal foldtext=VimWikiFoldText()
+setlocal foldlevel=1
+setlocal foldmethod=expr
+setlocal foldenable

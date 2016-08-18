@@ -1,4 +1,4 @@
-let &l:makeprg='psql -d exercises -f %'
+let &l:makeprg='psql -f %'
 let &l:errorformat='%Epsql:%f:%\\d%\\+:\ ERROR:\ %m,
                    \%CLINE %l:%.%#,
                    \%Z        %p^'
