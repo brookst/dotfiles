@@ -75,6 +75,9 @@ nnoremap <leader>f :exec "file ". resolve(expand('%:p'))<CR>:e<CR>
 " Vimwiki bullet point a line
 nnoremap <leader>* ^i	* <esc>l
 
+imap <silent> <C-<> <Plug>VimwikiDecreaseLvlSingleItem
+imap <silent> <C->> <Plug>VimwikiIncreaseLvlSingleItem
+
 " Disable these plugins if invoked as less
 let g:pathogen_disabled = ['vim-css-color']
 if exists("loaded_less")
@@ -138,7 +141,7 @@ if v:version > 703 && !exists("loaded_less")
 endif
 
 augroup VimReload
-    " autocmd!
+    autocmd!
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END
 
@@ -151,16 +154,20 @@ if &term =~ "screen"
     " set t_AB=[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;5;%p1%d%;m
 endif
 
-let g:ttyname = substitute($PROMPT_COMMAND, "print_titlebar ", "", "")
-let g:ttyname = substitute(g:ttyname, "$(PWD)", "", "")
-
 " Default to bash, not kornshell
 let g:is_bash = 1
 
 " Default to LaTeX, not plain TeX
 let g:tex_flavor = "latex"
 
-au BufEnter * set title | let &titlestring = split(g:ttyname, ";")[-1] . substitute(expand("%:p"), "/home/brooks", "~", "")
+let g:ttyname = substitute($PROMPT_COMMAND, "print_titlebar ", "", "")
+if g:ttyname != ''
+    let g:ttyname = substitute(g:ttyname, "$(PWD)", "", "")
+    let g:ttyname = split(g:ttyname, ";")[-1]
+endif
+
+au BufEnter * set title | let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
+
 augroup filetype
     au! BufNewFile,BufReadPost *.md set filetype=markdown
     au! BufRead,BufNewFile *.plt    set filetype=gnuplot
@@ -261,9 +268,11 @@ nnoremap S :call BreakHere()<CR>
 
 " Don't display push enter to continue, just pop open the quicklist
 function! Make()
-  ccl
+  update
+  silent !clear
   silent make
   redraw!
+  cwindow
 "   for i in getqflist()
 "     if i['valid']
 "       cwin
@@ -317,9 +326,14 @@ if v:version < 701
     call add(g:pathogen_disabled, 'vim-yankstack')
 endif
 
+" Stop AnsiEsc mappings
+let g:no_cecutil_maps = 1
+
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
-call pathogen#infect()
+if !exists("g:vimrc_loaded")
+    call pathogen#infect()
+endif
 
 let g:jellybeans_background_color = "000000"
 let g:jellybeans_background_color_256 = "000"
@@ -334,8 +348,36 @@ function! CutAndRunNormal()
     normal! D
     normal @"
 endfunction
+function! RunNormal()
+    normal! y$
+    normal @"
+endfunction
 
-nnoremap <leader>e :call CutAndRunNormal()<CR><Esc>
+nnoremap <silent> <leader>x :call CutAndRunNormal()<CR><Esc>
+nnoremap <silent> <leader>gx :call RunNormal()<CR><Esc>
+
+function! RunShell(type)
+    if a:type ==# 'v'
+        " Visual mode
+        execute "normal! `<v`>y"
+    elseif a:type ==# 'V'
+        " Visual line mode
+        execute "normal! `<V`>y"
+    elseif a:type ==# ''
+        " Visual block mode
+        execute "normal! `<V`>y"
+    elseif a:type ==# 'char'
+        " Characterwise motion
+        execute "normal! `[v`]y"
+    else
+        return
+    endif
+    " Run the raw string as a shell command
+    execute ":!" . @"
+endfunction
+
+nnoremap <silent> <leader>! :set operatorfunc=RunShell<CR>g@
+vnoremap <silent> <leader>! :<c-u>call RunShell(visualmode())<CR>
 
 "Scratchpad from
 "http://dhruvasagar.com/2014/03/11/creating-custom-scratch-buffers-in-vim
@@ -412,7 +454,7 @@ if v:version < 701 || v:version == 701 && !has('patch040')
     let g:syntastic_enable_highlighting = 0
 endif
 
-let g:better_whitespace_filetypes_blacklist=['help']
+let g:better_whitespace_filetypes_blacklist=['help', 'qf']
 
 let g:syntastic_check_on_open=1
 let g:syntastic_error_symbol='✗'
@@ -438,7 +480,9 @@ let wiki_user.css_name = '~/vimwiki/style.css'
 let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'bash': 'sh', 'conf': 'conf', 'ssh': 'python', 'yaml': 'yaml', 'md': 'markdown', 'makefile': 'make'}
 
 " Shortcut to search wiki faster that :VWS
-command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.wiki' | :copen | :redraw!
+command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.wiki' | :copen | :let @/ = <q-args> | :redraw!
+
+" let g:vimwiki_folding='expr'
 
 " Handler for precise linking
 let g:vimwiki_list = [wiki_user]
@@ -451,3 +495,5 @@ function! VimwikiWikiIncludeHandler(value)
     endif
     return ''
 endfunction
+
+let g:vimrc_loaded = 1
