@@ -248,18 +248,30 @@ newline () {
     fi
 }
 
+get_titlebar () {
+  TTY=$(tty)
+  TTY=${TTY##*/}
+  if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    local _host=${FULLHOST#*-}
+
+    if [ -n "$_host" ]; then
+      _host="@${_host}"
+    fi
+  fi
+  echo "${TTY}/${TERM_TEXT}${_host}:\$(PWD)"
+}
+
+# List the screen id if this is a screen session
+if [ -n "$STY" ]; then
+TERM_TEXT="${STY#*.}"
+TERM_TEXT="[${TERM_TEXT%.$HOSTNAME}.${WINDOW}]"
+fi
+
 # Don't junk up simple linux terminals
 if [[ "$TERM" =~ linux ]];then #-o "$STY" == "" ]; then
   export PROMPT_COMMAND=""
 else
-  # List the screen id if this is a screen session
-  if [ -n "$STY" ]; then
-    TERM_TEXT="${STY#*.}"
-    TERM_TEXT="[${TERM_TEXT%.$HOSTNAME}.${WINDOW}]"
-  fi
-  TTY=$(tty)
-  TTY=${TTY##*/}
-  titlebar="${TERM_TEXT}@${FULLHOST#*-}/${TTY}:\$(PWD)"
+  titlebar=$(get_titlebar)
   export PROMPT_COMMAND="newline;print_titlebar ${titlebar}"
   export TERM=xterm-256color
 fi
@@ -356,16 +368,18 @@ fi
 PS1="\[\$(prompt_exit)\]"
 # Time in HH:MM:SS form
 PS1+="\t"
+# Number of jobs managed by this shell
+PS1+="_\j"
+# TTY number for this shell
+PS1+="\[$GREEN\]/\l"
 # Screen name
 PS1+="\[$YELLOW\]$TERM_TEXT"
 # Hostname
-PS1+="\[$GREEN\]@${FULLHOST#*-}"
-# Number of this shells TTY
-PS1+="/\l"
-# Number of jobs managed by this shell
-PS1+="\[$LIGHT_BLUE\](\j)"
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    PS1+="@\[$GREEN\]${FULLHOST#*-}"
+fi
 # Present working directory, with some abbreviations
-PS1+="\[$NO_COLOUR\]\$(PWD)"
+PS1+="\[$NO_COLOUR\]:\$(PWD)"
 # Git branch, if available
 if type __git_ps1 &> /dev/null; then
     PS1+="\$(__git_ps1 '<%s')"
