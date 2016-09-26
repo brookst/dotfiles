@@ -258,7 +258,7 @@ get_titlebar () {
       _host="@${_host}"
     fi
   fi
-  echo "${TTY}/${TERM_TEXT}${_host}:\$(PWD)"
+  echo "${TTY}${TERM_TEXT}${_host}:\$(PWD)"
 }
 
 # List the screen id if this is a screen session
