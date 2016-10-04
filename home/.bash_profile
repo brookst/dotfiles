@@ -369,7 +369,7 @@ PS1="\[\$(prompt_exit)\]"
 # Time in HH:MM:SS form
 PS1+="\t"
 # Number of jobs managed by this shell
-PS1+="_\j"
+PS1+="<\[$NO_COLOUR\]\j"
 # TTY number for this shell
 PS1+="\[$GREEN\]/\l"
 # Screen name
