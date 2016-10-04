@@ -263,8 +263,8 @@ get_titlebar () {
 
 # List the screen id if this is a screen session
 if [ -n "$STY" ]; then
-TERM_TEXT="${STY#*.}"
-TERM_TEXT="[${TERM_TEXT%.$HOSTNAME}.${WINDOW}]"
+    TERM_TEXT="${STY#*.}"
+    TERM_TEXT="[${TERM_TEXT%.$HOSTNAME}.${WINDOW}]"
 fi
 
 # Don't junk up simple linux terminals
@@ -369,23 +369,23 @@ PS1="\[\$(prompt_exit)\]"
 # Time in HH:MM:SS form
 PS1+="\t"
 # Number of jobs managed by this shell
-PS1+="<\[$NO_COLOUR\]\j"
+PS1+="\[$NO_COLOUR\]<\[$BLUE\]\j"
 # TTY number for this shell
-PS1+="\[$GREEN\]/\l"
+PS1+="\[$NO_COLOUR\]/\[$BLUE\]\l"
 # Screen name
 PS1+="\[$YELLOW\]$TERM_TEXT"
 # Hostname
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    PS1+="@\[$GREEN\]${FULLHOST#*-}"
+    PS1+="\[$NO_COLOUR\]@\[$BLUE\]${FULLHOST#*-}"
 fi
 # Present working directory, with some abbreviations
-PS1+="\[$NO_COLOUR\]:\$(PWD)"
+PS1+="\[$NO_COLOUR\]:\[$LIGHT_WHITE\]\$(PWD)"
 # Git branch, if available
 if type __git_ps1 &> /dev/null; then
-    PS1+="\$(__git_ps1 '<%s')"
+    PS1+="\$(__git_ps1 '\[$NO_COLOUR\]<\[$GREEN\]%s')"
 fi
 # End of prompt
-PS1+=">\[$NO_COLOUR\] "
+PS1+="\[$NO_COLOUR\]> "
 
 if go version &> /dev/null; then
     export GOROOT
