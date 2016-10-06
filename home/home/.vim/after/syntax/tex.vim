@@ -1,1 +1,0 @@
-/home/brooks/.dotfiles/home/.vim/after/syntax/tex.vim
