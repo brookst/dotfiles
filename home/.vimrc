@@ -10,6 +10,7 @@ set list
 set listchars=tab:▸-
 ",trail:¶
 ",eol:¶
+set fillchars=vert:│,diff:─
 set showcmd
 set ruler
 set incsearch
@@ -163,7 +164,7 @@ let g:tex_flavor = "latex"
 let g:ttyname = substitute($PROMPT_COMMAND, "print_titlebar ", "", "")
 if g:ttyname != ''
     let g:ttyname = substitute(g:ttyname, "$(PWD)", "", "")
-    let g:ttyname = split(g:ttyname, ";")[-1]
+    let g:ttyname = substitute(g:ttyname, '.*;\"\(.*\)\"', '\1', '')
 endif
 
 au BufEnter * set title | let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
@@ -477,7 +478,7 @@ let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
 let wiki_user.css_name = '~/vimwiki/style.css'
-let wiki_user.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'bash': 'sh', 'conf': 'conf', 'ssh': 'python', 'yaml': 'yaml', 'md': 'markdown', 'makefile': 'make'}
+let wiki_user.nested_syntaxes = {'python': 'python', 'cxx': 'cpp', 'cc': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'bash': 'sh', 'conf': 'conf', 'ssh': 'python', 'yaml': 'yaml', 'md': 'markdown', 'makefile': 'make', 'messages': 'messages'}
 
 " Shortcut to search wiki faster that :VWS
 command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.wiki' | :copen | :let @/ = <q-args> | :redraw!
