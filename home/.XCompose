@@ -5760,6 +5760,17 @@
 <Multi_key> <colon> <period>                    : "∴"   therefore   # : . THEREFORE
 <Multi_key> <period> <colon>                    : "∵"   because     # . : BECAUSE
 
+<Multi_key> <i> <n>                             : "∩"   intersection  # i n INTERSECTION
+<Multi_key> <u> <n>                             : "∪"   union         # u n UNION
+<Multi_key> <S> <u>                             : "⊃"   superset      # S u SUPERSET
+<Multi_key> <s> <u>                             : "⊂"   subset        # s u SUBSET
+
+# Vim style:
+<Multi_key> <(> <U>                             : "∩"   intersection  # ( U INTERSECTION
+<Multi_key> <)> <U>                             : "∪"   union         # ) U UNION
+<Multi_key> <(> <C>                             : "⊂"   subset        # ( C SUBSET
+<Multi_key> <)> <C>                             : "⊃"   superset      # ) C SUPERSET
+
 # Characters from "Miscellaneous Technical"
 
 <Multi_key> <U22a5> <U22a4>                     : "⌶"   U2336   # ⊥ ⊤ APL FUNCTIONAL SYMBOL I-BEAM
