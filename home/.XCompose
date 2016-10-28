@@ -226,7 +226,7 @@
 <Multi_key> <o> <r>              	: "®"   registered # REGISTERED SIGN
 <Multi_key> <o> <R>              	: "®"   registered # REGISTERED SIGN
 <Multi_key> <O> <r>              	: "®"   registered # REGISTERED SIGN
-<Multi_key> <O> <R>              	: "®"   registered # REGISTERED SIGN
+# <Multi_key> <O> <R>              	: "®"   registered # REGISTERED SIGN
 <Multi_key> <R> <o> 			: "®"   registered # REGISTERED SIGN
 <Multi_key> <R> <O> 			: "®"   registered # REGISTERED SIGN
 
@@ -5760,12 +5760,14 @@
 <Multi_key> <colon> <period>                    : "∴"   therefore   # : . THEREFORE
 <Multi_key> <period> <colon>                    : "∵"   because     # . : BECAUSE
 
-<Multi_key> <i> <n>                             : "∩"   intersection  # i n INTERSECTION
-<Multi_key> <u> <n>                             : "∪"   union         # u n UNION
-<Multi_key> <S> <u>                             : "⊃"   superset      # S u SUPERSET
-<Multi_key> <s> <u>                             : "⊂"   subset        # s u SUBSET
+<Multi_key> <I> <N>                             : "∩"   intersection  # I N INTERSECTION
+<Multi_key> <U> <N>                             : "∪"   union         # U N UNION
+<Multi_key> <S> <P>                             : "⊃"   superset      # S P SUPERSET
+<Multi_key> <S> <B>                             : "⊂"   subset        # S B SUBSET
 
 # Vim style:
+<Multi_key> <A> <N>                             : "∧"   and           # A N AND
+<Multi_key> <O> <R>                             : "∨"   or            # O R OR
 <Multi_key> <(> <U>                             : "∩"   intersection  # ( U INTERSECTION
 <Multi_key> <)> <U>                             : "∪"   union         # ) U UNION
 <Multi_key> <(> <C>                             : "⊂"   subset        # ( C SUBSET
