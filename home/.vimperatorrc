@@ -1,10 +1,40 @@
 "3.10.1 (created: 2015/08/25 00:41:59)
+" vim: set ft=vim:
 
 colorscheme molokai
-map s ogoogle 
-map S tgoogle 
+
+set tabnumbers
 set complete=lS
 set gui=addons,nobookmarks,nomenu,nonavigation,tabs
 source! /home/brooks/.vimperatorrc.local
 
-" vim: set ft=vimperator:
+nnoremap s ogoogle<space>
+nnoremap S tgoogle<space>
+
+" Scroll faster
+nnoremap j 2j
+nnoremap k 2k
+
+" Last open tab
+nnoremap <BS> b#<CR>
+
+source .vimperatorlocalrc
+
+js <<EOS
+    function zeroPad(num, places) {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    }
+    function or(left, right) {
+        if (left) {
+            return left;
+        } else {
+            return right;
+        }
+    }
+EOS
+
+command! -nargs=1 pep execute "open http://www.python.org/dev/peps/pep-"+zeroPad(<args>, 4)+"/"
+command! -nargs=1 rfc execute "open https://www.ietf.org/html/rfc"+zeroPad(<args>, 4)+".txt"
+command! -nargs=? -complete url wayback execute "open \"https://web.archive.org/web/*/"+or("<args>", content.location.href)+"\""
+command! pin set apptab!
