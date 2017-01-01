@@ -189,6 +189,11 @@ scp () {
     command scp "${args[@]}" "$1" "$2"
 }
 
+wordsearch () {
+    pat=$1
+    grep -e "^${pat}\$" /usr/share/dict/british-english-large
+}
+
 # Env vars for a few things
 export EDITOR=vim
 export PAGER=less
