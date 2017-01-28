@@ -37,7 +37,9 @@ set mouse=a
 
 " GNU screen sometimes borks dragging in 'xterm' mode
 " See: http://stackoverflow.com/questions/8939043/gnu-screen-and-vim-adjusting-the-split-window-buffer-size-with-mouse
-set ttymouse=xterm2
+if !has("nvim")
+    set ttymouse=xterm2
+endif
 
 " Use British English
 set spelllang=en_gb
@@ -85,6 +87,9 @@ if exists("loaded_less")
     call add(g:pathogen_disabled, 'vim-surround')
     call add(g:pathogen_disabled, 'vim-speeddating')
     call add(g:pathogen_disabled, 'vim-yankstack')
+endif
+if has("nvim")
+    call add(g:pathogen_disabled, 'editorconfig-vim')
 endif
 
 " Use vim-surround to wrap a word e.g. after adding a print
@@ -418,6 +423,8 @@ function! s:DiffWithSaved()
 endfunction
 com! DiffSaved call s:DiffWithSaved()
 
+call camelcasemotion#CreateMotionMappings('<leader>')
+
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#example#enabled = 0
@@ -484,6 +491,7 @@ let wiki_user.nested_syntaxes = {'python': 'python', 'cxx': 'cpp', 'cc': 'c', 'r
 command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.wiki' | :copen | :let @/ = <q-args> | :redraw!
 
 " let g:vimwiki_folding='expr'
+let g:vimwiki_map_prefix = '<leader>g'
 
 " Handler for precise linking
 let g:vimwiki_list = [wiki_user]
