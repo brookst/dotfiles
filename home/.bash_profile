@@ -59,7 +59,11 @@ ssh () {
 
 # Sanely search for process details
 psgrep () {
-    ps aux | { read titles; echo "${titles}"; grep -v grep | grep --color "$1"; }
+    ps aux | {
+        read titles
+        echo "${titles}"
+        grep -v grep | grep --color -i "$1"
+    }
 }
 
 #Turn off echoing of ^C when interrupting a process - saves mangling the following prompt
@@ -87,6 +91,7 @@ alias s="screen -dR"
 alias j="jobs"
 alias g="git"
 alias py="python"
+alias py2="python2"
 alias py3="python3"
 alias ipy="ipython"
 alias ipy3="ipython3"
@@ -124,7 +129,11 @@ define () {
 todo () {
     IFS="
 "
-    file_list=($(grep '\[ \]' "${HOME}"/vimwiki/*-*-*.wiki))
+    if [ -z "$1" ]; then
+        file_list=($(grep "\[ \]" "${HOME}"/vimwiki/*-*-*.wiki))
+    else
+        file_list=($(grep "\[ \]" "${HOME}"/vimwiki/*-*-*.wiki | grep -i --colour=always "$1"))
+    fi
     select file_name in ${file_list[*]}
     do
         if [ -n "$file_name" ]; then
