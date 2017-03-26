@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# Timothy Brooks 2017 <brooks@skoorb.net>
+#
+# sid - Identify screens and their associated ttys
+
+screens=$(screen -list)
+for screen in $screens; do
+    if [[ $screen =~ [[:digit:]]+\..+ ]]; then
+    # Pick up the screen names of the from <pid>.<name>
+        if [ -z "$repeat" ]; then
+        # Print headings
+            repeat=true
+            echo "PID TTY NAME"
+        fi
+        pid=${screen%%.*}
+        name=${screen#*.}
+        # Look at the child of screen (should be the shell) and get its TTY
+        tty_name=$(ps --ppid "$pid" ho tty)
+        echo "$pid $tty_name $name"
+    fi
+done | column -t
