@@ -15,8 +15,10 @@ for screen in $screens; do
         fi
         pid=${screen%%.*}
         name=${screen#*.}
-        # Look at the child of screen (should be the shell) and get its TTY
-        tty_name=$(ps --ppid "$pid" ho tty)
-        echo "$pid $tty_name $name"
+        # Look at the children of the screen and get their TTY
+        tty_names=( $(ps --ppid "$pid" ho tty) )
+        for tty_name in "${tty_names[@]}"; do
+            echo "$pid $tty_name $name"
+        done
     fi
 done | column -t
