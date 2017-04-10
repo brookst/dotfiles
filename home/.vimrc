@@ -423,7 +423,9 @@ function! s:DiffWithSaved()
 endfunction
 com! DiffSaved call s:DiffWithSaved()
 
-call camelcasemotion#CreateMotionMappings('<leader>')
+if exists("camelcasemotion#CreateMotionMappings")
+    call camelcasemotion#CreateMotionMappings('<leader>')
+endif
 
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
