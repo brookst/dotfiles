@@ -1,3 +1,4 @@
+# vim: sts=8 sw=8
 # See also .config/git/config
 [include]
         # For username / creds / etc
@@ -20,6 +21,7 @@
         noprefix = true
         renames = copies
         compactionHeuristic = true
+        indentHeuristic = true
 [difftool]
         prompt = false
         trustExitCode = true
@@ -32,11 +34,16 @@
 [merge]
         tool = vimdiff
         stat = true
+[submodule]
+        fetchJobs = 4
+[rerere]
+        enabled = 1
 [advice]
         statusHints = false
         pushNonFastForward = false
 [alias]
         s = status
+        m = merge
         p = pull
         l = log
         d = diff
@@ -45,5 +52,5 @@
         co = checkout
         pop = stash pop
         vimdiff = difftool
-
-# vim: sts=8 sw=8
+        grog = log --graph --abbrev-commit --decorate --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)'
+        # From: https://hackernoon.com/lesser-known-git-commands-151a1918a0
