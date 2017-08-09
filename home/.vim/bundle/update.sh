@@ -1,20 +1,28 @@
 #!/bin/bash
 
+NO_COLOUR=$'\033[0m'
+RED=$'\033[0;31m'
+
+logger () {
+    read foo
+    echo "    $foo" | grep --color=always error
+}
+
 echo "#$(date)" > update.list
-for repo in $(find * -maxdepth 0 -type d); do
-    cd "$repo"
+while read repo; do
+    pushd "$repo" > /dev/null
     url=""
     for remote in $(git remote -v | grep fetch | awk '{print $1}'); do
         url=$(git remote -v | grep -e "^${remote}" | grep fetch | awk '{print $2}')
         echo "${repo}: ${url}"
         if [ "$remote" == "origin" ]; then
-            git pull "${remote}" master
+            git pull "${remote}" master |& logger
         else
-            echo "Not updateing from remote ${remote}"
+            echo "${RED}Not updating from remote ${remote}${NO_COLOUR}"
         fi
     done
-    cd ..
+    popd > /dev/null
     echo "${url}" >> update.list
-done
+done < <(find * -maxdepth 0 -type d)
 
-vim -RET dumb -c 'Helptags' -c 'q' > /dev/null
+vim -RET dumb -c 'call pathogen#helptags()' -c 'q' > /dev/null
