@@ -2,8 +2,12 @@ let configpath = '/home/brooks/.cvimrc'
 set localconfig
 
 set noautofocus
+let homedirectory = "/home/brooks/"
 let barposition = "top"
 let locale = "uk"
+
+unmap <Space>
+let mapleader = ","
 
 map d closeTab
 map u lastClosedTab
@@ -14,3 +18,12 @@ altclose -> {{
 }}
 
 map D :call altclose<CR>
+map X :call altclose<CR>
+
+let searchengine stackoverflow = "http://stackoverflow.com/search?q=%s"
+
+map <leader>s :open stackoverflow
+
+" command! wayback -description="Open a page in the wayback machine"
+"     \ -nargs=? -complete url
+"     \ execute "open http://web.archive.org/web/" + ("<args>" == "" ? buffer.URL : "<args>")

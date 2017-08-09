@@ -1,1 +1,1 @@
-{"mail\\.google\\.com":["b","<C-n>","<C-p>"],"www\\.reddit\\.com":["b","<C-n>","<C-p>","d","D"]}
+{"mail\\.google\\.com":["b","<C-n>","<C-p>"],"www\\.reddit\\.com":["<C-n>","<C-p>","b","d","D","H","g","f","r","o","O","s","S","/",":"],"www\\.youtube\\.com":["<C-n>","<C-p>","b","d","D","H","r","f","o","O","s","S",":"],"github\\.com":["<C-n>","<C-p>","b","d","D","H","L","r","f","o","O","t","T","s","S","n","N","/",":"],"localhost:8888/lab":["<C-p>","<C-n>"],"http://localhost:8888/lab":["<C-p>","<C-n>"]}

@@ -11,7 +11,7 @@ hi CompItem             background:#121112; color:#D0CFD0;
 hi CompItem[selected]   color: #FF9926; background: #262426;
 hi CompDesc             width: 500px; max-width: 500px; color: #465457;
 hi CompMsg              margin-left: 16px;
-hi ErrorMsg             background: #D7005F; color: #D0CFD0; font-weight: bold;
+hi ErrorMsg             background: #D71100; color: #D0CFD0; font-weight: bold;
 hi Filter               color: #FF8700; background: #262426;
 hi StatusLine           color: #D0CFD0; background: transparent; font-weight: normal;
 hi Hint                 font-family: monospace; font-size: 10px; font-weight: bold; color: white; background-color: red; border-color: ButtonShadow; border-width: 0px; border-style: solid; padding: 0px 1px 0px 1px;
