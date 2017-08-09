@@ -1,8 +1,11 @@
 #!/bin/bash
 
+_author="Tim Brooks <brooks@skoorb.net> 2015"
+_name=$(basename "$0")
+
 usage () {
     if [ "$1" == 0 ]; then
-    echo "${_name} - Tim Brooks 2015 <brooks@skoorb.net>"
+    echo "${_name} - ${_author}"
     fi
     echo "Usage: echo data | ${_name} [options]"
     echo "Auto update git repo"
@@ -15,8 +18,11 @@ usage () {
     exit "$1"
 }
 
+VERBOSE=0
+PLOT=( )
+
 # Execute getopt
-if ! ARGS=$(getopt -o hs:o:p: -l "help,store:,options:,plot:" -n "getopt.sh" -- "$@"); then
+if ! ARGS=$(getopt -o hvs:o:p: -l "help,verbose,store:,options:,plot:" -n "getopt.sh" -- "$@"); then
   usage 1
 fi
 
@@ -39,6 +45,10 @@ while true; do
       OPTIONS+=("$1")
       shift;
       ;;
+    -v|--verbose)
+      shift;
+      VERBOSE=$((VERBOSE+1));
+      ;;
     -h|--help)
       usage 0;
       ;;
@@ -48,10 +58,14 @@ while true; do
       ;;
   esac
 done
+[ $VERBOSE -gt 2 ] && echo " pp: \$VERBOSE = ${VERBOSE}"
 
 DATA=${FILE-$(mktemp)}
 PLOT=${PLOT-"1:2"}
-GNUPLOT=${TMPDIR-"/tmp"}/$$.gnuplot-pipe
+GNUPLOT=${TMPDIR-/tmp}/$$.gnuplot-pipe
+[ $VERBOSE -gt 2 ] && echo " pp: \$DATA = ${DATA}"
+[ $VERBOSE -gt 2 ] && echo " pp: \$PLOT = ${PLOT}"
+[ $VERBOSE -gt 2 ] && echo " pp: \$GNUPLOT = ${GNUPLOT}"
 mkfifo "$GNUPLOT"
 [ -f "${DATA}" ] || touch "$DATA"
 
@@ -62,8 +76,10 @@ done
 
 # Read in the first few data points
 while [ "$(wc -l "$DATA" | awk '{print $1}')" -lt 2 ]; do
+    [ $VERBOSE -gt 2 ] && echo " pp: plot"
     IFS= read line
     [ -n "$line" ] && echo "$line" >> "$DATA"
+    [ $VERBOSE -gt 1 ] && echo " pp: reading: $line"
 done
 
 gnuplot -p <"$GNUPLOT" &
@@ -71,8 +87,10 @@ pid=$!
 exec 3>"$GNUPLOT"
 for option in "${OPTIONS[@]}"; do
     echo "$option" >&3
+    [ $VERBOSE -gt 2 ] && echo " pp: option $option"
 done
 echo "$script" >&3
+[ $VERBOSE -gt 2 ] && echo " pp: option $script"
 sleep .1s
 
 running=1
@@ -81,20 +99,23 @@ trap 'running=0' SIGINT
 head "$DATA"
 while read line && [ "$running" -eq 1 ]; do
     echo "$line" >> "$DATA"
-    echo "$line"
+    [ $VERBOSE -gt 0 ] && echo " pp: reading: $line"
     echo "replot" >&3
-    sleep .5s
+    sleep 0.005s
 done
 
 exec 3>&-
-rm "$GNUPLOT"
-[ -z "$FILE" ] && rm "$DATA"
 pid=$(ps | awk '/gnuplot_qt/{ print $1; exit }')
 
 running=1
 while kill -0 "$pid" &>/dev/null && [ "$running" -eq 1 ]; do
-    sleep 0.1
+    printf "waiting on pid: %s -\r" "$pid"
+    sleep 0.5
+    printf "waiting on pid: %s |\r" "$pid"
+    sleep 0.5
 done
 kill "$pid" &>/dev/null
+rm "$GNUPLOT"
+[ -z "$FILE" ] && rm "$DATA"
 
 exit 0
