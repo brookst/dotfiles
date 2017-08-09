@@ -15,6 +15,7 @@ set showcmd
 set ruler
 set incsearch
 set ignorecase
+set infercase
 set smartcase
 set wrap
 set splitright
@@ -22,6 +23,7 @@ set splitbelow
 set tags+=~/stl.tags
 set scrolloff=5
 set equalalways
+set wildmenu
 
 if version >= 703
     if exists("&undodir")
@@ -41,11 +43,36 @@ if !has("nvim")
     set ttymouse=xterm2
 endif
 
+if has("nvim")
+    set inccommand=nosplit
+endif
+
 " Use British English
 set spelllang=en_gb
 
 " Match multiple times per line
 set gdefault
+
+set winaltkeys=no
+if has("nvim") || has("gui")
+    " let alt 'send' ESC key: https://github.com/neovim/neovim/issues/2088#issuecomment-171921470
+    let s:printable_ascii = map(range(32, 126), 'nr2char(v:val)')
+    call remove(s:printable_ascii, 92)
+    for s:char in s:printable_ascii
+        execute "inoremap <A-" . s:char . "> <Esc>" . s:char
+    endfor
+    unlet s:printable_ascii s:char"
+    execute "inoremap <A-SPACE> <Esc><SPACE>"
+endif
+
+if ! has('gui_running')
+    set ttimeoutlen=10
+    augroup FastEscape
+        autocmd!
+        au InsertEnter * set timeoutlen=0
+        au InsertLeave * set timeoutlen=1000
+    augroup END
+endif
 
 " Use <space> as <leader>
 nnoremap <space> <nop>
@@ -87,9 +114,6 @@ if exists("loaded_less")
     call add(g:pathogen_disabled, 'vim-surround')
     call add(g:pathogen_disabled, 'vim-speeddating')
     call add(g:pathogen_disabled, 'vim-yankstack')
-endif
-if has("nvim")
-    call add(g:pathogen_disabled, 'editorconfig-vim')
 endif
 
 " Use vim-surround to wrap a word e.g. after adding a print
@@ -243,6 +267,7 @@ set laststatus=2
 filetype on            " enables file type detection
 filetype plugin on     " enables file type specific plugins
 syntax on
+set synmaxcol=300
 
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -313,6 +338,10 @@ noremap <Left>   <NOP>
 "Unmap ex mode
 noremap Q <NOP>
 
+" vim-rsi like mappings
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+
 "Remap line movements to traverse wrapped segments
 nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
@@ -352,11 +381,19 @@ nmap <leader>P <Plug>yankstack_substitute_older_paste
 "http://stackoverflow.com/questions/26884104/
 function! CutAndRunNormal()
     normal! D
-    normal @"
+    if @" =~ '^:'
+        exec @"
+    else
+        normal @"
+    endif
 endfunction
 function! RunNormal()
     normal! y$
-    normal @"
+    if @" =~ '^:'
+        exec @"
+    else
+        normal @"
+    endif
 endfunction
 
 nnoremap <silent> <leader>x :call CutAndRunNormal()<CR><Esc>
@@ -423,8 +460,12 @@ function! s:DiffWithSaved()
 endfunction
 com! DiffSaved call s:DiffWithSaved()
 
-if exists("camelcasemotion#CreateMotionMappings")
+if !empty(glob("~/.vim/bundle/CamelCaseMotion"))
     call camelcasemotion#CreateMotionMappings('<leader>')
+endif
+
+if !empty(glob("~/.vim/bundle/poppy.vim"))
+    au! cursormoved * call PoppyInit()
 endif
 
 let g:airline_powerline_fonts=1
@@ -438,7 +479,8 @@ let g:airline_theme="jellybeans"
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
-let g:airline_symbols.paste = 'P'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_mode_map = {
     \ '__' : '------',
     \ 'n'  : 'N',
@@ -473,11 +515,15 @@ let g:syntastic_style_error_symbol='✗'
 let g:syntastic_style_warning_symbol='⚠'
 
 let g:syntastic_cpp_config_file='.syntastic_cpp_config'
+let g:syntastic_python_pylint_post_args = '--msg-template="{path}:{line}:{column}:{C}: [{symbol} {msg_id}] {msg}"'
 
 " On by default, turn it off for html
 let g:syntastic_mode_map = { 'mode': 'active',
         \ 'active_filetypes': [],
         \ 'passive_filetypes': ['html'] }
+
+" use ripgrep instead of ack
+let g:ackprg = "rg --vimgrep"
 
 let wiki_user = {}
 let wiki_user.path = '~/vimwiki/'
@@ -487,7 +533,7 @@ let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
 let wiki_user.css_name = '~/vimwiki/style.css'
-let wiki_user.nested_syntaxes = {'python': 'python', 'cxx': 'cpp', 'cc': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'sh': 'sh', 'bash': 'sh', 'conf': 'conf', 'ssh': 'python', 'yaml': 'yaml', 'md': 'markdown', 'makefile': 'make', 'messages': 'messages'}
+let wiki_user.nested_syntaxes = {'python': 'python', 'cxx': 'cpp', 'cc': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'perl': 'perl', 'sh': 'sh', 'bash': 'sh', 'conf': 'conf', 'ssh': 'python', 'css': 'css','yaml': 'yaml', 'md': 'markdown', 'makefile': 'make', 'messages': 'messages'}
 
 " Shortcut to search wiki faster that :VWS
 command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.wiki' | :copen | :let @/ = <q-args> | :redraw!
