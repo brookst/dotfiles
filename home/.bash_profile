@@ -88,8 +88,10 @@ export SVNGRP=svn+ssh://svn.cern.ch/reps/atlasgrp
 export SVNTDAQ=svn+ssh://svn.cern.ch/reps/atlastdaq
 export SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
 alias s="screen -dR"
-alias j="jobs"
+alias j="jobs -l"
 alias g="git"
+alias sc="systemctl"
+alias scu="systemctl --user"
 alias py="python"
 alias py2="python2"
 alias py3="python3"
@@ -400,6 +402,10 @@ if type __git_ps1 &> /dev/null; then
 fi
 # End of prompt
 PS1+="\[$NO_COLOUR\]> "
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWSTASHSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+export GIT_PS1_SHOWUPSTREAM="auto"
 
 if go version &> /dev/null; then
     export GOROOT
@@ -416,7 +422,7 @@ export PYTHONSTARTUP=$HOME/.pythonrc
 
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$MINUIT2DIR/lib:$PYTHIA8/lib
 export PYTHONPATH=$ROOTSYS/lib:$PYTHONDIR/lib
-export PATH=$HOME/.local/bin:$HOME/.cargo/bin:$ROOTSYS/bin:$PATH
+export PATH=$HOME/.local/bin:$HOME/.cargo/bin:$HOME/go/bin:$ROOTSYS/bin:$PATH
 alias root="root -l"
 
 # Set up ATLAS computing environment
