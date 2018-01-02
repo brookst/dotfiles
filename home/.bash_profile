@@ -37,6 +37,9 @@ ssh () {
     for token in "$@"; do
         if [ "${token:0:1}" == "-" ]; then
             : #NOP
+        elif [ "$token" == "Batchmode yes" ]; then  # passthrough SSH bash_completion
+            command ssh "$@"
+            return
         elif [[ "$token" =~ @ ]]; then
             title="$token"
         else
@@ -288,7 +291,7 @@ if [[ "$TERM" =~ linux ]];then #-o "$STY" == "" ]; then
   export PROMPT_COMMAND=""
 else
   titlebar=$(get_titlebar)
-  export PROMPT_COMMAND="newline;print_titlebar ${titlebar}"
+  export PROMPT_COMMAND='newline;history -a;history -n;print_titlebar "'${titlebar}'"'
   export TERM=xterm-256color
 fi
 
@@ -428,6 +431,14 @@ alias root="root -l"
 # Set up ATLAS computing environment
 export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase
 alias atlsetup='source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh'
+
+if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
+    . ~/.nix-profile/etc/profile.d/nix.sh
+fi # added by Nix installer
+
+if [ -e ~/dev/co/src/co-hooks.sh ]; then
+    . ~/dev/co/src/co-hooks.sh
+fi
 
 # Store ssh settings in a hostname specific script
 SSH_ENV="$HOME/.ssh/${HOSTNAME%%.*}.environment"
