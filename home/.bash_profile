@@ -221,10 +221,10 @@ export LESS=-aiRsx4
 alias vim='vim -w ~/.vim/log'
 
 # Set the LS_COLORS variable
-if [ "${HOSTNAME}" != "linappserv0.pp.rhul.ac.uk" ]; then
-    eval "$(dircolors "${HOME}"/.config/colors)"
-else
+if [ "${HOSTNAME}" == "linappserv0.pp.rhul.ac.uk" ]; then
     eval "$(dircolors <(grep -v "RESET\|MULTIHARDLINK\|CAPABILITY" .config/colors))"
+elif [ -e "${HOME}/.config/colors" ]; then
+    eval "$(dircolors "${HOME}"/.config/colors)"
 fi
 
 # define some colors which will be used in the prompt
@@ -388,17 +388,23 @@ PS1="\[\$(prompt_exit)\]"
 # Time in HH:MM:SS form
 PS1+="\t"
 # Number of jobs managed by this shell
-PS1+="\[$NO_COLOUR\]<\[$BLUE\]\j"
+PS1+="\[$NO_COLOUR\](\[$BLUE\]\j"
 # TTY number for this shell
-PS1+="\[$NO_COLOUR\]/\[$BLUE\]\l"
+PS1+="\[$NO_COLOUR\]/\[$BLUE\]\l\[$NO_COLOUR\])"
 # Screen name
-PS1+="\[$YELLOW\]$TERM_TEXT"
+if [ -n "$TERM_TEXT" ]; then
+    PS1+="\[$YELLOW\]$TERM_TEXT\[$NO_COLOUR\]"
+fi
+# Username
+if [ "${USER}" != "brooks" ]; then
+    PS1+="${USER}"
+fi
 # Hostname
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    PS1+="\[$NO_COLOUR\]@\[$BLUE\]${FULLHOST#*-}"
+    PS1+="@\[$BLUE\]${FULLHOST#*-}\[$NO_COLOUR\]"
 fi
 # Present working directory, with some abbreviations
-PS1+="\[$NO_COLOUR\]:\[$LIGHT_WHITE\]\$(PWD)"
+PS1+=":\[$LIGHT_WHITE\]\$(PWD)"
 # Git branch, if available
 if type __git_ps1 &> /dev/null; then
     PS1+="\$(__git_ps1 '\[$NO_COLOUR\]<\[$GREEN\]%s')"
