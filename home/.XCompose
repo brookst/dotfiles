@@ -122,6 +122,11 @@
 <Multi_key> <B> <Y> : "𝕐"
 <Multi_key> <B> <Z> : "ℤ"
 
+<Multi_key> <@> </>     : "✓" # CHECK MARK
+<Multi_key> <@> <@> </> : "✔" # HEAVY CHECK MARK
+<Multi_key> <@> <X>     : "✗" # BALLOT X
+<Multi_key> <@> <@> <X> : "✘" # HEAVY BALLOT X
+
 # UTF-8 (Unicode) compose sequence
 # David.Monniaux@ens.fr
 #
