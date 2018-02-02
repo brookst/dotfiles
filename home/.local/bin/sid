@@ -4,6 +4,7 @@
 #
 # sid - Identify screens and their associated ttys
 
+OLDIFS=$IFS
 screens=$(screen -list)
 for screen in $screens; do
     if [[ $screen =~ [[:digit:]]+\..+ ]]; then
@@ -11,14 +12,19 @@ for screen in $screens; do
         if [ -z "$repeat" ]; then
         # Print headings
             repeat=true
-            echo "PID TTY NAME"
+            echo "NAME TTY PID CMD"
         fi
-        pid=${screen%%.*}
+        spid=${screen%%.*}
         name=${screen#*.}
         # Look at the children of the screen and get their TTY
-        tty_names=( $(ps --ppid "$pid" ho tty) )
-        for tty_name in "${tty_names[@]}"; do
-            echo "$pid $tty_name $name"
+        IFS=$'\n' children=( $( ps --ppid "$spid" ho tty:1,pid:1,ucomm:1) )
+        IFS=$OLDIFS
+        for child in "${children[@]}"; do
+            child=( $child )
+            tty_name=${child[0]}
+            pid=${child[1]}
+            cmd=${child[2]}
+            echo "$name $tty_name $pid $cmd"
         done
     fi
 done | column -t
