@@ -53,10 +53,10 @@ ssh () {
     print_titlebar "$title"
     if [ -z "${HOSTNAME/*cern.ch}" ]; then
         command ssh "$@"
-    elif [[ $HOSTNAME == "pi3" || $HOSTNAME =~ .+\.cern\.ch$ ]]; then
-        ssh-add -l &> /dev/null || ssh-add -t 16h && command ssh "$@"
+    elif [[ $HOSTNAME =~ ^pi || $HOSTNAME =~ .+\.cern\.ch$ ]]; then
+        ssh-add -l &> /dev/null || ssh-add -t 16h; command ssh "$@"
     else
-        ssh-add -l &> /dev/null || ssh-add && command ssh "$@"
+        ssh-add -l &> /dev/null || ssh-add; command ssh "$@"
     fi
 }
 
@@ -459,13 +459,15 @@ start_agent () {
 }
 
 # Source SSH settings, if applicable
-
-if [ -f "${SSH_ENV}" ]; then
-     . "${SSH_ENV}" > /dev/null
-     #ps ${SSH_AGENT_PID} doesn't work under cywgin, hopefully pgrep does
-     pgrep -u "$USER" ssh-agent > /dev/null || {
-         start_agent;
-     }
+if [ -S "${SSH_AUTH_SOCK}" ]; then
+    echo "Using forwarded SSH agent"
+elif [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    echo "Using existing SSH agent"
+    #ps ${SSH_AGENT_PID} doesn't work under cywgin, hopefully pgrep does
+    pgrep -u "$USER" ssh-agent > /dev/null || {
+        start_agent;
+    }
 else
     start_agent;
 fi
