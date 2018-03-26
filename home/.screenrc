@@ -9,6 +9,15 @@ hardstatus off
 defhstatus "^Et"
 term screen-256color
 
+# Don't wait on ESC keypress
+maptimeout 0
+
+# Make messages stick around longer
+msgwait 3
+
+# Send mouse inputs to the corresponding window split
+mousetrack on
+
 # Start $SHELL as login-shell
 shell -$SHELL
 
@@ -25,8 +34,27 @@ altscreen on
 # Enable 256 color terminal
 # attrcolor b ".I"
 termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
-# termcapinfo xterm|xterms|xs|rxvt ti@:te@
-defbce "on"
+
+# Erase with background color
+defbce on
 
 # Log 50000 lines
 defscrollback 50000
+
+# Don't draw bright white line between vertical splits
+rendition so =00
+
+# split vertically creating new shell prompt
+bind | eval 'split -v' 'focus right' screen
+
+caption always "%{kK}%S %-w%50L>%{kw}%n%{-}]%{kw}%t%{-}%+w%<"
+# %{kK} bg=black, fg=grey
+# %S    session name
+# %-w   preceding window numbers+names (if any)
+# %50L> truncate preceding (>) such that this point is at the 50% mark (50) indicated with '...' (L)
+# %{kw} bg=black, fg=white
+# %n    window number
+# %t    window title
+# %{-}  pop last formatting change
+# %+w   following window numbers+names (if any)
+# %<    point to truncate up to

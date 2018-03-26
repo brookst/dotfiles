@@ -209,7 +209,13 @@ wordsearch () {
 }
 
 # Env vars for a few things
-export EDITOR=vim
+if which nvim &>/dev/null; then
+    export EDITOR="nvim"
+    alias vimdiff="nvim -d"
+    alias vim="nvim"
+else
+    export EDITOR="vim"
+fi
 export PAGER=less
 export LESS=-aiRsx4
 # -a : search from end of this screen
@@ -218,7 +224,7 @@ export LESS=-aiRsx4
 # -s : truncate multiple blank lines to a single one
 # -x4 : set tab stops to multiples of 4 characters
 
-alias vim='vim -w ~/.vim/log'
+# alias vim='vim -w ~/.vim/log'
 
 # Set the LS_COLORS variable
 if [ "${HOSTNAME}" == "linappserv0.pp.rhul.ac.uk" ]; then
@@ -277,7 +283,7 @@ get_titlebar () {
       _host="@${_host}"
     fi
   fi
-  echo "${TTY}${TERM_TEXT}${_host}:\$(PWD)"
+  echo "${TTY}${_host}:\$(PWD)"
 }
 
 # List the screen id if this is a screen session
@@ -292,6 +298,7 @@ if [[ "$TERM" =~ linux ]];then #-o "$STY" == "" ]; then
 else
   titlebar=$(get_titlebar)
   export PROMPT_COMMAND='newline;history -a;history -n;print_titlebar "'${titlebar}'"'
+  trap 'print_titlebar "$BASH_COMMAND"' DEBUG
   export TERM=xterm-256color
 fi
 

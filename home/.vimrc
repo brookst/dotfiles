@@ -115,6 +115,13 @@ if exists("loaded_less")
     call add(g:pathogen_disabled, 'vim-speeddating')
     call add(g:pathogen_disabled, 'vim-yankstack')
 endif
+if !has('nvim')
+    call add(g:pathogen_disabled, 'LanguageClient-neovim')
+else
+    let g:LanguageClient_serverCommands = {
+            \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+            \ }
+endif
 
 " Use vim-surround to wrap a word e.g. after adding a print
 nnoremap <silent> <leader>s) :normal lysw)h<CR>
@@ -190,11 +197,12 @@ let g:is_bash = 1
 " Default to LaTeX, not plain TeX
 let g:tex_flavor = "latex"
 
-let g:ttyname = substitute($PROMPT_COMMAND, "print_titlebar ", "", "")
+let g:ttyname = substitute($PROMPT_COMMAND, "newline.*print_titlebar ", "", "")
 if g:ttyname != ''
     let g:ttyname = substitute(g:ttyname, "$(PWD)", "", "")
     let g:ttyname = substitute(g:ttyname, '.*;\"\(.*\)\"', '\1', '')
 endif
+let g:ttyname = substitute(g:ttyname, "\"", "", "g")
 
 au BufEnter * set title | let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
 
@@ -441,14 +449,22 @@ function! Gutter()
         set nonumber
         set norelativenumber
         set showbreak=
+        if &signcolumn == "yes"
+            setlocal signcolumn=no
+        endif
     else
         set number
         set relativenumber
         set showbreak=↪
+        if &signcolumn == "no"
+            setlocal signcolumn=yes
+        endif
     endif
     SignifyToggle
 endfunction
 nmap <silent> gh :call Gutter()<CR>
+
+let g:signify_vcs_list = [ 'git', 'hg' ]
 
 " See http://vim.wikia.com/wiki/Diff_current_buffer_and_the_original_file
 function! s:DiffWithSaved()
@@ -480,7 +496,7 @@ if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
 let g:airline_symbols.paste = '∥'
-let g:airline_symbols.spell = 'Ꞩ'
+let g:airline_symbols.spell = '§'
 let g:airline_mode_map = {
     \ '__' : '------',
     \ 'n'  : 'N',
