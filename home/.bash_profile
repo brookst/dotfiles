@@ -467,6 +467,7 @@ start_agent () {
 
 # Source SSH settings, if applicable
 if [ -S "${SSH_AUTH_SOCK}" ]; then
+    echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}; export SSH_AUTH_SOCK; unset SSH_AGENT_PID;" > "${SSH_ENV}"
     echo "Using forwarded SSH agent"
 elif [ -f "${SSH_ENV}" ]; then
     . "${SSH_ENV}" > /dev/null
