@@ -378,8 +378,9 @@ if !exists("g:vimrc_loaded")
     call pathogen#infect()
 endif
 
-let g:jellybeans_background_color = "000000"
-let g:jellybeans_background_color_256 = "000"
+let g:jellybeans_overrides = {
+\    'background': { 'guibg': '000000' }
+\}
 silent! colorscheme jellybeans
 
 nmap <leader>p <Plug>yankstack_substitute_newer_paste
