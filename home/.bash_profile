@@ -307,7 +307,7 @@ fi
 PWD () {
   es=$?
   local ps1="${PWD/$TestArea/$}"
-  if [ "$BASH_MAJVERSION" -ge 4 ] && [ "$BASH_MINVERSION" -ge 3 ]; then
+  if [ "$BASH_MAJVERSION" -ge 5 ] || ( [ "$BASH_MAJVERSION" -eq 4 ] && [ "$BASH_MINVERSION" -ge 3 ] ); then
     ps1="${ps1/$HOME/\~}"   #Bash 4.3 now expands in substitutions
   else
     ps1="${ps1/$HOME/~}"    #But prior versions didn't

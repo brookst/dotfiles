@@ -544,7 +544,7 @@ let g:ackprg = "rg --vimgrep"
 
 let wiki_user = {}
 let wiki_user.path = '~/vimwiki/'
-let wiki_user.diary_rel_path = ''
+let wiki_user.diary_rel_path = './'
 let wiki_user.template_path = '~/vimwiki/templates/'
 let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'
@@ -561,7 +561,7 @@ let g:vimwiki_map_prefix = '<leader>g'
 " Handler for precise linking
 let g:vimwiki_list = [wiki_user]
 function! VimwikiWikiIncludeHandler(value)
-    let url = matchstr(a:value, g:vimwiki_rxWikiInclMatchUrl)
+    let url = matchstr(a:value, g:vimwiki_global_vars['rxWikiInclMatchUrl'])
     let desc = matchstr(a:value, '{{.*|\zs\%([^|}]*\)\ze}}')
     if url[0] == '.'
         let url = url[1:]
