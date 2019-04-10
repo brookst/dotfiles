@@ -4,11 +4,12 @@ NO_COLOUR=$'\033[0m'
 RED=$'\033[0;31m'
 
 logger () {
-    read foo
-    echo "    $foo" | grep --color=always error
+    while read line; do
+        echo "    $line"
+    done
 }
 
-echo "#$(date)" > update.list
+echo "#$(date)" > bundle.list
 while read repo; do
     pushd "$repo" > /dev/null
     url=""
@@ -22,7 +23,8 @@ while read repo; do
         fi
     done
     popd > /dev/null
-    echo "${url}" >> update.list
+    echo "${url}" >> bundle.list
 done < <(find * -maxdepth 0 -type d)
 
+# Generate helptags
 vim -RET dumb -c 'call pathogen#helptags()' -c 'q' > /dev/null
