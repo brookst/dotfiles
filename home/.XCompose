@@ -1,8 +1,6 @@
 # PKGW customizations
 # Greek ambiguities: epsilon/eta, theta/tau, pi/phi/psi, omega/omicron
 
-<Multi_key> <backslash> <comma> : " " U202F # thin nonbreaking space
-
 <Multi_key> <asterisk> <a> : "α"
 <Multi_key> <asterisk> <b> : "β"
 <Multi_key> <asterisk> <g> : "γ"
@@ -177,47 +175,12 @@
 
 # ASCII characters that may be difficult to access
 # on some keyboards.
-<Multi_key> <plus> <plus>        	: "#"   numbersign # NUMBER SIGN
-<Multi_key> <apostrophe> <space> 	: "'"   apostrophe # APOSTROPHE
-<Multi_key> <space> <apostrophe> 	: "'"   apostrophe # APOSTROPHE
-<Multi_key> <A> <T>              	: "@"   at # COMMERCIAL AT
-<Multi_key> <parenleft> <parenleft> 	: "["   bracketleft # LEFT SQUARE BRACKET
-<Multi_key> <slash> <slash>      	: "\\"   backslash # REVERSE SOLIDUS
-<Multi_key> <slash> <less>       	: "\\"   backslash # REVERSE SOLIDUS
-<Multi_key> <less> <slash>       	: "\\"   backslash # REVERSE SOLIDUS
-<Multi_key> <parenright> <parenright> 	: "]"   bracketright # RIGHT SQUARE BRACKET
-
-<Multi_key> <asciicircum> <space> 	: "^"   asciicircum # CIRCUMFLEX ACCENT
-<Multi_key> <space> <asciicircum> 	: "^"   asciicircum # CIRCUMFLEX ACCENT
-<Multi_key> <greater> <space>    	: "^"   asciicircum # CIRCUMFLEX ACCENT
-<Multi_key> <space> <greater>    	: "^"   asciicircum # CIRCUMFLEX ACCENT
-
-<Multi_key> <grave> <space>      	: "`"   grave # GRAVE ACCENT
-<Multi_key> <space> <grave>      	: "`"   grave # GRAVE ACCENT
-
 <Multi_key> <comma> <space>      	: "¸"   cedilla # CEDILLA
 <Multi_key> <space> <comma>      	: "¸"   cedilla # CEDILLA
 <Multi_key> <comma> <comma> 		: "¸"   cedilla # CEDILLA
 
-<Multi_key> <parenleft> <minus>  	: "{"   braceleft # LEFT CURLY BRACKET
-<Multi_key> <minus> <parenleft>  	: "{"   braceleft # LEFT CURLY BRACKET
-
-<Multi_key> <slash> <asciicircum> 	: "|"   bar # VERTICAL LINE
-<Multi_key> <asciicircum> <slash> 	: "|"   bar # VERTICAL LINE
-<Multi_key> <V> <L>              	: "|"   bar # VERTICAL LINE
-<Multi_key> <L> <V>              	: "|"   bar # VERTICAL LINE
-<Multi_key> <v> <l>              	: "|"   bar # VERTICAL LINE
-<Multi_key> <l> <v>              	: "|"   bar # VERTICAL LINE
-
-<Multi_key> <parenright> <minus> 	: "}"   braceright # RIGHT CURLY BRACKET
-<Multi_key> <minus> <parenright> 	: "}"   braceright # RIGHT CURLY BRACKET
-
-<Multi_key> <asciitilde> <space> 	: "~"   asciitilde # TILDE
-<Multi_key> <space> <asciitilde> 	: "~"   asciitilde # TILDE
-<Multi_key> <minus> <space>      	: "~"   asciitilde # TILDE
-<Multi_key> <space> <minus>      	: "~"   asciitilde # TILDE
-
 # Spaces
+<Multi_key> <backslash> <comma>  	: " "   U202F # thin nonbreaking space
 <Multi_key> <space> <space>      	: " "   nobreakspace # NO-BREAK SPACE
 <Multi_key> <space> <period>     	: " "   U2008 # PUNCTUATION SPACE
 
@@ -231,7 +194,6 @@
 <Multi_key> <o> <r>              	: "®"   registered # REGISTERED SIGN
 <Multi_key> <o> <R>              	: "®"   registered # REGISTERED SIGN
 <Multi_key> <O> <r>              	: "®"   registered # REGISTERED SIGN
-# <Multi_key> <O> <R>              	: "®"   registered # REGISTERED SIGN
 <Multi_key> <R> <o> 			: "®"   registered # REGISTERED SIGN
 <Multi_key> <R> <O> 			: "®"   registered # REGISTERED SIGN
 
@@ -247,7 +209,7 @@
 <Multi_key> <p> <exclam>         	: "¶"   paragraph # PILCROW SIGN
 <Multi_key> <P> <exclam>         	: "¶"   paragraph # PILCROW SIGN
 <Multi_key> <plus> <minus>       	: "±"   plusminus # PLUS-MINUS SIGN
-<Multi_key> <minus> <plus> 		: "±"   plusminus # PLUS-MINUS SIGN
+<Multi_key> <minus> <plus>       	: "∓"   minusplus # MINUS-PLUS SIGN
 <Multi_key> <question> <question> 	: "¿"   questiondown # INVERTED QUESTION MARK
 <Multi_key> <s> <s>              	: "ß"   ssharp # LATIN SMALL LETTER SHARP S
 <Multi_key> <S> <S>              	: "ẞ"   U1e9e # LATIN CAPITAL LETTER SHARP S
@@ -5777,6 +5739,12 @@
 <Multi_key> <)> <U>                             : "∪"   union         # ) U UNION
 <Multi_key> <(> <C>                             : "⊂"   subset        # ( C SUBSET
 <Multi_key> <)> <C>                             : "⊃"   superset      # ) C SUPERSET
+<Multi_key> <F> <A>                             : "∀"   U2200         # FOR ALL
+<Multi_key> <d> <P>                             : "∂"   U2202         # PARTIAL DIFFERENTIAL
+<Multi_key> <T> <E>                             : "∃"   U2203         # THERE EXISTS
+<Multi_key> <N> <B>                             : "∇"   U2207         # NABLA
+<Multi_key> <(> <->                             : "∈"   U2208         # ELEMENT OF
+<Multi_key> <-> <)>                             : "∋"   U220B         # CONTAINS AS MEMBER
 
 # Characters from "Miscellaneous Technical"
 
