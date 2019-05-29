@@ -5,7 +5,7 @@
         path = ~/.gitconfig.local
 [user]
         name = Tim Brooks
-        email = brooks@cern.ch
+        email = brooks@skoorb.net
         signingkey = 0C66D5A7
 [github]
         user = brookst
@@ -54,3 +54,5 @@
         vimdiff = difftool
         grog = log --graph --abbrev-commit --decorate --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)'
         # From: https://hackernoon.com/lesser-known-git-commands-151a1918a0
+[http]
+        emptyAuth = true

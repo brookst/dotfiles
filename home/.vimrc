@@ -487,6 +487,7 @@ endif
 
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_min_count = 2
 let g:airline#extensions#example#enabled = 0
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#redgreen#enabled = 1
@@ -555,11 +556,11 @@ let wiki_user.nested_syntaxes = {'python': 'python', 'cxx': 'cpp', 'cc': 'c', 'r
 " Shortcut to search wiki faster that :VWS
 command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.wiki' | :copen | :let @/ = <q-args> | :redraw!
 
+let g:vimwiki_list = [wiki_user]
 " let g:vimwiki_folding='expr'
 let g:vimwiki_map_prefix = '<leader>g'
 
 " Handler for precise linking
-let g:vimwiki_list = [wiki_user]
 function! VimwikiWikiIncludeHandler(value)
     let url = matchstr(a:value, g:vimwiki_global_vars['rxWikiInclMatchUrl'])
     let desc = matchstr(a:value, '{{.*|\zs\%([^|}]*\)\ze}}')

@@ -129,7 +129,7 @@ function pull () {
     else
         git pull --quiet ${repo_remote} ${repo_branch} 2>&1 | log
     fi
-    code=$?
+    code=$PIPESTATUS # Capture code from first command in pipe
     if [[ "${code}" != "0" ]]; then
         echo "Error ${code} occurred while pulling"
         exit $code
@@ -139,7 +139,7 @@ function pull () {
 function add () {
     echo "AG: add function" | log_debug
     git add --all 2>&1 | log
-    code=$?
+    code=$PIPESTATUS
     if [[ "${code}" != "0" ]]; then
         echo "Error ${code} occurred while adding"
         exit $code
@@ -149,7 +149,7 @@ function add () {
 function commit () {
     echo "AG: commit function" | log_debug
     git commit -m "Auto update @${HOSTNAME}" 2>&1 | log
-    code=$?
+    code=$PIPESTATUS
     if [[ "${code}" != "0" ]]; then
         echo "Error ${code} occurred while committing"
         exit $code
@@ -159,7 +159,7 @@ function commit () {
 function push () {
     echo "AG: push function" | log_debug
     git push -q ${repo_remote} ${repo_branch} 2>&1 | log
-    code=$?
+    code=$PIPESTATUS
     if [[ "${code}" != "0" ]]; then
         echo "Error ${code} occurred while pushing"
         exit $code
@@ -214,7 +214,7 @@ function main () {
 }
 
 echo "Started @ $(date)" | log_debug
-env | log_debug
+# env | log_debug
 main
 echo "Ended @ $(date)" | log_debug
 echo | log_debug
