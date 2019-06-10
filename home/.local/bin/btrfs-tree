@@ -10,15 +10,16 @@ from sys import exit
 FILESYSTEM_ROOTID=5
 
 class Subvolume:
-    __slots__ = ["sid", "parent", "path", "children", "_gen", "_uuid"]
+    __slots__ = ["sid", "parent", "path", "children", "_gen", "_ruuid", "_uuid"]
     def __init__(self, line=None):
         if line is not None:
-            tokens = line.split(b' ')
+            tokens = line.split()
             self.sid = int(tokens[1])
             self._gen = tokens[3]
             self.parent = int(tokens[5])
-            self._uuid = tokens[10]
-            self.path = tokens[12].decode()
+            self._ruuid = tokens[10]
+            self._uuid = tokens[12]
+            self.path = tokens[14].decode()
         else:
             self.sid = FILESYSTEM_ROOTID
         self.children = []
@@ -31,8 +32,12 @@ class Subvolume:
     def uuid(self):
         return self._uuid.decode()
 
+    @property
+    def ruuid(self):
+        return self._ruuid.decode()
+
 def main(args):
-    subvolumes = run(["sudo", "btrfs", "subvolume", "list", args.path, "-pu"], capture_output=True)
+    subvolumes = run(["sudo", "btrfs", "subvolume", "list", args.path, "-pRu"], capture_output=True)
     if subvolumes.returncode is not 0:
         print(subvolumes.stderr.decode())
         exit(subvolumes.returncode)
@@ -74,6 +79,8 @@ def print_tree(subvol, args, prefix=b"", stringer=""):
             extra += "gen {:d} ".format(child.gen)
         if args.uuid:
             extra += "uuid {:s} ".format(child.uuid)
+        if args.ruuid:
+            extra += "received_uuid {:s} ".format(child.ruuid)
         if extra:
             extra = "[ " + extra + "] "
         print(stringer + runner + extra + path)
@@ -87,9 +94,10 @@ def get_args():
     a = parser.add_argument
     a("path", nargs='?', default="/", help="btrfs filesystem root (default: /)")
     a("-i", "--id", action="store_true", help="display subvolume ID numbers")
-    a("-g", "--gen", action="store_true", help="display subvolume generation numbers")
+    a("-g", "--gen", action="store_true", help="print subvolume generation numbers")
     a("-f", "--full", action="store_true", help="print the full path for each file")
-    a("-u", "--uuid", action="store_true", help="display subvolume UUIDs")
+    a("-u", "--uuid", action="store_true", help="print the uuid of subvolumes (and snapshots)")
+    a("-R", "--ruuid", action="store_true", help="print the uuid of the received snapshots")
     a("-L", dest='level', metavar='level', type=int, help="descend only level subvolumes deep")
     return parser.parse_args()
 
