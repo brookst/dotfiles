@@ -1,0 +1,97 @@
+#!/bin/python3
+#
+# Timothy Brooks 2019 <brooks@skoorb.net>
+#
+DESCRIPTION = "List btrfs subvolumes"
+
+from subprocess import run
+from sys import exit
+
+FILESYSTEM_ROOTID=5
+
+class Subvolume:
+    __slots__ = ["sid", "parent", "path", "children", "_gen", "_uuid"]
+    def __init__(self, line=None):
+        if line is not None:
+            tokens = line.split(b' ')
+            self.sid = int(tokens[1])
+            self._gen = tokens[3]
+            self.parent = int(tokens[5])
+            self._uuid = tokens[10]
+            self.path = tokens[12].decode()
+        else:
+            self.sid = FILESYSTEM_ROOTID
+        self.children = []
+
+    @property
+    def gen(self):
+        return int(self._gen)
+
+    @property
+    def uuid(self):
+        return self._uuid.decode()
+
+def main(args):
+    subvolumes = run(["sudo", "btrfs", "subvolume", "list", args.path, "-pu"], capture_output=True)
+    if subvolumes.returncode is not 0:
+        print(subvolumes.stderr.decode())
+        exit(subvolumes.returncode)
+
+    # Build Subvolume objects
+    subvols = {FILESYSTEM_ROOTID: Subvolume()}
+    for line in subvolumes.stdout.splitlines():
+        subobj = Subvolume(line)
+        subvols[subobj.sid] = subobj
+
+    # Connect child Subvolumes to parents
+    for subvol in subvols.values():
+        if subvol.sid != FILESYSTEM_ROOTID:
+            subvols[subvol.parent].children.append(subvol)
+
+    # Print to stdout
+    print(args.path)
+    print_tree(subvols[FILESYSTEM_ROOTID], args)
+
+def print_tree(subvol, args, prefix=b"", stringer=""):
+    if args.level is not None and len(stringer) / 4 >= args.level:
+        print(stringer + "└── …")
+        return
+    last = len(subvol.children) - 1
+    for i, child in enumerate(subvol.children):
+        suffix = child.path[len(prefix):]
+        if i == last:
+            runner = "└── "
+            riser = "    "
+        else:
+            runner = "├── "
+            riser = "│   "
+
+        path = child.path if args.full else suffix
+        extra = ""
+        if args.id:
+            extra += "ID {:d} ".format(child.sid)
+        if args.gen:
+            extra += "gen {:d} ".format(child.gen)
+        if args.uuid:
+            extra += "uuid {:s} ".format(child.uuid)
+        if extra:
+            extra = "[ " + extra + "] "
+        print(stringer + runner + extra + path)
+
+        if child.children:
+            print_tree(child, args, child.path, stringer + riser)
+
+def get_args():
+    from argparse import ArgumentParser
+    parser = ArgumentParser(description=DESCRIPTION)
+    a = parser.add_argument
+    a("path", nargs='?', default="/", help="btrfs filesystem root (default: /)")
+    a("-i", "--id", action="store_true", help="display subvolume ID numbers")
+    a("-g", "--gen", action="store_true", help="display subvolume generation numbers")
+    a("-f", "--full", action="store_true", help="print the full path for each file")
+    a("-u", "--uuid", action="store_true", help="display subvolume UUIDs")
+    a("-L", dest='level', metavar='level', type=int, help="descend only level subvolumes deep")
+    return parser.parse_args()
+
+if __name__ == '__main__':
+    main(get_args())
