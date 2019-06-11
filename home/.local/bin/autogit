@@ -3,7 +3,7 @@
 # Tim Brooks <brooks@cern.ch>
 
 _name=${0##*/}
-_version=$(cd "$HOME/.dotfiles"; git log -1 --pretty="format:%ai %h" "home/.local/bin/autogit")
+_version=$(cd "$HOME/.dotfiles" || exit; git log -1 --pretty="format:%ai %h" "home/.local/bin/autogit")
 
 function usage () {
     if [ "$1" == 0 ]; then
@@ -84,7 +84,7 @@ fi
 
 function log () {
     #read lines as they are emitted from the preceding command
-    while read msg; do
+    while read -r msg; do
         if [ "$verbose" == true ] && [ -n "${msg}" ]; then
             echo "${msg}"
         fi
@@ -93,7 +93,7 @@ function log () {
 
 function log_debug () {
     #read lines as they are emitted from the preceding command
-    while read msg; do
+    while read -r msg; do
         if [ "$debug" == true ]&& [ -n "${msg}" ]; then
             echo "${msg}"
         fi
@@ -129,40 +129,40 @@ function pull () {
     else
         git pull --quiet ${repo_remote} ${repo_branch} 2>&1 | log
     fi
-    code=$PIPESTATUS # Capture code from first command in pipe
+    code=${PIPESTATUS[0]} # Capture code from first command in pipe
     if [[ "${code}" != "0" ]]; then
         echo "Error ${code} occurred while pulling"
-        exit $code
+        exit "$code"
     fi
 }
 
 function add () {
     echo "AG: add function" | log_debug
     git add --all 2>&1 | log
-    code=$PIPESTATUS
+    code=${PIPESTATUS[0]}
     if [[ "${code}" != "0" ]]; then
         echo "Error ${code} occurred while adding"
-        exit $code
+        exit "$code"
     fi
 }
 
 function commit () {
     echo "AG: commit function" | log_debug
     git commit -m "Auto update @${HOSTNAME}" 2>&1 | log
-    code=$PIPESTATUS
+    code=${PIPESTATUS[0]}
     if [[ "${code}" != "0" ]]; then
         echo "Error ${code} occurred while committing"
-        exit $code
+        exit "$code"
     fi
 }
 
 function push () {
     echo "AG: push function" | log_debug
     git push -q ${repo_remote} ${repo_branch} 2>&1 | log
-    code=$PIPESTATUS
+    code=${PIPESTATUS[0]}
     if [[ "${code}" != "0" ]]; then
         echo "Error ${code} occurred while pushing"
-        exit $code
+        exit "$code"
     else
         echo "Pushed to remote" | log_debug
     fi

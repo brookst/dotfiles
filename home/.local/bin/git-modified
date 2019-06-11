@@ -3,8 +3,8 @@
 #Tim Brooks 2014 <brooks@skoorb.net>
 #
 #Get modified files
-modified=$(git status --porcelain | grep M)
-if [ $? != 0 ]; then
+cd "$(git rev-parse --show-toplevel)" || exit 1
+if ! modified=$(git status --porcelain | grep M); then
     #Exit if there were none
     exit
 fi

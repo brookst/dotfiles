@@ -6,13 +6,15 @@
 path=$1
 line=$2
 
-if [ "$path" == "" -o "$line" == "" ]; then
+if [ -z "$path" ] || [ -z "$line" ]; then
     echo "Usage: git lineblame <file> <line>"
     exit 1
 fi
 
-rev=$(git blame "${path}" "-L${line},${line}" | awk '{print $1}')
-if [ "$rev" == "" ]; then
+read -rd "" rev filename <<< "$(git blame -p "$path" "-L${line},${line}" | sed -n -e '1s/^\(.\{40\}\).*/\1/p' -e 's/filename //p')"
+if [ -z "$rev" ] || [ -z "$filename" ]; then
     exit 1
 fi
-git show "$rev"
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+git log -1 -p "$rev" -- "$filename"

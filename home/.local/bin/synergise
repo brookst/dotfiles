@@ -38,8 +38,7 @@ disown
 
 # Start synergy on remote machine and deactivate screensaver
 # shellcheck disable=SC2029
-ssh -R"${PORT}:localhost:${PORT}" -N "${HOST}" "killall synergyc &>/dev/null; DISPLAY=:0 dev/synergy/bin/synergyc localhost:${PORT}; DISPLAY=:0 gnome-screensaver-command -d"
-if [ $? != 0 ]; then
+if ! ssh -R"${PORT}:localhost:${PORT}" -N "${HOST}" "killall synergyc &>/dev/null; DISPLAY=:0 dev/synergy/bin/synergyc localhost:${PORT}; DISPLAY=:0 gnome-screensaver-command -d"; then
     echo "Failed to connect" | err
     exit 1
 fi
@@ -48,7 +47,7 @@ fi
 ssh -N "${HOST}" "DISPLAY=:0 gnome-screensaver-command -i -n synergise -r 'Under remote control'" &
 
 # Propagate screensavers on this machine to the remote
-DISPLAY=:0 dbus-monitor --session "type='signal',interface='org.gnome.ScreenSaver'" | while read event; do
+DISPLAY=:0 dbus-monitor --session "type='signal',interface='org.gnome.ScreenSaver'" | while read -r event; do
     # echo "==$event"
     case "$event" in
         *"boolean true") ssh -R"${PORT}:localhost:${PORT}" -N "$HOST" 'DISPLAY=:0 gnome-screensaver-command -l' 0</dev/null; echo "Screen lock" | log;;

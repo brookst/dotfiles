@@ -18,10 +18,10 @@ WHITE=$'\033[0;37m'
 LIGHT_WHITE=$'\033[1;37m'
 
 for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-    eval printf "%-9b%b%-12b" "${color}: " \$${color} "${color}\ Foo"
+    eval printf "%-9b%b%-12b" "${color}: " \$${color} "${color}\\ Foo"
     # eval echo -n \$${color}
     # echo -n "${color} Foo ${NO_COLOUR}LIGHT_${color}: "
-    eval printf "%b%-15b%b%-18b" $NO_COLOUR "LIGHT_${color}: " \$LIGHT_${color} "LIGHT_${color}\ Foo"
+    eval printf "%b%-15b%b%-18b" $NO_COLOUR "LIGHT_${color}: " \$LIGHT_${color} "LIGHT_${color}\\ Foo"
     # echo -n "LIGHT_${color} Foo"
     echo "${NO_COLOUR}"
 done

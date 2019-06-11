@@ -17,10 +17,11 @@ for screen in $screens; do
         spid=${screen%%.*}
         name=${screen#*.}
         # Look at the children of the screen and get their TTY
-        IFS=$'\n' children=( $( ps --ppid "$spid" ho tty:1,pid:1,ucomm:1) )
+        # IFS=$'\n' children=( $( ps --ppid "$spid" ho tty:1,pid:1,ucomm:1) )
+        mapfile -t children < <( ps --ppid "$spid" ho tty:1,pid:1,ucomm:1)
         IFS=$OLDIFS
         for child in "${children[@]}"; do
-            child=( $child )
+            IFS=" " read -r -a child <<< "$child"
             tty_name=${child[0]}
             pid=${child[1]}
             cmd=${child[2]}

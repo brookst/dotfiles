@@ -80,7 +80,7 @@ done
 if [ -z "$PID" ]; then                         # if $PID is null, then set it to the last option:
   eval PID=\$${OPTIND}
   exists=$(kill -0 ${PID} &> /dev/null; echo $?)
-  if [ -n "$PID" -a "$exists" != "0" ]; then   # unless thats not a process
+  if [ -n "$PID" ] && [ "$exists" != "0" ]; then   # unless thats not a process
     echo "PID ${PID} not found"
     if [ "$INTER" == 0 ]; then
       kill -SIGINT $$
@@ -90,11 +90,11 @@ if [ -z "$PID" ]; then                         # if $PID is null, then set it to
   fi
 fi
 
-if [ -n "$PID" -a -n "$JOB" ]; then            # warn if -j and PID used together
+if [ -n "$PID" ] && [ -n "$JOB" ]; then            # warn if -j and PID used together
   echo "Option -j is exclusive of PID" >&2
   PID="NULL"
 elif [ -n "$JOB" ]; then                       # use JOB if -j specified
-  PID=$(jobs -l | grep "^\[${JOB}\]" | awk '{print $2}')
+  PID=$(jobs -l | grep "^\\[${JOB}\\]" | awk '{print $2}')
   if [ -z "$PID" ]; then
     echo "Job ${JOB} not found"
     if [ "$INTER" == 0 ]; then
@@ -108,7 +108,7 @@ elif [ -z "$PID" ]; then                       # if neither -j or PID specified,
   JOB=$(jobs | tail -n1 | sed -n '/^\[\([0-9]\+\)\].*/s//\1/p')
 fi
 
-if [ -z "$PID" -o "$PID" == "NULL" ]; then     # print usage message if we still don't have PID or it's "NULL"
+if [ -z "$PID" ] || [ "$PID" == "NULL" ]; then     # print usage message if we still don't have PID or it's "NULL"
   echo "usage: ${PROG} [options] [PID]" >&2
   echo "" >&2
   echo "options:" >&2
