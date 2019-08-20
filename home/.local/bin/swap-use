@@ -16,7 +16,7 @@ usage () {
     exit "$1"
 }
 
-if ARGS=$(getopt -o hft: --long help,full,truncate: -n "$_name" -- "$@"); then
+if ! ARGS=$(getopt -o hft: --long help,full,truncate: -n "$_name" -- "$@"); then
     # echo "Bad option" >&2
     usage 1
 fi
@@ -54,7 +54,7 @@ while read -r line; do
     fi
     SAVEIFS=$IFS
     IFS=$'\n'
-    PROGNAME=( "$(tr '\0' '\n' < "/proc/$PID/cmdline")" )
+    PROGNAME=( "$(tr '\0' ' ' < "/proc/$PID/cmdline")" )
     IFS=$SAVEIFS
     # printf "PID %5d - Swap used: %7d kB - %${pad}s\n" "$PID" "$SUM" "${PROGNAME[*]}"
 
