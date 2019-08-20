@@ -1,0 +1,120 @@
+#!/bin/bash
+# Get current swap usage for all running processes
+# Tim Brooks 21/11/2016
+# Erik Ljungstrom 27/05/2011
+
+_name=${0##*/}
+
+usage () {
+    if [ "$1" == 0 ]; then
+        echo "$_name: Sum program swap allocations"
+    fi
+    echo '
+    -h, --help              This help message
+    -f, --full              Don'\''t try to truncate paths to basenames
+    -t, --truncate COLS     Truncate output to COLS columns'
+    exit "$1"
+}
+
+if ARGS=$(getopt -o hft: --long help,full,truncate: -n "$_name" -- "$@"); then
+    # echo "Bad option" >&2
+    usage 1
+fi
+
+# echo "ARGS: $ARGS"
+eval set -- "$ARGS"
+
+pad=".$(( $(tput cols) - 31 ))" # printf format is 36chars
+path=true
+
+while true; do
+  case "$1" in
+    -h | --help) usage 0 ;;
+    -f | --full) shift; path=false ;;
+    -t | --truncate) shift
+        if [ "$1" == "0" ]; then
+            pad=""
+        else
+            pad=".$1"
+        fi; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+regex="${1}"
+
+while read -r line; do
+    PID=${line#* }
+    SUM=${line% *}
+    # PROGNAME=$(ps -p "$PID" -o comm --no-headers)
+    # PROGNAME=$(head -zn1 "/proc/$PID/cmdline" 2>/dev/null | xargs -0l basename -- 2>/dev/null)
+    if [[ ! -f "/proc/$PID/cmdline" ]]; then
+        continue
+    fi
+    SAVEIFS=$IFS
+    IFS=$'\n'
+    PROGNAME=( "$(tr '\0' '\n' < "/proc/$PID/cmdline")" )
+    IFS=$SAVEIFS
+    # printf "PID %5d - Swap used: %7d kB - %${pad}s\n" "$PID" "$SUM" "${PROGNAME[*]}"
+
+    if [ $path == true ]; then
+        base=$(basename "${PROGNAME[0]}" 2>/dev/null)
+        baseok=$?
+        if [[ "${PROGNAME[0]}" =~ \ -- ]]; then
+            base="$(basename "${PROGNAME[0]%% --*}" 2>/dev/null) --${PROGNAME[0]#* --}"
+            baseok=$?
+        fi
+        if [ $baseok == 0 ]; then
+            PROGNAME[0]="$base"
+        fi
+        # printf "PROGNAME[0] %d: %s\n" $baseok "${PROGNAME[0]}"
+
+        base=$(basename "${PROGNAME[1]}" 2>/dev/null)
+        baseok=$?
+        if [[ "${PROGNAME[1]}" =~ \ -- ]]; then
+            base="$(basename "${PROGNAME[1]%% --*}" 2>/dev/null) --${PROGNAME[1]#* --}"
+            baseok=$?
+        fi
+        if [ $baseok == 0 ]; then
+            PROGNAME[1]="$base"
+        fi
+        # printf "PROGNAME[1] %d : %s\n" $baseok "${PROGNAME[1]}"
+    fi
+
+    if [[ ${PROGNAME[0]} =~ $regex ]]; then
+        if [[ $SUM -lt 1024 ]]; then
+            printf "PID %5d - swap: %4d kB - %${pad}s\\n" "$PID" "$SUM" "${PROGNAME[*]}"
+        else
+            printf "PID %5d - swap: %4d MB - %${pad}s\\n" "$PID" "$((SUM / 1024))" "${PROGNAME[*]}"
+        fi
+    fi
+    (( OVERALL=OVERALL+SUM ))
+done < <(grep Swap: /proc/[1-9]*/smaps 2>/dev/null \
+        | awk '{SUM[$1] += $2} END {for (proc in SUM) print SUM[proc], proc}' \
+        | sed 's/\/proc\/\([0-9]\+\)\/smaps:Swap:/\1/' \
+        | sort -n)
+
+if [[ $OVERALL -lt 1024 ]]; then
+    printf "    Overall swap: %4d kB\\n" $OVERALL
+else
+    printf "    Overall swap: %4d MB\\n" $((OVERALL / 1024))
+fi
+
+# # Get current swap usage for all running processes
+# # Erik Ljungstrom 27/05/2011
+# SUM=0
+# OVERALL=0
+# for DIR in `find /proc/ -maxdepth 1 -type d | egrep "^/proc/[0-9]"` ; do
+# PID=`echo $DIR | cut -d / -f 3`
+# PROGNAME=`ps -p $PID -o comm --no-headers`
+# for SWAP in `grep Swap $DIR/smaps 2>/dev/null| awk '{ print $2 }'`
+# do
+# let SUM=$SUM+$SWAP
+# done
+# printf "PID= %5d - Swap used: %6d kB - ($PROGNAME )\n" "$PID" $SUM
+# let OVERALL=$OVERALL+$SUM
+# SUM=0
+
+# done
+# echo "Overall swap used: $OVERALL kB"
