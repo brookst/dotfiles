@@ -551,6 +551,7 @@ let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'
 let wiki_user.path_html = '~/vimwiki_html/'
 let wiki_user.css_name = '~/vimwiki/style.css'
+let wiki_user.diary_caption_level = -1
 let wiki_user.nested_syntaxes = {'python': 'python', 'cxx': 'cpp', 'cc': 'c', 'rust': 'rust', 'sql': 'sql', 'javascript': 'javascript', 'perl': 'perl', 'sh': 'sh', 'bash': 'sh', 'conf': 'conf', 'ssh': 'python', 'css': 'css','yaml': 'yaml', 'md': 'markdown', 'makefile': 'make', 'messages': 'messages'}
 
 " Shortcut to search wiki faster that :VWS
