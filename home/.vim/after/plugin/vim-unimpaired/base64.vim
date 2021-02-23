@@ -1,5 +1,9 @@
 " base64 unimpaired maps
 " place this file in ~/.vim/after/plugin/vim-unimpaired
+if !exists("g:loaded_unimpared")
+  finish
+endif
+
 function! B64_encode(str)
   return substitute(system('base64', a:str),'\n','','g')
 endfunction
