@@ -16,7 +16,7 @@ maptimeout 0
 msgwait 3
 
 # Send mouse inputs to the corresponding window split
-mousetrack on
+defmousetrack on
 
 # Start $SHELL as login-shell
 shell -$SHELL

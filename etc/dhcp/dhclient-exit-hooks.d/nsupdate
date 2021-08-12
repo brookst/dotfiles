@@ -53,7 +53,7 @@ ns_update() {
         update+="update delete $ALIAS-local.$DOMAIN. A\n"
         update+="update add $ALIAS-local.$DOMAIN. $TTL A $localip\n"
         update+="send"
-        echo -e $update | nsupdate -d -p 54 -v -k $KEYFILE
+        echo -e $update | nsupdate -d -p 53 -v -k $KEYFILE
         stat=$?
         # Log how things went to syslog
         if [ $stat == 0 ]; then
