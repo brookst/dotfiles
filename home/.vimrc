@@ -122,6 +122,18 @@ else
             \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
             \ }
 endif
+let g:lsc_server_commands = {
+        \ 'python': 'pyls',
+        \ 'rust': 'rls',
+        \ 'cpp': {
+            \ 'command': 'clangd',
+            \ 'suppress_stderr': v:true,
+            \ },
+        \ }
+let g:lsc_auto_map = {'defaults': v:true,
+        \ 'NextReference': '',
+        \ 'PreviousReference': '',
+        \ }
 
 " Use vim-surround to wrap a word e.g. after adding a print
 nnoremap <silent> <leader>s) :normal lysw)h<CR>
