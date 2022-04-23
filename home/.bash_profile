@@ -462,17 +462,29 @@ start_agent () {
 }
 
 # Source SSH settings, if applicable
-if [ -S "${SSH_AUTH_SOCK}" ]; then
+if which npiperelay.exe >/dev/null; then
+    # Have npiperelay - on WSL
+    export SSH_AUTH_SOCK=/home/brooks/.ssh/agent.sock
+    if [ -S "${SSH_AUTH_SOCK}" ] && ssh-add -l &>/dev/null; then
+        echo "Using existing relay to SSH agent"
+    else
+        rm -f ${SSH_AUTH_SOCK}
+        echo "Establishing relay to SSH agent"
+        (setsid socat UNIX-LISTEN:$SSH_AUTH_SOCK,fork EXEC:"npiperelay.exe -ei -s //./pipe/openssh-ssh-agent",nofork &) >/dev/null 2>&1
+    fi
+elif [ -S "${SSH_AUTH_SOCK}" ]; then
     echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}; export SSH_AUTH_SOCK; unset SSH_AGENT_PID;" > "${SSH_ENV}"
     echo "Using forwarded SSH agent"
 elif [ -f "${SSH_ENV}" ]; then
     . "${SSH_ENV}" > /dev/null
-    echo "Using existing SSH agent"
-    #ps ${SSH_AGENT_PID} doesn't work under cywgin, hopefully pgrep does
-    pgrep -u "$USER" ssh-agent > /dev/null || {
-        start_agent;
-    }
+    if [ -S "${SSH_AUTH_SOCK}" ]; then
+        echo "Using existing SSH agent"
+    else
+        echo "Old SSH agent in ${SSH_ENV}"
+        # start_agent;
+    fi
 else
+    echo "No remote SSH agent"
     start_agent;
 fi
 
