@@ -473,7 +473,9 @@ function! Gutter()
             setlocal signcolumn=yes
         endif
     endif
-    SignifyToggle
+    if !empty(glob("~/.vim/bundle/vim-signify"))
+        SignifyToggle
+    endif
 endfunction
 nmap <silent> gh :call Gutter()<CR>
 

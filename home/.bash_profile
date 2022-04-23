@@ -282,6 +282,8 @@ get_titlebar () {
     if [ -n "$_host" ]; then
       _host="@${_host}"
     fi
+  elif uname -a | grep -q 'WSL'; then
+    _host="@$( . /etc/os-release; echo $VERSION_CODENAME)"
   fi
   echo "${TTY}${_host}:\$(PWD)"
 }
@@ -405,6 +407,8 @@ fi
 # Hostname
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
     PS1+="@\[$BLUE\]${FULLHOST#*-}\[$NO_COLOUR\]"
+elif uname -a | grep -q 'WSL'; then
+    PS1+="@\[$BLUE\]$( . /etc/os-release; echo $VERSION_CODENAME)\[$NO_COLOUR\]"
 fi
 # Present working directory, with some abbreviations
 PS1+=":\[$LIGHT_WHITE\]\$(PWD)"
