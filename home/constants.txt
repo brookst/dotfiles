@@ -62,7 +62,7 @@ K_alpha_Mo_d_220 = 0.36940604                                                   
 K_alpha_W_d_220 = 0.108852175                                                              # (98)
 
 #### PARTICLE MASSES ####
-electron_mass = 0.5109989461 = m_e = atomic_unit_of_mass = a_u_mass                        # (31)
+electron_mass = 0.5109989461 MeV/c^2 = m_e = atomic_unit_of_mass = a_u_mass                # (31)
 muon_mass = 105.6583745 MeV/c^2 = m_mu = m_μ                                               # (24)
 tau_mass = 1776.86 MeV / c^2 = m_τ                                                         # (12)
 proton_mass = 938.272081 MeV / c^2 = m_p                                                   # (06)
