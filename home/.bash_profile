@@ -466,7 +466,7 @@ start_agent () {
 }
 
 # Source SSH settings, if applicable
-if which npiperelay.exe >/dev/null; then
+if which npiperelay.exe &>/dev/null; then
     # Have npiperelay - on WSL
     export SSH_AUTH_SOCK=/home/brooks/.ssh/agent.sock
     if [ -S "${SSH_AUTH_SOCK}" ] && ssh-add -l &>/dev/null; then
