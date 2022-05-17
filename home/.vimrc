@@ -391,7 +391,7 @@ if !exists("g:vimrc_loaded")
 endif
 
 let g:jellybeans_overrides = {
-\    'background': { 'guibg': '000000' }
+\    'background': { 'guibg': 'NONE', 'ctermbg': 'NONE' }
 \}
 silent! colorscheme jellybeans
 
