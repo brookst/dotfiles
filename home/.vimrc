@@ -103,7 +103,9 @@ set path+=src,inc,include,
 nnoremap <leader>f :exec "file ". resolve(expand('%:p'))<CR>:e<CR>
 
 " Vimwiki bullet point a line
-nnoremap <leader>* ^i	* <esc>l
+nnoremap <Plug>BulletPoint ^i	* <esc>l
+\:call repeat#set("\<Plug>BulletPoint")<CR>
+nmap <leader>* <Plug>BulletPoint
 
 imap <silent> <C-<> <Plug>VimwikiDecreaseLvlSingleItem
 imap <silent> <C->> <Plug>VimwikiIncreaseLvlSingleItem
@@ -122,18 +124,24 @@ else
             \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
             \ }
 endif
-let g:lsc_server_commands = {
-        \ 'python': 'pyls',
-        \ 'rust': 'rls',
+if exists("v:true") " There must be a better way
+    let g:lsc_server_commands = {
+        \ 'python': {
+            \ 'command': 'jedi-language-server',
+            \ 'suppress_stderr': v:true,
+            \ },
+        \ 'rust': 'rust-analyzer',
         \ 'cpp': {
             \ 'command': 'clangd',
             \ 'suppress_stderr': v:true,
             \ },
         \ }
-let g:lsc_auto_map = {'defaults': v:true,
+    let g:lsc_auto_map = {'defaults': v:true,
         \ 'NextReference': '',
         \ 'PreviousReference': '',
         \ }
+endif
+set completeopt-=preview
 
 " Use vim-surround to wrap a word e.g. after adding a print
 nnoremap <silent> <leader>s) :normal lysw)h<CR>
