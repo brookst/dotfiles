@@ -1,5 +1,5 @@
 # Build directory
-build
+/*build*/
 *.d
 *.o
 
@@ -8,6 +8,7 @@ build
 *.swo
 *.pyc
 *bak
+.cache
 
 # Generated files
 README.html
@@ -16,3 +17,6 @@ Cargo.lock
 
 # Syntastic config
 .syntastic_*_config
+
+# CMake compile commands for clangd
+compile_commands.json
