@@ -27,7 +27,12 @@ set wildmenu
 
 if version >= 703
     if exists("&undodir")
-        set undodir=~/.vim/undo/
+        if has('nvim')
+            set undodir=~/.config/nvim/undo/
+            set directory=~/.local/share/nvim/swap//
+        else
+            set undodir=~/.vim/undo/
+        endif
     endif
     set undofile
     set undoreload=10000
@@ -94,6 +99,13 @@ nnoremap <leader>h <C-w>h
 nnoremap <leader>j <C-w>j
 nnoremap <leader>k <C-w>k
 nnoremap <leader>l <C-w>l
+nnoremap <leader>q <C-w>q
+nnoremap <leader>v :vsp<CR>
+nnoremap <leader>c :sp<CR>
+
+" Break change before erasing line/word in insert mode
+inoremap <c-u> <c-g>u<c-u>
+inoremap <c-w> <c-g>u<c-w>
 
 " Add typical directories to path
 set path+=src,inc,include,
@@ -135,10 +147,14 @@ if exists("v:true") " There must be a better way
             \ 'command': 'clangd',
             \ 'suppress_stderr': v:true,
             \ },
+        \ 'c': {
+            \ 'command': 'clangd',
+            \ 'suppress_stderr': v:true,
+            \ },
         \ }
     let g:lsc_auto_map = {'defaults': v:true,
-        \ 'NextReference': '',
-        \ 'PreviousReference': '',
+        \ 'NextReference': '<leader>n',
+        \ 'PreviousReference': '<leader>p',
         \ }
 endif
 set completeopt-=preview
@@ -297,6 +313,11 @@ filetype plugin on     " enables file type specific plugins
 syntax on
 set synmaxcol=300
 
+function! SynGroup()
+    let l:s = synID(line('.'), col('.'), 1)
+    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
+
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
@@ -325,6 +346,9 @@ nnoremap S :call BreakHere()<CR>
 " \:call repeat#set("\<Plug>BreakHere")<CR>
 " nmap S <Plug>BreakHere
 
+" Remove tee such that vim gets v:shell_error correct
+set shellpipe=>%s\ 2>&1
+
 " Don't display push enter to continue, just pop open the quicklist
 function! Make()
   update
@@ -345,7 +369,7 @@ endfunction
 nmap <silent> <leader>m :call Make()<CR>
 
 nnoremap <F5> :call Make()<CR>
-nnoremap <F6> :GundoToggle<CR>
+nnoremap <F6> :UndotreeToggle<CR>
 
 "Insert date in insert mode
 inoremap <C-d>   <C-R>=strftime('%F')." "<CR>
@@ -358,10 +382,6 @@ inoremap <Up>    <NOP>
 inoremap <Down>  <NOP>
 inoremap <Right> <NOP>
 inoremap <Left>  <NOP>
-noremap <Up>     <NOP>
-noremap <Down>   <NOP>
-noremap <Right>  <NOP>
-noremap <Left>   <NOP>
 
 "Unmap ex mode
 noremap Q <NOP>
@@ -379,7 +399,12 @@ nnoremap <C-n> :bnext<CR>
 nnoremap <C-p> :bprev<CR>
 "map  :w!<CR>:!aspell check %<CR>:e! %<CR>
 
-let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'x', 'X', 'y', 'Y']
+" https://github.com/AndrewRadev/switch.vim
+let g:switch_custom_definitions = [
+\    ['TRUE', 'FALSE'],
+\    ['YES', 'NO'],
+\    ['yes', 'no'],
+\]
 
 " These plugins don't seem to work with vim 700
 if v:version < 701
