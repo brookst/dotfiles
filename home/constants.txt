@@ -79,6 +79,12 @@ Jpsi_mass = 3096.900 MeV / c^2 = m_Jpsi = m_Jψ                                 
 W_mass = 80.379 GeV / c^2 = m_W                                                            # (12)
 Z_mass = 91.1876 GeV / c^2 = m_Z                                                           # (21)
 H0_mass = 125.25 GeV / c^2 = m_Z                                                           # (17)
+top_mass = 172.76 GeV / c^2 = m_top                                                        # (30)
+bottom_mass = 4.18 GeV / c^2 = m_bottom                                                    # (04)
+charm_mass = 1.275 GeV / c^2 = m_charm                                                     # (35)
+strange_mass = 95 MeV / c^2 = m_strange                                                    # (09)
+down_mass = 4.7 MeV / c^2 = m_down                                                         # (05)
+up_mass = 2.2 MeV / c^2 = m_up                                                             # (05)
 
 #### DERIVED CONSTANTS ####
 
