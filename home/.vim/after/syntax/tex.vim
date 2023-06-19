@@ -9,4 +9,10 @@ syn region texZone start="\\newglossaryentry{" end="}\|%stopzone\>" contains=@No
 syn cluster tikzZoneGroup contains=texComment,texDelimiter,texLength,texMathDelim,texMathMatcher,texMathSymbol,texMathText,texRefZone,texSpecialChar,texStatement,texTypeSize,texTypeStyle
 syn region tikzPicture start="\\begin\s*{\s*tikzpicture\s*}" end="\\end\s*{\s*tikzpicture\s*}" keepend contains=@tikzZoneGroup
 
+syn region texBeginEndName matchgroup=Delimiter start="{" end="}" contained nextgroup=texBeginEndModifier contains=texComment,@NoSpell
+
+if exists('*TexNewMathZone')
+    call TexNewMathZone("E","align",1)
+endif
+
 set iskeyword+=:
