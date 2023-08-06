@@ -122,6 +122,10 @@ nmap <leader>* <Plug>BulletPoint
 imap <silent> <C-<> <Plug>VimwikiDecreaseLvlSingleItem
 imap <silent> <C->> <Plug>VimwikiIncreaseLvlSingleItem
 
+" Close netrw explorer buffers after opening a file
+" https://vi.stackexchange.com/a/20111/47284
+let g:netrw_fastbrowse = 0
+
 " Disable these plugins if invoked as less
 let g:pathogen_disabled = ['vim-css-color']
 if exists("loaded_less")
@@ -202,7 +206,7 @@ hi ColorColumn ctermbg=red
 if v:version > 704 || v:version == 704 && has("patch338")
     set breakindent
 endif
-set showbreak=↪
+set showbreak=↪\ 
 
 " Line numbering
 set number
@@ -327,6 +331,10 @@ au VimResized * :wincmd =
 
 " Reset wrap mode after diffing files
 au FilterWritePre * if &diff | set wrap | endif
+
+au FileType cpp setlocal commentstring=//\ %s
+au FileType c setlocal commentstring=//\ %s
+au FileType nix setlocal commentstring=#\ %s
 
 if $TERM ==? "linux"
   set t_Co=8
@@ -593,6 +601,8 @@ let g:ackprg = "rg --vimgrep"
 let wiki_user = {}
 let wiki_user.path = '~/vimwiki/'
 let wiki_user.diary_rel_path = './'
+let wiki_user.bullet_types = ['*', '-', '#']
+let wiki_user.list_markers = ['*', '1.', '-', 'I)', 'a)']
 let wiki_user.template_path = '~/vimwiki/templates/'
 let wiki_user.template_default = 'default'
 let wiki_user.template_ext = '.html'

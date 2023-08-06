@@ -93,6 +93,7 @@ export SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
 alias s="screen -dR"
 alias j="jobs -l"
 alias g="git"
+alias o="xdg-open"
 alias sc="systemctl"
 alias scu="systemctl --user"
 alias py="python3"
@@ -102,7 +103,6 @@ alias ipy="ipython"
 alias ipy3="ipython3"
 alias ls="ls --color=auto"
 alias sl="ls -r"
-alias cda='cd $AFSHOME'
 alias dir="ls *.*[^~]"
 alias pdf="evince"
 alias skoorb='ssh $SKOORB'
@@ -283,7 +283,7 @@ get_titlebar () {
       _host="@${_host}"
     fi
   elif uname -a | grep -q 'WSL'; then
-    _host="@$( . /etc/os-release; echo $VERSION_CODENAME)"
+    _host="@$( . /etc/os-release; echo $ID$VERSION_ID )"
   fi
   echo "${TTY}${_host}:\$(PWD)"
 }
@@ -408,7 +408,7 @@ fi
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
     PS1+="@\[$BLUE\]${FULLHOST#*-}\[$NO_COLOUR\]"
 elif uname -a | grep -q 'WSL'; then
-    PS1+="@\[$BLUE\]$( . /etc/os-release; echo $VERSION_CODENAME)\[$NO_COLOUR\]"
+    PS1+="@\[$BLUE\]$( . /etc/os-release; echo $ID$VERSION_ID)\[$NO_COLOUR\]"
 fi
 # Present working directory, with some abbreviations
 PS1+=":\[$LIGHT_WHITE\]\$(PWD)"
