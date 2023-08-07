@@ -248,9 +248,9 @@ for command in ${commands[*]}; do
           fi
         else
           if [ "${#send_files[@]}" == 0 ]; then
-              action git commit -am "File update @${HOSTNAME%%.*}"
+              action git commit -am "File update from ${HOSTNAME%%.*}"
           else
-              action git commit -m "File update @${HOSTNAME%%.*}" ${send_files[*]}
+              action git commit -m "File update from ${HOSTNAME%%.*}" ${send_files[*]}
           fi
         fi
     fi
@@ -307,10 +307,10 @@ for command in ${commands[*]}; do
       if [ ${#add_files[@]} == 1 ]; then
         action git commit -m "Added ${add_files[0]##$HOME/} from ${HOSTNAME%%.*}"
       else
-        action git commit -m "Added multiple files @${HOSTNAME%%.*}"
+        action git commit -m "Added multiple files from ${HOSTNAME%%.*}"
       fi
     else
-      action git commit -m "File update @${HOSTNAME%%.*}"
+      action git commit -m "File update from ${HOSTNAME%%.*}"
     fi
   elif is "$command" in "pull"; then
     cd "${DOTFILES}"
