@@ -18,7 +18,7 @@
         ui = auto
 [diff]
         tool = vimdiff
-        noprefix = true
+        noprefix = false
         renames = copies
         compactionHeuristic = true
         indentHeuristic = true

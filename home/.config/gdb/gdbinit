@@ -1,1 +1,2 @@
 set history save on
+add-auto-load-safe-path /mnt/wsl/cvmfs/sft.cern.ch/lcg/releases/gcc/
