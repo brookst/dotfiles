@@ -264,6 +264,7 @@ print_titlebar () {
     printf "${START_TITLE}%s${END_TITLE}" "$1"
   fi
 }
+export -f print_titlebar
 
 newline () {
     # Return if cursor is not at col 1, see: http://unix.stackexchange.com/questions/88296/get-vertical-cursor-position/183121#183121
@@ -272,6 +273,7 @@ newline () {
         echo
     fi
 }
+export -f newline
 
 get_titlebar () {
   TTY=$(tty)
@@ -318,6 +320,7 @@ PWD () {
   echo "$ps1"
   return $es
 }
+export -f PWD
 
 prompt_exit () {
   #Set colour red or green based on exit code of last command
@@ -330,6 +333,7 @@ prompt_exit () {
   echo $status_color
   return $es
 }
+export -f prompt_exit
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
@@ -347,10 +351,8 @@ fi
 # Use Vi shortcuts
 set -o vi
 
-# Expand variables in paths in bash v4
-if [ "$BASH_MAJVERSION" == 4 ] && [ "$BASH_MINVERSION" -ge 2 ]; then
-    shopt -s direxpand
-fi
+shopt -u direxpand 2>/dev/null || true
+shopt -u progcomp 2>/dev/null || true
 
 # append to the history file, don't overwrite it
 shopt -s histappend
