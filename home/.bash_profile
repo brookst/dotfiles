@@ -494,6 +494,11 @@ else
     start_agent;
 fi
 
+mkcd () {
+    mkdir "$*";
+    cd "$*"
+}
+
 #Move environment between sessions, i.e. into an old screen
 ENV_FILE=${HOME}/.env
 push_env() {
