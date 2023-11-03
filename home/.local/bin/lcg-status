@@ -1,0 +1,24 @@
+#!/bin/bash
+
+NO_COLOUR=$'\033[0m'
+RED=$'\033[0;31m'
+GREEN=$'\033[0;32m'
+
+if [ -n "$LCG_VERSION" ]; then
+    echo "${GREEN}LCG version: $LCG_VERSION"
+else
+    echo "${RED}NO LCG version${NO_COLOUR}"
+fi
+
+ROOT_VER=$(root-config --version 2> /dev/null)
+if [ $? == 0 ]; then
+    echo "${GREEN}ROOT version: $ROOT_VER"
+else
+    echo "${RED}NO ROOT version${NO_COLOUR}"
+fi
+GEANT_VER=$(geant4-config --version 2> /dev/null)
+if [ $? == 0 ]; then
+    echo "${GREEN}GEANT4 version: $GEANT_VER"
+else
+    echo "${RED}NO GEANT4 version${NO_COLOUR}"
+fi
