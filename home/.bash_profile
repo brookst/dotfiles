@@ -485,6 +485,7 @@ if which npiperelay.exe &>/dev/null; then
     if [ -S "${SSH_AUTH_SOCK}" ] && ssh-add -l &>/dev/null; then
         echo "Using existing relay to SSH agent"
     else
+        pkill socat
         rm -f ${SSH_AUTH_SOCK}
         echo "Establishing relay to SSH agent"
         (setsid socat UNIX-LISTEN:$SSH_AUTH_SOCK,fork EXEC:"npiperelay.exe -ei -s //./pipe/openssh-ssh-agent",nofork &) >/dev/null 2>&1
@@ -508,6 +509,23 @@ fi
 mkcd () {
     mkdir "$*";
     cd "$*"
+}
+
+mvln () {
+    dest="${@: -1}"
+    if [ ! -d "$dest" ]; then
+        echo "$dest is not an existing dir"
+        return 1
+    fi
+    for file in "$@"; do
+        [ "$file" = "$dest" ] && break
+        if [ -f "${dest%/}/$file" ]; then
+            echo "${dest%/}/$file already exists - skipping."
+            continue
+        fi
+        mv "$file" "$dest";
+        ln -s "${dest%/}/$file" "./"
+    done
 }
 
 #Move environment between sessions, i.e. into an old screen

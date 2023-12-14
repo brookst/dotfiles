@@ -90,6 +90,9 @@ endif
 nnoremap <space> <nop>
 let mapleader=" "
 
+" Toggle folding on home row
+nnoremap <leader>a za
+
 " Fix obvious spelling mistake
 nnoremap <leader>z 1z=
 
@@ -226,6 +229,26 @@ endif
 augroup VimReload
     autocmd!
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
+augroup END
+
+function! HasFold()
+    let view = winsaveview()
+    let fold = 0
+    for move in ['zj', 'zk']
+        exe 'keepj norm!' move
+        if foldlevel('.') > 0
+            let fold = 1
+            break
+        endif
+    endfor
+    call winrestview(view)
+    return fold
+endfunction
+
+augroup remember_folds
+  autocmd!
+  autocmd BufWinLeave ?* if HasFold() | mkview | endif
+  autocmd BufWinEnter ?* silent! loadview
 augroup END
 
 if &term =~ "screen"
