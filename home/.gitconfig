@@ -60,3 +60,5 @@
         # From: https://hackernoon.com/lesser-known-git-commands-151a1918a0
 [http]
         emptyAuth = true
+[push]
+	default = simple

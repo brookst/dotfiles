@@ -7,10 +7,6 @@ set expandtab
 set cindent
 set hlsearch
 set list
-set listchars=tab:▸-
-",trail:¶
-",eol:¶
-set fillchars=vert:│,diff:─
 set showcmd
 set ruler
 set incsearch
@@ -24,6 +20,17 @@ set tags+=~/stl.tags
 set scrolloff=5
 set equalalways
 set wildmenu
+
+if has("patch-7.4.1642")
+    set showbreak=↪
+    set listchars=tab:▸-
+",trail:¶
+",eol:¶
+    set fillchars=vert:│,diff:─
+else
+    set showbreak=»»
+    set listchars=tab:>-
+endif
 
 if version >= 703
     if exists("&undodir")
@@ -206,7 +213,6 @@ hi ColorColumn ctermbg=red
 if v:version > 704 || v:version == 704 && has("patch338")
     set breakindent
 endif
-set showbreak=↪\ 
 
 " Line numbering
 set number
