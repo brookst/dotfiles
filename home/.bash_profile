@@ -266,6 +266,17 @@ print_titlebar () {
 }
 export -f print_titlebar
 
+command_titlebar () {
+    case "${1#*:}" in
+        "fg") ;;
+        "newline") ;;
+        "history") ;;
+        "print_titlebar") ;;
+        *) printf "${START_TITLE}%s${END_TITLE}" "$1"
+    esac
+}
+export -f command_titlebar
+
 newline () {
     # Return if cursor is not at col 1, see: http://unix.stackexchange.com/questions/88296/get-vertical-cursor-position/183121#183121
     IFS=';' read -sdR -p $'\E[6n' _ COL
@@ -302,7 +313,7 @@ if [[ "$TERM" =~ linux ]];then #-o "$STY" == "" ]; then
 else
   titlebar=$(get_titlebar)
   export PROMPT_COMMAND='newline;history -a;history -n;print_titlebar "'${titlebar}'"'
-  trap 'print_titlebar "$BASH_COMMAND"' DEBUG
+  trap 'command_titlebar ${titlebar%:*}:$BASH_COMMAND' DEBUG
   export TERM=xterm-256color
 fi
 
