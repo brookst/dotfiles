@@ -231,20 +231,21 @@ augroup VimReload
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END
 
+" Detect if buffer contains any folds
+" See https://stackoverflow.com/a/9936073/1780018
 function! HasFold()
     let view = winsaveview()
-    let fold = 0
     for move in ['zj', 'zk']
-        exe 'keepj norm!' move
+        silent! exec 'keepjumps norm!' move
         if foldlevel('.') > 0
-            let fold = 1
-            break
+            call winrestview(view)
+            return 1
         endif
     endfor
-    call winrestview(view)
-    return fold
+    return 0
 endfunction
 
+" Save and restore view if it contains folds
 augroup remember_folds
   autocmd!
   autocmd BufWinLeave ?* if HasFold() | mkview | endif
