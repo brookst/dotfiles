@@ -262,6 +262,10 @@ print_titlebar () {
   # Echo title command sequence to the terminal
   if [ -n "$1" ]; then
     printf "${START_TITLE}%s${END_TITLE}" "$1"
+    if uname -a | grep -q 'WSL'; then
+      # Emit PWD for Windows Terminal
+      printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+    fi
   fi
 }
 export -f print_titlebar
