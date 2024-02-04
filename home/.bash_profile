@@ -425,7 +425,7 @@ fi
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
     PS1+="@\[$BLUE\]${FULLHOST#*-}\[$NO_COLOUR\]"
 elif uname -a | grep -q 'WSL'; then
-    PS1+="@\[$BLUE\]$( . /etc/os-release; echo $ID$VERSION_ID)\[$NO_COLOUR\]"
+    PS1+="@\[$BLUE\]$( . /etc/os-release; [ -z ${VERSION_CODENAME+x} ] && echo $ID$VERSION_ID || echo $VERSION_CODENAME)\[$NO_COLOUR\]"
 fi
 # Present working directory, with some abbreviations
 PS1+=":\[$LIGHT_WHITE\]\$(PWD)"
