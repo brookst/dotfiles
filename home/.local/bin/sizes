@@ -5,4 +5,4 @@
 #
 
 SPEC=("${@:-.}")
-du -hd 1 "${SPEC[@]%/}" | sort -h
+du -hxd 1 "${SPEC[@]%/}" | sort -h
