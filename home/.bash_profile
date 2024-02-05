@@ -300,7 +300,7 @@ get_titlebar () {
       _host="@${_host}"
     fi
   elif uname -a | grep -q 'WSL'; then
-    _host="@$( . /etc/os-release; echo $ID$VERSION_ID )"
+    _host="@$( . /etc/os-release; [ -z ${VERSION_CODENAME+x} ] && echo $ID$VERSION_ID || echo $VERSION_CODENAME )"
   fi
   echo "${TTY}${_host}:\$(PWD)"
 }
