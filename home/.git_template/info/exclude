@@ -20,3 +20,8 @@ Cargo.lock
 
 # CMake compile commands for clangd
 compile_commands.json
+.clangd
+
+# env files
+.envrc
+.env
