@@ -32,7 +32,7 @@ SAVEMACRO = "import readline; readline.write_history_file('"+HISTORYTMP+"'); \
     print('####>>>>>>>>>>'); print(''.join(list(filter(lambda lineP: not lineP.strip().endswith('"+ENDMARKERSTR+"'), open('"+HISTORYTMP+"').readlines()))[:-1])+'####<<<<<<<<<<')"
 
 readline.parse_and_bind('tab: complete')
-readline.parse_and_bind('\C-w: "'+SAVEMACRO+'"')
+readline.parse_and_bind(r'\C-w: "'+SAVEMACRO+'"')
 
 def save_history(history_path=HISTORYPATH, endmarker_str=ENDMARKERSTR):
     from readline import write_history_file
