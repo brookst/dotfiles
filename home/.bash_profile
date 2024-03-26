@@ -442,7 +442,7 @@ export GIT_PS1_SHOWSTASHSTATE=true
 export GIT_PS1_SHOWUNTRACKEDFILES=true
 export GIT_PS1_SHOWUPSTREAM="auto"
 
-if which direnv >/dev/null; then
+if which direnv &>/dev/null; then
     eval "$(direnv hook bash)"
 fi
 
