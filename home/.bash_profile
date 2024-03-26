@@ -410,14 +410,14 @@ PS1="\[\$(prompt_exit)\]"
 # Time in HH:MM:SS form
 PS1+="\t"
 # Number of jobs managed by this shell
-PS1+="${NO_COLOUR}(${BLUE}\j"
+PS1+="\[$NO_COLOUR\](\[$BLUE\]\j"
 # Shell depth
-PS1+="${NO_COLOUR}|${BLUE}${SHLVL}"
+PS1+="\[$NO_COLOUR\]|\[$BLUE\]${SHLVL}"
 # TTY number for this shell
-PS1+="${NO_COLOUR}/${BLUE}\l${NO_COLOUR})"
+PS1+="\[$NO_COLOUR\]/\[$BLUE\]\l\[$NO_COLOUR\])"
 # Screen name
 if [ -n "$TERM_TEXT" ]; then
-    PS1+="${YELLOW}${TERM_TEXT}${NO_COLOUR}"
+    PS1+="\[$YELLOW\]\[$TERM_TEXT\]\[$NO_COLOUR\]"
 fi
 # Username
 if [ "${USER}" != "brooks" ]; then
