@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # sizes - sorts files sizes in human readable form
 # Tim Brooks 2013 - <brooks@skoorb.net>

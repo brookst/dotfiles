@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # autogit - automatic git commit generator
 # Tim Brooks <brooks@cern.ch>
 

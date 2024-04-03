@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #Show detailed list of modifications to a git repository
 #Tim Brooks 2014 <brooks@skoorb.net>
 #

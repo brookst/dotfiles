@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #https://github.com/git/git/blob/master/contrib/diff-highlight/diff-highlight
 
 use 5.008;
