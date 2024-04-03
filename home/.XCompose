@@ -120,10 +120,10 @@
 <Multi_key> <B> <Y> : "𝕐"
 <Multi_key> <B> <Z> : "ℤ"
 
-<Multi_key> <@> </>     : "✓" # CHECK MARK
-<Multi_key> <@> <@> </> : "✔" # HEAVY CHECK MARK
-<Multi_key> <@> <X>     : "✗" # BALLOT X
-<Multi_key> <@> <@> <X> : "✘" # HEAVY BALLOT X
+<Multi_key> <at> <slash>     : "✓" # CHECK MARK
+<Multi_key> <at> <at> <slash> : "✔" # HEAVY CHECK MARK
+<Multi_key> <at> <X>     : "✗" # BALLOT X
+<Multi_key> <at> <at> <X> : "✘" # HEAVY BALLOT X
 
 # UTF-8 (Unicode) compose sequence
 # David.Monniaux@ens.fr
@@ -234,7 +234,7 @@
 <Multi_key> <p> <exclam>         	: "¶"   paragraph # PILCROW SIGN
 <Multi_key> <P> <exclam>         	: "¶"   paragraph # PILCROW SIGN
 <Multi_key> <plus> <minus>       	: "±"   plusminus # PLUS-MINUS SIGN
-<Multi_key> <minus> <plus>       	: "∓"   minusplus # MINUS-PLUS SIGN
+<Multi_key> <minus> <plus>       	: "∓"   #minusplus # MINUS-PLUS SIGN
 <Multi_key> <question> <question> 	: "¿"   questiondown # INVERTED QUESTION MARK
 <Multi_key> <s> <s>              	: "ß"   ssharp # LATIN SMALL LETTER SHARP S
 <Multi_key> <S> <S>              	: "ẞ"   U1e9e # LATIN CAPITAL LETTER SHARP S
@@ -5726,17 +5726,17 @@
 
 <Multi_key> <I> <N>                             : "∩"   intersection  # I N INTERSECTION
 <Multi_key> <U> <N>                             : "∪"   union         # U N UNION
-<Multi_key> <S> <P>                             : "⊃"   superset      # S P SUPERSET
-<Multi_key> <S> <B>                             : "⊂"   subset        # S B SUBSET
+<Multi_key> <S> <P>                             : "⊃"   #superset      # S P SUPERSET
+<Multi_key> <S> <B>                             : "⊂"   #subset        # S B SUBSET
 
 # Vim style:
 <Multi_key> <F> <A>                             : "∀"   U2200         # FOR ALL
 <Multi_key> <d> <P>                             : "∂"   U2202         # PARTIAL DIFFERENTIAL
 <Multi_key> <T> <E>                             : "∃"   U2203         # THERE EXISTS
 <Multi_key> <N> <B>                             : "∇"   U2207         # NABLA
-<Multi_key> <parenleft> <->                     : "∈"   U2208         # ELEMENT OF
+<Multi_key> <parenleft> <minus>                 : "∈"   U2208         # ELEMENT OF
 <Multi_key> <exclam> <i> <n>                    : "∉"   U2209         # NOT AN ELEMENT OF
-<Multi_key> <-> <parenright>                    : "∋"   U220B         # CONTAINS AS MEMBER
+<Multi_key> <minus> <parenright>                : "∋"   U220B         # CONTAINS AS MEMBER
 <Multi_key> <slash> <n> <i>                     : "∌"   U220C         # DOES NOT CONTAIN AS MEMBER
 <Multi_key> <A> <N>                             : "∧"   U2227         # A N AND
 <Multi_key> <O> <R>                             : "∨"   U2228         # O R OR
