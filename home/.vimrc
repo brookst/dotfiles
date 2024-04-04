@@ -110,7 +110,7 @@ nnoremap <leader>j <C-w>j
 nnoremap <leader>k <C-w>k
 nnoremap <leader>l <C-w>l
 nnoremap <leader>q <C-w>q
-nnoremap <leader>d :bp \| bd #<CR>
+nnoremap <leader>d :b # \| bd #<CR>
 nnoremap <leader>v :vsp<CR>
 nnoremap <leader>c :sp<CR>
 
