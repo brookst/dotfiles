@@ -166,6 +166,9 @@ if exists("v:true") " There must be a better way
             \ 'command': 'clangd',
             \ 'suppress_stderr': v:true,
             \ },
+        \ 'nix': {
+            \ 'command': 'nil',
+            \ },
         \ }
     let g:lsc_auto_map = {'defaults': v:true,
         \ 'NextReference': '<leader>n',
