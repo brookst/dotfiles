@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 NO_COLOUR=$'\033[0m'
 RED=$'\033[0;31m'
@@ -27,4 +27,8 @@ while read repo; do
 done < <(find * -maxdepth 0 -type d)
 
 # Generate helptags
-vim -RET dumb -c 'call pathogen#helptags()' -c 'q' > /dev/null
+if which nvim > /dev/null; then
+    nvim -c 'call pathogen#helptags()' -c 'q' > /dev/null
+else
+    vim -c 'call pathogen#helptags()' -c 'q' > /dev/null
+fi
