@@ -417,7 +417,7 @@ PS1+="\[$NO_COLOUR\]|\[$BLUE\]${SHLVL}"
 PS1+="\[$NO_COLOUR\]/\[$BLUE\]\l\[$NO_COLOUR\])"
 # Screen name
 if [ -n "$TERM_TEXT" ]; then
-    PS1+="\[$YELLOW\]\[$TERM_TEXT\]\[$NO_COLOUR\]"
+    PS1+="\[$YELLOW\]$TERM_TEXT\[$NO_COLOUR\]"
 fi
 # Username
 if [ "${USER}" != "brooks" ]; then
