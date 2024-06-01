@@ -31,14 +31,20 @@ valid_ip() {
 
 #Collect ips and send update to $NAMESERVER
 ns_update() {
-    #Get current external ip
     local localip=$new_ip_address
     if [ "$localip" == "" ]; then
         localip=$DHCP4_IP_ADDRESS
     fi
     #Cleanly extract the first global ip addr
     local localip=$(ip addr | grep -P 'inet .*global (?!docker)' | tr '/' ' ' | cut -d' ' -f 6 | head -n1)
-    # local newip=$(curl --silent ifconfig.me/ip)
+
+    #Get tailscale IP
+    local tailip4=""
+    local tailip6=""
+    tailip4=$(ip -o a | sed -n "s/^.*tailscale.*inet \([0-9\.]\{8,16\}\).*scope global.*$/\1/p")
+    tailip6=$(ip -o a | sed -n "s/^.*tailscale.*inet6 \([0-9a-f:]\{21,39\}\).*scope global.*$/\1/p")
+
+    #Get current external IP
     local newip=""
     newip=$(dig +short myip.opendns.com @resolver1.opendns.com)
     valid_ip "$newip" || newip=$(curl -s http://whatismijnip.nl | cut -d" " -f5)
@@ -52,6 +58,14 @@ ns_update() {
         update+="update add $ALIAS.$DOMAIN. $TTL A $newip\n"
         update+="update delete $ALIAS-local.$DOMAIN. A\n"
         update+="update add $ALIAS-local.$DOMAIN. $TTL A $localip\n"
+        if [ -n "$tailip4" ]; then
+            update+="update delete $ALIAS-tail.$DOMAIN. A\n"
+            update+="update delete $ALIAS-tail.$DOMAIN. AAAA\n"
+            update+="update add $ALIAS-tail.$DOMAIN. $TTL A $tailip4\n"
+        fi
+        if [ -n "$tailip6" ]; then
+            update+="update add $ALIAS-tail.$DOMAIN. $TTL AAAA $tailip6\n"
+        fi
         update+="send"
         echo -e $update | nsupdate -d -p 53 -v -k $KEYFILE
         stat=$?
@@ -59,6 +73,8 @@ ns_update() {
         if [ $stat == 0 ]; then
             logger -it nsupdate "Updated dns record $ALIAS.$DOMAIN. to $newip"
             logger -it nsupdate "Updated dns record $ALIAS-local.$DOMAIN. to $localip"
+            [ -n "$tailip4" ] && logger -it nsupdate "Updated dns record $ALIAS-tail.$DOMAIN. to $tailip4"
+            [ -n "$tailip6" ] && logger -it nsupdate "Updated dns record $ALIAS-tail.$DOMAIN. to $tailip6"
         else
             logger -ist nsupdate "Failed to update dns record - nsupdate returned $stat"
         fi
