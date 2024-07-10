@@ -27,7 +27,7 @@ while read repo; do
 done < <(find * -maxdepth 0 -type d)
 
 # Generate helptags
-if which nvim > /dev/null; then
+if which nvim &> /dev/null; then
     nvim -c 'call pathogen#helptags()' -c 'q' > /dev/null
 else
     vim -c 'call pathogen#helptags()' -c 'q' > /dev/null
