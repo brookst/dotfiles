@@ -20,8 +20,8 @@ try: # Pint throws an exception under python2.6
 except Exception:
     pass
 else:
-    REG = UnitRegistry(os.path.join(os.getenv("HOME"), "units.txt"))
-    Qty = REG.Quantity
+    u = UnitRegistry(os.path.join(os.getenv("HOME"), "units.txt"))
+    q = u.Quantity
 
 HISTORYPATH = os.path.expanduser("~/.pyhistory")
 HISTORYTMP = os.path.expanduser("~/.pyhisttmp.py")
