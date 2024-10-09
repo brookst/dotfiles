@@ -118,6 +118,10 @@ nnoremap <leader>c :sp<CR>
 inoremap <c-u> <c-g>u<c-u>
 inoremap <c-w> <c-g>u<c-w>
 
+" <C-BS> reports as <C-h> in terminal for some reason
+inoremap <C-BS> <C-w>
+inoremap <C-h> <C-w>
+
 " Add typical directories to path
 set path+=src,inc,include,
 
@@ -158,6 +162,9 @@ if exists("v:true") " There must be a better way
             \ 'suppress_stderr': v:true,
             \ },
         \ 'rust': 'rust-analyzer',
+        \ 'cuda': {
+            \ 'command': 'clangd',
+            \ },
         \ 'cpp': {
             \ 'command': 'clangd',
             \ 'suppress_stderr': v:true,
@@ -647,6 +654,7 @@ let wiki_user.nested_syntaxes = {'python': 'python', 'cxx': 'cpp', 'cc': 'c', 'r
 
 " Shortcut to search wiki faster that :VWS
 command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.wiki' | :copen | :let @/ = <q-args> | :redraw!
+command! -nargs=1 WGrep exec ':silent grep! <q-args> ' . wiki_user.path . '*.wiki' | :copen | :let @/ = <q-args> | :redraw!
 
 let g:vimwiki_list = [wiki_user]
 " let g:vimwiki_folding='expr'
