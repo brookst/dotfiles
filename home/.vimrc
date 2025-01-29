@@ -285,7 +285,15 @@ if g:ttyname != ''
 endif
 let g:ttyname = substitute(g:ttyname, "\"", "", "g")
 
-au BufEnter * set title | let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
+set title
+au BufEnter * call SetTitle()
+function! SetTitle()
+    if match(expand("%:e"), "wiki") == 0
+        let &titlestring = expand("%:t")
+    else
+        let &titlestring = g:ttyname . substitute(expand("%:p"), "/home/brooks", "~", "")
+    endif
+endfun
 
 augroup filetype
     au! BufNewFile,BufReadPost *.md set filetype=markdown
@@ -400,18 +408,17 @@ set shellpipe=>%s\ 2>&1
 
 " Don't display push enter to continue, just pop open the quicklist
 function! Make()
+  cclose
   update
-  silent !clear
-  silent make
+  " silent !clear
+  echom "make"
   redraw!
-  cwindow
-"   for i in getqflist()
-"     if i['valid']
-"       cwin
-"       winc p
-"       return
-"     endif
-"   endfor
+  silent make!
+  redraw!
+  if v:shell_error
+      cwin
+  endif
+  echom "make finished"
 endfunction
 
 " " Call make silently
@@ -419,6 +426,7 @@ nmap <silent> <leader>m :call Make()<CR>
 
 nnoremap <F5> :call Make()<CR>
 nnoremap <F6> :UndotreeToggle<CR>
+nnoremap <F7> :Lexplore<CR>
 
 "Insert date in insert mode
 inoremap <C-d>   <C-R>=strftime('%F')." "<CR>
@@ -657,7 +665,7 @@ command! -nargs=1 Wgrep exec ':silent grep! -i <q-args> ' . wiki_user.path . '*.
 command! -nargs=1 WGrep exec ':silent grep! <q-args> ' . wiki_user.path . '*.wiki' | :copen | :let @/ = <q-args> | :redraw!
 
 let g:vimwiki_list = [wiki_user]
-" let g:vimwiki_folding='expr'
+let g:vimwiki_folding='syntax'
 let g:vimwiki_map_prefix = '<leader>g'
 
 " Handler for precise linking

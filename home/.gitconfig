@@ -54,6 +54,7 @@
         dt = difftool
         ci = commit
         co = checkout
+        cp = cherry-pick
         sub = submodule
         sup = submodule update
         pop = stash pop
