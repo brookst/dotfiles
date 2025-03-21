@@ -217,7 +217,7 @@ else
     export EDITOR="vim"
 fi
 export PAGER=less
-export LESS=-aiRsx4
+export LESS="-aiRsx4 --mouse"
 # -a : search from end of this screen
 # -i : ignore case when searching
 # -R : output ANSI color codes as raw control characters (use ^notation for other control codes)
