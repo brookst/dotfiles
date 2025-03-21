@@ -5,6 +5,7 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 set cindent
+set cinkeys-=0#
 set hlsearch
 set list
 set showcmd
@@ -36,7 +37,7 @@ if version >= 703
     if exists("&undodir")
         if has('nvim')
             set undodir=~/.config/nvim/undo/
-            set directory=~/.local/share/nvim/swap//
+            set directory=~/.local/share/nvim/swap/
         else
             set undodir=~/.vim/undo/
         endif
