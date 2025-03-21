@@ -163,6 +163,16 @@ if exists("v:true") " There must be a better way
             \ 'suppress_stderr': v:true,
             \ },
         \ 'rust': 'rust-analyzer',
+        \ 'tex': {
+            \ 'command': 'texlab',
+            \ 'settings': {
+                \ 'texlab': {
+                    \ 'chktex': {
+                        \'onEdit': 'true',
+                        \ },
+                    \ },
+                \ },
+            \ },
         \ 'cuda': {
             \ 'command': 'clangd',
             \ },
