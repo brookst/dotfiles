@@ -355,7 +355,7 @@ export -f prompt_exit
 HISTCONTROL=ignoredups:ignorespace
 
 # save infinite history
-if [ "$BASH_MAJVERSION" -ge 4 ] && [ "$BASH_MINVERSION" -ge 3 ]; then
+if [ "$BASH_MAJVERSION" -eq 4 ] && [ "$BASH_MINVERSION" -ge 3 ] || [ "$BASH_MAJVERSION" -eq 5 ]; then
     HISTSIZE=-1
     HISTFILESIZE=-1
 else
