@@ -52,9 +52,9 @@ set mouse=a
 
 " GNU screen sometimes borks dragging in 'xterm' mode
 " See: http://stackoverflow.com/questions/8939043/gnu-screen-and-vim-adjusting-the-split-window-buffer-size-with-mouse
-if !has("nvim")
-    set ttymouse=xterm2
-endif
+" if !has("nvim")
+"    set ttymouse=xterm2
+" endif
 
 if has("nvim")
     set inccommand=nosplit
