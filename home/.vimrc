@@ -375,7 +375,7 @@ set laststatus=2
 filetype on            " enables file type detection
 filetype plugin on     " enables file type specific plugins
 syntax on
-set synmaxcol=300
+set synmaxcol=450
 
 function! SynGroup()
     let l:s = synID(line('.'), col('.'), 1)
