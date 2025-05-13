@@ -52,6 +52,7 @@
         d = diff
         dc = diff --cached
         dt = difftool
+        mt = mergetool
         ci = commit
         co = checkout
         cp = cherry-pick
