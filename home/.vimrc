@@ -356,8 +356,10 @@ nmap yp yo<BS>
 
 set background=dark
 
+if !has('nvim')
 "toggle set paste option
 set pastetoggle=<F2>
+endif
 
 " Vim doesn't set this under Windows for some reason
 set backspace=indent,eol,start
@@ -487,7 +489,7 @@ let g:no_cecutil_maps = 1
 
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
-if !exists("g:vimrc_loaded")
+if !exists("g:vimrc_loaded") && filereadable(expand("$HOME/.vim/bundle/vim-pathogen/autoload/pathogen.vim"))
     call pathogen#infect()
 endif
 
@@ -592,7 +594,7 @@ function! s:DiffWithSaved()
 endfunction
 com! DiffSaved call s:DiffWithSaved()
 
-if !empty(glob("~/.vim/bundle/CamelCaseMotion"))
+if !empty(glob("~/.vim/bundle/CamelCaseMotion")) && &rtp =~ 'camelcasemotion'
     call camelcasemotion#CreateMotionMappings('<leader>')
 endif
 
