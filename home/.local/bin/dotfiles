@@ -157,6 +157,7 @@ action () {
         if [ $? != 0 ]; then
             warn "failed command: $*"
         fi
+        chmod 600 ${DOTFILES}/home/.ssh/config
     fi
 }
 
