@@ -69,6 +69,21 @@ psgrep () {
     }
 }
 
+s () {
+    if which tmux >/dev/null; then
+        local name="$1"
+        if [ "$name" == "-ls" ]; then
+            tmux list-sessions
+        elif [ -z "$name" ]; then
+            tmux
+        else
+            tmux attach-session -t "$name" 2>/dev/null || tmux new-session -s "$name"
+        fi
+    else
+        screen -dR $@
+    fi
+}
+
 #Turn off echoing of ^C when interrupting a process - saves mangling the following prompt
 stty -ctlecho
 
@@ -90,7 +105,6 @@ export SVNUSR=svn+ssh://svn.cern.ch/reps/atlasusr
 export SVNGRP=svn+ssh://svn.cern.ch/reps/atlasgrp
 export SVNTDAQ=svn+ssh://svn.cern.ch/reps/atlastdaq
 export SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
-alias s="screen -dR"
 alias j="jobs -l"
 alias g="git"
 alias o="xdg-open"
