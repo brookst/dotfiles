@@ -107,7 +107,7 @@ export SVNTDAQ=svn+ssh://svn.cern.ch/reps/atlastdaq
 export SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
 alias j="jobs -l"
 alias g="git"
-alias o="xdg-open"
+alias o="QT_LOGGING_RULES='kf.kio.gui=false' xdg-open"
 alias sc="systemctl"
 alias scu="systemctl --user"
 alias py="python3"
