@@ -62,7 +62,7 @@ ssh () {
 
 # Sanely search for process details
 psgrep () {
-    ps aux | {
+    ps -eo user,pid,ppid,%cpu,%mem,vsz,rss,tty,stat,start,time,command | {
         read titles
         echo "${titles}"
         grep -v grep | grep --color -i "$1"
@@ -108,6 +108,7 @@ export SVNINST=svn+ssh://svn.cern.ch/reps/atlasinst
 alias j="jobs -l"
 alias g="git"
 alias o="QT_LOGGING_RULES='kf.kio.gui=false' xdg-open"
+alias nb="nix build"
 alias sc="systemctl"
 alias scu="systemctl --user"
 alias py="python3"
@@ -237,6 +238,8 @@ export LESS="-aiRsx4 --mouse"
 # -R : output ANSI color codes as raw control characters (use ^notation for other control codes)
 # -s : truncate multiple blank lines to a single one
 # -x4 : set tab stops to multiples of 4 characters
+
+export NIX_SHELL_PRESERVE_PROMPT=1
 
 # alias vim='vim -w ~/.vim/log'
 
@@ -381,7 +384,6 @@ fi
 set -o vi
 
 shopt -u direxpand 2>/dev/null || true
-shopt -u progcomp 2>/dev/null || true
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -390,31 +392,6 @@ shopt -s histappend
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-if ! shopt -oq posix && type _completion_loader &>/dev/null; then
-    # Override dynamic completion loading to resolve aliases
-    _completion_loader()
-    {
-        # Resolve alias
-        name=${BASH_ALIASES[$1]:-$1}
-        local compfile=/usr/share/bash-completion/completions
-        compfile+="/${name##*/}"
-        # echo " -completing $1 as $name with $compfile"
-
-        # Avoid trying to source dirs; https://bugzilla.redhat.com/903540
-        # Set alias completion to real completion
-        if [[ -f "$compfile" ]] && . "$compfile" &>/dev/null; then
-            # Find the completion set by $compfile and substitute in the alias
-            local comp_line
-            comp_line=$(complete | grep "${name}\$" | sed "s/${name}\$/${1}/")
-            eval "$comp_line"
-            # Tell bash to retry completion now this alias has been set
-            return 124
-        fi
-
-        # Need to define *something*, otherwise there will be no completion at all.
-        complete -F _minimal "$1" && return 124
-    }
-fi
 
 # Set prompt
 # See http://www.gnu.org/software/bash/manual/bash.html#Controlling-the-Prompt
