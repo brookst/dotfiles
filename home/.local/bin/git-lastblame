@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#Show when <paths> were last committed, with date, author and commit title
+#Tim Brooks 2026 <brooks@skoorb.net>
+
+paths=("$@")
+if ((${#paths[@]} == 0)); then
+    paths=(".")
+fi
+
+while IFS=$'\t' read -r hash file; do
+  git show --pretty=format:"%h:%Cblue%as%Creset %Cgreen%an%Creset %Cblue$file:%Creset%s" --no-patch $hash
+done < <(git last-modified ${paths[@]})
